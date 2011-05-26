@@ -9,7 +9,7 @@
 using namespace std;
 
 #include "droidFrame.hpp"
-#include "misc/data.hpp"
+#include "data.hpp"
 
 IMPLEMENT_APP(DroidApp)
 

@@ -14,7 +14,7 @@ END_EVENT_TABLE()
 #include <iostream>
 using namespace std;
 
-#include "misc/data.hpp"
+#include "data.hpp"
 
 #ifdef __WXMSW__
 #define _FRAME_ICON wxT("icon.xpm")

@@ -24,3 +24,5 @@ BEGIN
 END
 
 id ICON "../data/icon.ico"
+
+#include "wx/msw/wx.rc"

@@ -15,21 +15,6 @@
 
 @SET_MAKE@
 
-#   This file is part of DroidPad.
-# 
-#   DroidPad is free software: you can redistribute it and/or modify
-#   it under the terms of the GNU General Public License as published by
-#   the Free Software Foundation, either version 3 of the License, or
-#   (at your option) any later version.
-# 
-#   DroidPad is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#   GNU General Public License for more details.
-# 
-#   You should have received a copy of the GNU General Public License
-#   along with DroidPad.  If not, see <http://www.gnu.org/licenses/>.
-
 VPATH = @srcdir@
 pkgdatadir = $(datadir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -49,7 +34,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-subdir = data
+subdir = src/lib/usb/files
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
@@ -91,8 +76,8 @@ am__nobase_list = $(am__nobase_strip_setup); \
 am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;$$!N;s/\n/ /g' | \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
-am__installdirs = "$(DESTDIR)$(dpdatadir)" "$(DESTDIR)$(pixmapsdir)"
-DATA = $(dpdata_DATA) $(pixmaps_DATA)
+am__installdirs = "$(DESTDIR)$(adbfiledir)"
+DATA = $(adbfile_DATA)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
@@ -229,18 +214,10 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-@IF_GUI_TRUE@dpdatadir = $(datadir)/droidpad
-@IF_GUI_TRUE@dpdata_DATA = layout.xrc iconlarge.xpm
-@IF_GUI_TRUE@pixmapsdir = $(datadir)/pixmaps
-@IF_GUI_TRUE@pixmaps_DATA = droidpad.png
-
-# menudir = $(datadir)/applications
-# menu_DATA = droidpad.desktop
-
-# menu_in_files = droidpad.desktop.in
-# menu_DATA = $(menu_in_files:.desktop.in=.desktop)
-# {at}INTLTOOL_DESKTOP_RULE{at}
-EXTRA_DIST = $(dpdata_DATA) $(pixmaps_DATA) layout.xrc icon.ico icon.xpm iconlarge.xpm droidpad.png
+adbfiledir = $(datadir)/droidpad/adb
+@OS_LINUX_TRUE@adbfile_DATA = adb
+@OS_WIN32_TRUE@adbfile_DATA = adb.exe AdbWinApi.dll AdbWinUsbApi.dll
+EXTRA_DIST = adb adb.exe AdbWinApi.dll AdbWinUsbApi.dll
 all: all-am
 
 .SUFFIXES:
@@ -253,9 +230,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu data/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu src/lib/usb/files/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu data/Makefile
+	  $(AUTOMAKE) --gnu src/lib/usb/files/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
@@ -280,46 +257,26 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
-install-dpdataDATA: $(dpdata_DATA)
+install-adbfileDATA: $(adbfile_DATA)
 	@$(NORMAL_INSTALL)
-	test -z "$(dpdatadir)" || $(MKDIR_P) "$(DESTDIR)$(dpdatadir)"
-	@list='$(dpdata_DATA)'; test -n "$(dpdatadir)" || list=; \
+	test -z "$(adbfiledir)" || $(MKDIR_P) "$(DESTDIR)$(adbfiledir)"
+	@list='$(adbfile_DATA)'; test -n "$(adbfiledir)" || list=; \
 	for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  echo "$$d$$p"; \
 	done | $(am__base_list) | \
 	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(dpdatadir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(dpdatadir)" || exit $$?; \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(adbfiledir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(adbfiledir)" || exit $$?; \
 	done
 
-uninstall-dpdataDATA:
+uninstall-adbfileDATA:
 	@$(NORMAL_UNINSTALL)
-	@list='$(dpdata_DATA)'; test -n "$(dpdatadir)" || list=; \
+	@list='$(adbfile_DATA)'; test -n "$(adbfiledir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	test -n "$$files" || exit 0; \
-	echo " ( cd '$(DESTDIR)$(dpdatadir)' && rm -f" $$files ")"; \
-	cd "$(DESTDIR)$(dpdatadir)" && rm -f $$files
-install-pixmapsDATA: $(pixmaps_DATA)
-	@$(NORMAL_INSTALL)
-	test -z "$(pixmapsdir)" || $(MKDIR_P) "$(DESTDIR)$(pixmapsdir)"
-	@list='$(pixmaps_DATA)'; test -n "$(pixmapsdir)" || list=; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(pixmapsdir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(pixmapsdir)" || exit $$?; \
-	done
-
-uninstall-pixmapsDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(pixmaps_DATA)'; test -n "$(pixmapsdir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	test -n "$$files" || exit 0; \
-	echo " ( cd '$(DESTDIR)$(pixmapsdir)' && rm -f" $$files ")"; \
-	cd "$(DESTDIR)$(pixmapsdir)" && rm -f $$files
+	echo " ( cd '$(DESTDIR)$(adbfiledir)' && rm -f" $$files ")"; \
+	cd "$(DESTDIR)$(adbfiledir)" && rm -f $$files
 tags: TAGS
 TAGS:
 
@@ -361,7 +318,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(dpdatadir)" "$(DESTDIR)$(pixmapsdir)"; do \
+	for dir in "$(DESTDIR)$(adbfiledir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -409,7 +366,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-dpdataDATA install-pixmapsDATA
+install-data-am: install-adbfileDATA
 
 install-dvi: install-dvi-am
 
@@ -453,22 +410,21 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-dpdataDATA uninstall-pixmapsDATA
+uninstall-am: uninstall-adbfileDATA
 
 .MAKE: install-am install-strip
 
 .PHONY: all all-am check check-am clean clean-generic clean-libtool \
 	distclean distclean-generic distclean-libtool distdir dvi \
-	dvi-am html html-am info info-am install install-am \
-	install-data install-data-am install-dpdataDATA install-dvi \
+	dvi-am html html-am info info-am install install-adbfileDATA \
+	install-am install-data install-data-am install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-pixmapsDATA install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs maintainer-clean maintainer-clean-generic \
-	mostlyclean mostlyclean-generic mostlyclean-libtool pdf pdf-am \
-	ps ps-am uninstall uninstall-am uninstall-dpdataDATA \
-	uninstall-pixmapsDATA
+	install-pdf install-pdf-am install-ps install-ps-am \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	uninstall uninstall-adbfileDATA uninstall-am
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

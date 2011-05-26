@@ -13,11 +13,13 @@
 #   You should have received a copy of the GNU General Public License
 #   along with DroidPad.  If not, see <http://www.gnu.org/licenses/>.
 
-dpdatadir = $(datadir)/droidpad
-dpdata_DATA = layout.xrc iconlarge.xpm
+if IF_GUI
+  dpdatadir = $(datadir)/droidpad
+  dpdata_DATA = layout.xrc iconlarge.xpm
 
-pixmapsdir = $(datadir)/pixmaps
-pixmaps_DATA = droidpad.png
+  pixmapsdir = $(datadir)/pixmaps
+  pixmaps_DATA = droidpad.png
+endif
 
 # menudir = $(datadir)/applications
 # menu_DATA = droidpad.desktop
@@ -26,4 +28,4 @@ pixmaps_DATA = droidpad.png
 # menu_DATA = $(menu_in_files:.desktop.in=.desktop)
 # {at}INTLTOOL_DESKTOP_RULE{at}
 
-EXTRA_DIST = $(dpdata_DATA) $(pixmaps_DATA) layout.xrc icon.ico icon.xpm
+EXTRA_DIST = $(dpdata_DATA) $(pixmaps_DATA) layout.xrc icon.ico icon.xpm iconlarge.xpm droidpad.png
