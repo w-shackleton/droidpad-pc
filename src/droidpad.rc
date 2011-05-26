@@ -1,0 +1,26 @@
+1 VERSIONINFO
+FILEVERSION     0,1,0,0
+PRODUCTVERSION  0,1,0,0
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "080904E4"
+    BEGIN
+      VALUE "CompanyName", "Digitalsquid"
+      VALUE "FileDescription", "DroidPad"
+      VALUE "FileVersion", "0.1"
+      VALUE "InternalName", "droidpad"
+      VALUE "LegalCopyright", "DroidPad"
+      VALUE "OriginalFilename", "droidpad.exe"
+      VALUE "ProductName", "DroidPad"
+      VALUE "ProductVersion", "0.1 Devel"
+    END
+  END
+
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x809, 1252
+  END
+END
+
+id ICON "../data/icon.ico"

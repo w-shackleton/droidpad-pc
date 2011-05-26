@@ -1,0 +1,14 @@
+Source: droidpad
+Section: utils
+Priority: optional
+Maintainer: William Shackleton <w.shackleton@gmail.com>
+Build-Depends: debhelper (>= 7.0.50~), autotools-dev, mime-support, gettext, intltool, libcroco3, libxml-parser-perl, locales, libxml2, libgtkmm-2.4-dev, libc6, libexpat1, gawk
+Standards-Version: 3.8.4
+Homepage: https://launchpad.net/droidpad-linux
+
+Package: droidpad
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Use your Android phone as a joystick on the computer.
+ DroidPad lets you use an Android phone as a joystick & mouse on the
+ computer. It can connect via the network (Wifi) or USB.

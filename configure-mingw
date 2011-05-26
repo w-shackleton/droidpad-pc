@@ -1,0 +1,3 @@
+#!/bin/sh
+
+./configure --host=i586-mingw32msvc --disable-shared --with-wx-prefix=/usr/i586-mingw32msvc "$@"

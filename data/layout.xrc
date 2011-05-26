@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resource version="2.3.0.1">
+  <object class="wxPanel" name="mainPanel">
+    <style>wxTAB_TRAVERSAL</style>
+    <object class="wxBoxSizer">
+      <orient>wxVERTICAL</orient>
+      <object class="sizeritem">
+        <object class="wxStaticBoxSizer">
+          <object class="sizeritem">
+            <object class="wxBoxSizer">
+              <object class="sizeritem">
+                <object class="wxStaticText" name="deviceText">
+                  <label>Connected Devices:</label>
+                  <style>wxALIGN_LEFT</style>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="wxListBox" name="devicesList">
+                  <size>300,150</size>
+                  <content>
+                    <item></item>
+                  </content>
+                  <selection>2</selection>
+                </object>
+              </object>
+              <object class="sizeritem">
+                <object class="wxBoxSizer">
+                  <orient>wxHORIZONTAL</orient>
+                  <object class="sizeritem">
+                    <object class="wxButton" name="devicesRefresh">
+                      <label>Refresh</label>
+                    </object>
+                    <flag>wxALL</flag>
+                    <border>3</border>
+                  </object>
+                </object>
+              </object>
+              <orient>wxVERTICAL</orient>
+            </object>
+            <flag>wxALL</flag>
+            <border>3</border>
+          </object>
+          <orient>wxVERTICAL</orient>
+        </object>
+        <flag>wxALL</flag>
+        <border>3</border>
+      </object>
+      <object class="sizeritem">
+        <option>1</option>
+        <flag>wxEXPAND</flag>
+        <object class="wxBoxSizer">
+          <orient>wxHORIZONTAL</orient>
+          <object class="sizeritem">
+            <flag>wxALL</flag>
+            <border>3</border>
+            <object class="wxButton" name="buttonStart">
+              <label>Start</label>
+            </object>
+          </object>
+          <object class="sizeritem">
+            <flag>wxALL</flag>
+            <border>3</border>
+            <object class="wxButton" name="buttonStop">
+              <label>Stop</label>
+            </object>
+          </object>
+        </object>
+      </object>
+    </object>
+  </object>
+  <object class="wxMenuBar" name="menu">
+    <object class="wxMenu" name="menuFile">
+      <label>_File</label>
+      <object class="wxMenuItem" name="menuFileStart">
+        <label>_Start</label>
+      </object>
+      <object class="wxMenuItem" name="menufileStop">
+        <label>S_top</label>
+      </object>
+      <object class="separator"/>
+      <object class="wxMenuItem" name="menuFileQuit">
+        <label>_Quit</label>
+      </object>
+    </object>
+    <object class="wxMenu" name="menuHelp">
+      <label>_Help</label>
+      <object class="wxMenuItem" name="menuHelpAbout">
+        <label>_About</label>
+      </object>
+    </object>
+  </object>
+</resource>
