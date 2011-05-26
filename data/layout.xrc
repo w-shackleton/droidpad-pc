@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resource version="2.3.0.1">
   <object class="wxPanel" name="mainPanel">
-    <style>wxTAB_TRAVERSAL</style>
     <object class="wxBoxSizer">
       <orient>wxVERTICAL</orient>
       <object class="sizeritem">
@@ -16,16 +15,16 @@
               </object>
               <object class="sizeritem">
                 <object class="wxListBox" name="devicesList">
-                  <size>300,150</size>
                   <content>
                     <item></item>
                   </content>
                   <selection>2</selection>
                 </object>
+                <option>1</option>
+                <flag>wxEXPAND</flag>
               </object>
               <object class="sizeritem">
                 <object class="wxBoxSizer">
-                  <orient>wxHORIZONTAL</orient>
                   <object class="sizeritem">
                     <object class="wxButton" name="devicesRefresh">
                       <label>Refresh</label>
@@ -33,23 +32,24 @@
                     <flag>wxALL</flag>
                     <border>3</border>
                   </object>
+                  <orient>wxHORIZONTAL</orient>
                 </object>
+                <flag>wxEXPAND</flag>
               </object>
               <orient>wxVERTICAL</orient>
             </object>
-            <flag>wxALL</flag>
+            <option>1</option>
+            <flag>wxALL|wxEXPAND</flag>
             <border>3</border>
           </object>
           <orient>wxVERTICAL</orient>
         </object>
-        <flag>wxALL</flag>
+        <option>1</option>
+        <flag>wxALL|wxEXPAND|wxGROW</flag>
         <border>3</border>
       </object>
       <object class="sizeritem">
-        <option>1</option>
-        <flag>wxEXPAND</flag>
         <object class="wxBoxSizer">
-          <orient>wxHORIZONTAL</orient>
           <object class="sizeritem">
             <flag>wxALL</flag>
             <border>3</border>
@@ -58,15 +58,18 @@
             </object>
           </object>
           <object class="sizeritem">
-            <flag>wxALL</flag>
-            <border>3</border>
             <object class="wxButton" name="buttonStop">
               <label>Stop</label>
             </object>
+            <flag>wxALL</flag>
+            <border>3</border>
           </object>
+          <orient>wxHORIZONTAL</orient>
         </object>
+        <option>0</option>
       </object>
     </object>
+    <style>wxTAB_TRAVERSAL</style>
   </object>
   <object class="wxMenuBar" name="menu">
     <object class="wxMenu" name="menuFile">

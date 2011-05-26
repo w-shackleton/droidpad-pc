@@ -1,6 +1,8 @@
 AM_MAKEFLAGS = --no-print-directory
 SUBDIRS = data src
 
+ACLOCAL_AMFLAGS = -I m4
+
 EXTRA_DIST = configure-mingw
 
 clean-local:
@@ -19,6 +21,6 @@ winexport: all
 	@echo "--- EXPORTING to 'winexport' for windows install ---"
 	test -d "winexport" || mkdir winexport
 	test -d "winexport/data" || mkdir winexport/data
-	cp src/spaceedit.exe winexport/
+	cp src/droidpad.exe winexport/
 	cp $(DATA_IMAGES) winexport/data
 	cp $(MINGW_FILES) winexport/

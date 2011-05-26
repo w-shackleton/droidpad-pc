@@ -42,8 +42,11 @@ void DroidFrame::init()
 	SetMenuBar(wxXmlResource::Get()->LoadMenuBar(this, wxT("menu")));
 
 	panel = wxXmlResource::Get()->LoadPanel(this, wxT("mainPanel"));
-	SetAutoLayout(true);
-	Fit();
+	panel->SetSizerAndFit(panel->GetSizer());
+	wxSize sz;
+	sz.SetHeight(200);
+	sz.SetWidth(500);
+	SetSize(sz);
 
 	LOADXRC(buttonStart,	buttonStart,		wxButton);
 	LOADXRC(buttonStop,	buttonStop,		wxButton);

@@ -9,3 +9,4 @@ src/Makefile
 src/droidpad
 autom4te.cache
 src/droidpad.res
+*.libs

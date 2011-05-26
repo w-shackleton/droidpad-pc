@@ -13,9 +13,11 @@ AC_CANONICAL_HOST
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
-# LT_INIT
+LT_INIT
 
 AM_SILENT_RULES([yes])
+
+AC_CONFIG_MACRO_DIR([m4])
 
 # Checks for libraries.
 AM_OPTIONS_WXCONFIG
