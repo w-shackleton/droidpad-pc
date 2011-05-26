@@ -5,6 +5,8 @@
 #include <wx/panel.h>
 #include <wx/button.h>
 
+#include "lib/deviceManager.hpp"
+
 class DroidFrame : public wxFrame
 {
 	public:
@@ -31,6 +33,10 @@ class DroidFrame : public wxFrame
 		void OnDevicesRefresh(wxCommandEvent& event);
 		void OnStart(wxCommandEvent& event);
 		void OnStop(wxCommandEvent& event);
+
+		void OnClose(wxCloseEvent& event);
+
+		droidpad::DeviceManager *devices;
 };
 
 #endif

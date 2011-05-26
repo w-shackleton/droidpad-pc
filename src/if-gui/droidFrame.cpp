@@ -9,10 +9,14 @@ BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
 	EVT_BUTTON(XRCID("devicesRefresh"), DroidFrame::OnDevicesRefresh)
 	EVT_BUTTON(XRCID("buttonStart"), DroidFrame::OnStart)
 	EVT_BUTTON(XRCID("buttonStop"), DroidFrame::OnStop)
+
+	EVT_CLOSE(DroidFrame::OnClose)
 END_EVENT_TABLE()
 
 #include <iostream>
 using namespace std;
+
+using namespace droidpad;
 
 #include "data.hpp"
 
@@ -43,6 +47,7 @@ void DroidFrame::init()
 
 	panel = wxXmlResource::Get()->LoadPanel(this, wxT("mainPanel"));
 	panel->SetSizerAndFit(panel->GetSizer());
+	panel->Disable();
 	wxSize sz;
 	sz.SetHeight(200);
 	sz.SetWidth(500);
@@ -51,6 +56,9 @@ void DroidFrame::init()
 	LOADXRC(buttonStart,	buttonStart,		wxButton);
 	LOADXRC(buttonStop,	buttonStop,		wxButton);
 	LOADXRC(devicesRefresh,	buttonDevicesRefresh,	wxButton);
+
+	devices = new DeviceManager;
+	PushEventHandler(devices);
 }
 
 void DroidFrame::handleXMLError(wxString name)
@@ -60,6 +68,13 @@ void DroidFrame::handleXMLError(wxString name)
 
 DroidFrame::~DroidFrame()
 {
+	delete devices;
+}
+
+void DroidFrame::OnClose(wxCloseEvent& event)
+{
+	RemoveEventHandler(devices);
+	Destroy();
 }
 
 void DroidFrame::OnDevicesRefresh(wxCommandEvent& event)
