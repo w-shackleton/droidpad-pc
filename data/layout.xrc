@@ -16,9 +16,10 @@
               <object class="sizeritem">
                 <object class="wxListBox" name="devicesList">
                   <content>
-                    <item/>
+                    <item>Loading...</item>
                   </content>
-                  <selection>2</selection>
+                  <selection>0</selection>
+                  <enabled>0</enabled>
                 </object>
                 <option>1</option>
                 <flag>wxEXPAND</flag>
@@ -28,6 +29,7 @@
                   <object class="sizeritem">
                     <object class="wxButton" name="devicesRefresh">
                       <label>Refresh</label>
+                      <enabled>0</enabled>
                     </object>
                     <flag>wxALL</flag>
                     <border>3</border>
@@ -51,23 +53,23 @@
       <object class="sizeritem">
         <object class="wxBoxSizer">
           <object class="sizeritem">
-            <flag>wxALL</flag>
-            <border>3</border>
             <object class="wxButton" name="buttonStart">
               <label>Start</label>
+              <enabled>0</enabled>
             </object>
+            <flag>wxALL</flag>
+            <border>3</border>
           </object>
           <object class="sizeritem">
             <object class="wxButton" name="buttonStop">
               <label>Stop</label>
+              <enabled>0</enabled>
             </object>
             <flag>wxALL</flag>
             <border>3</border>
           </object>
           <object class="sizeritem">
-            <object class="wxStaticText" name="statusText">
-              <label>Loading...</label>
-            </object>
+            <object class="wxStaticText" name="statusText"/>
           </object>
           <orient>wxHORIZONTAL</orient>
         </object>

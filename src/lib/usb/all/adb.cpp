@@ -5,6 +5,8 @@ using namespace droidpad;
 #include <iostream>
 using namespace std;
 
+#include <wx/tokenzr.h>
+
 #include "data.hpp"
 
 #ifdef OS_LINUX
@@ -16,6 +18,7 @@ using namespace std;
 
 #define ADB_START "start-server"
 #define ADB_STOP "kill-server"
+#define ADB_DEVICES "devices"
 
 #include "proc.hpp"
 
@@ -38,7 +41,22 @@ bool AdbManager::initialise() {
 
 AdbManager::~AdbManager() {
 	try {
-		runProcess(adbCmd + " " + ADB_STOP);
+		runProcess(adbCmd, ADB_STOP);
 	} catch (int e) {
 	}
+}
+
+vector<wxString> AdbManager::getDeviceIds() {
+	wxString ret = wxString(runProcess(adbCmd, ADB_DEVICES).c_str(), wxConvUTF8);
+
+	vector<wxString> devs;
+
+	wxStringTokenizer tkz(ret, wxT("\n"));
+	while (tkz.HasMoreTokens())
+	{
+		wxString line = tkz.GetNextToken();
+		if(line.Contains(wxT("List of devices")) || line.IsEmpty()) continue;
+		devs.push_back(line.Left(line.Find('\t')));
+	}
+	return devs;
 }

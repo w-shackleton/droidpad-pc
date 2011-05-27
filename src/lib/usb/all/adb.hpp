@@ -1,7 +1,8 @@
 #ifndef DP_ADB_H
 #define DP_ADB_H
 
-#include <string>
+#include <wx/string.h>
+#include <vector>
 
 namespace droidpad {
 	class AdbManager {
@@ -10,6 +11,8 @@ namespace droidpad {
 			~AdbManager();
 
 			bool initialise();
+
+			std::vector<wxString> getDeviceIds();
 
 		private:
 			std::string adbCmd;

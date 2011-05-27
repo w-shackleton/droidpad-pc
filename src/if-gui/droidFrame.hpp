@@ -5,6 +5,7 @@
 #include <wx/panel.h>
 #include <wx/button.h>
 #include <wx/stattext.h>
+#include <wx/listbox.h>
 
 #include "lib/deviceManager.hpp"
 #include "lib/droidpadCallbacks.hpp"
@@ -21,6 +22,8 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 		wxMenuBar *menuBar;
 
 		wxButton *buttonStart, *buttonStop, *buttonDevicesRefresh;
+		
+		wxListBox *devListBox;
 
 		wxStaticText *statusText;
 
@@ -46,6 +49,8 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 	public:
 		void dpInitComplete(bool complete);
 		void dpCloseComplete();
+
+		void dpNewDeviceList(droidpad::AndroidDeviceList &list);
 };
 
 #endif

@@ -50,7 +50,6 @@ void DroidFrame::init()
 
 	panel = wxXmlResource::Get()->LoadPanel(this, wxT("mainPanel"));
 	panel->SetSizerAndFit(panel->GetSizer());
-	panel->Disable();
 	wxSize sz;
 	sz.SetHeight(200);
 	sz.SetWidth(500);
@@ -60,6 +59,7 @@ void DroidFrame::init()
 	LOADXRC(buttonStop,	buttonStop,		wxButton);
 	LOADXRC(devicesRefresh,	buttonDevicesRefresh,	wxButton);
 	LOADXRC(statusText,	statusText,	wxStaticText);
+	LOADXRC(devicesList,	devListBox,	wxListBox);
 
 	devices = new DeviceManager(*this);
 	PushEventHandler(devices);
@@ -104,16 +104,34 @@ void DroidFrame::dpInitComplete(bool complete)
 		Destroy();
 		return;
 	}
-	panel->Enable();
-	statusText->SetLabel(wxT(""));
+	devListBox->Enable();
+	devListBox->Clear();
 }
 
 void DroidFrame::dpCloseComplete()
 {
-	panel->Enable();
-	statusText->SetLabel(wxT(""));
-
 	RemoveEventHandler(devices);
 	Destroy();
+}
+
+void DroidFrame::dpNewDeviceList(AndroidDeviceList &list)
+{
+	cout << "Devices found: " << list.size() << endl;
+	for(int i = 0; i < list.size(); i++) {
+		wxString label = list[i].usbId + wxT(": ") + list[i].name;
+		if(devListBox->FindString(label) == wxNOT_FOUND) {
+			AndroidDevice *clientData = new AndroidDevice(list[i]);
+			devListBox->Append(label, clientData); // Does wx take ownership here? Hope so.
+		}
+	}
+
+	for(int i = 0; i < devListBox->GetCount(); i++) {
+		AndroidDevice *clientData = (AndroidDevice*) devListBox->GetClientData(i);
+		bool matches = false;
+		for(int j = 0; j < list.size(); j++) {
+			if(list[j] == *clientData) matches = true;
+		}
+		if(!matches) devListBox->Delete(i);
+	}
 }
 

@@ -31,6 +31,23 @@ namespace droidpad {
 				AdbManager **adb;
 				DeviceManager &parent;
 		};
+
+		/**
+		  * Looping thread for finding devices
+		  */
+		class DeviceFinder : public wxThread
+		{
+			public:
+				DeviceFinder(DeviceManager &parent, AdbManager &adb);
+				void* Entry();
+
+				void stop();
+			private:
+				AdbManager &adb;
+				DeviceManager &parent;
+
+				bool running;
+		};
 	};
 };
 

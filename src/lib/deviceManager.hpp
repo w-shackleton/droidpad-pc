@@ -21,9 +21,14 @@ namespace droidpad {
 			AdbManager *adb;
 			void OnInitialised(DMEvent &event);
 			void OnClosed(DMEvent &event);
+			void OnDeviceFinderFinish(DMEvent &event);
+			void OnNewDevicesList(DevicesList &event);
+
+			bool finishing;
 
 			threads::DMInitialise *initThread;
 			threads::DMClose *closeThread;
+			threads::DeviceFinder *deviceFinder;
 			DroidPadCallbacks &callbacks;
 	};
 };

@@ -16,7 +16,7 @@ if OS_LINUX
   libdroidpad_la_SOURCES += $(SRC_LINUX)
 endif
 
-libdroidpad_la_LIBADD = @WXBASELIBS@ $(BOOST_LDFLAGS) $(BOOST_SYSTEM_LIB)
+libdroidpad_la_LIBADD = @WXBASELIBS@
 libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@ -I. -Iprocess
 
 AM_CPPFLAGS = -DPREFIX='"$(prefix)"'

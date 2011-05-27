@@ -317,7 +317,7 @@ libdroidpad_la_SOURCES = proc.cpp proc.hpp data.cpp data.hpp \
 	deviceManagerThreads.hpp events.cpp events.hpp \
 	droidpadCallbacks.cpp droidpadCallbacks.hpp usb/all/adb.cpp \
 	usb/all/adb.hpp $(am__append_1)
-libdroidpad_la_LIBADD = @WXBASELIBS@ $(BOOST_LDFLAGS) $(BOOST_SYSTEM_LIB)
+libdroidpad_la_LIBADD = @WXBASELIBS@
 libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@ -I. -Iprocess
 AM_CPPFLAGS = -DPREFIX='"$(prefix)"' $(am__append_2) $(am__append_3)
 all: all-recursive
