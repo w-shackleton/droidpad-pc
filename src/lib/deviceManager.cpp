@@ -7,18 +7,35 @@ using namespace droidpad::threads;
 using namespace std;
 
 BEGIN_EVENT_TABLE(DeviceManager, wxEvtHandler)
-	EVT_ADBEVENT(dpADB_INITIALISED, DeviceManager::OnAdbInitialise)
+	EVT_DMEVENT(dpDM_INITIALISED, DeviceManager::OnInitialised)
+	EVT_DMEVENT(dpDM_CLOSED, DeviceManager::OnClosed)
 END_EVENT_TABLE()
 
-DeviceManager::DeviceManager() :
-	wxEvtHandler()
+DeviceManager::DeviceManager(DroidPadCallbacks &callbacks) :
+	wxEvtHandler(),
+	callbacks(callbacks)
 {
-	adbInit = new AdbInitialise(*this, adb);
-	adbInit->Create();
-	adbInit->Run();
+	adb = new AdbManager;
+	initThread = new DMInitialise(*this, *adb);
+	initThread->Create();
+	initThread->Run();
 }
 
-void DeviceManager::OnAdbInitialise(AdbEvent &event)
+void DeviceManager::Close()
 {
-	cout << "ADB Initialised" << endl;
+	closeThread = new DMClose(*this, &adb);
+	closeThread->Create();
+	closeThread->Run();
+}
+
+void DeviceManager::OnInitialised(DMEvent &event)
+{
+	cout << "DeviceManager Initialised" << endl;
+	callbacks.dpInitComplete(event.getStatus() == DM_SUCCESS);
+}
+
+void DeviceManager::OnClosed(DMEvent &event)
+{
+	cout << "DeviceManager Closed" << endl;
+	callbacks.dpCloseComplete();
 }

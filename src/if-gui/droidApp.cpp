@@ -11,6 +11,8 @@ using namespace std;
 #include "droidFrame.hpp"
 #include "data.hpp"
 
+using namespace droidpad;
+
 IMPLEMENT_APP(DroidApp)
 
 bool DroidApp::OnInit()
@@ -26,13 +28,13 @@ bool DroidApp::OnInit()
 	SetAppName(_T("droidpad"));
 	wxInitAllImageHandlers();
 
-	if(!Misc::Data::initialise())
+	if(!Data::initialise())
 	{
 		wxMessageDialog(NULL, _("Could not find application data,\npossibly because application was installed incorrectly?"), _("Error finding data"), wxOK | wxICON_EXCLAMATION).ShowModal();
 		return false;
 	}
 
-	wxString layoutPath = Misc::Data::getFilePath(wxT("layout.xrc"));
+	wxString layoutPath = Data::getFilePath(wxT("layout.xrc"));
 	wxXmlResource::Get()->InitAllHandlers();
 	if(!wxXmlResource::Get()->Load(layoutPath))
 	{

@@ -14815,6 +14815,10 @@ WXBASECFLAGS="$WX_CFLAGS_ONLY"
 WXBASELIBS="$WX_LIBS"
 
 
+# # Check for boost
+# AX_BOOST_BASE
+# AX_BOOST_SYSTEM
+
 # Check for Windows (for res)
 case "$host" in
 	*mingw*)
@@ -14856,7 +14860,7 @@ fi
 
 
 # Checks for library functions.
-ac_config_files="$ac_config_files Makefile data/Makefile src/Makefile src/if-gui/Makefile src/lib/Makefile src/lib/usb/Makefile src/lib/usb/files/Makefile src/lib/usb/all/Makefile"
+ac_config_files="$ac_config_files Makefile data/Makefile data/adb/Makefile src/Makefile src/if-gui/Makefile src/lib/Makefile src/lib/usb/Makefile src/lib/usb/all/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -15951,11 +15955,11 @@ do
     "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "data/Makefile") CONFIG_FILES="$CONFIG_FILES data/Makefile" ;;
+    "data/adb/Makefile") CONFIG_FILES="$CONFIG_FILES data/adb/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "src/if-gui/Makefile") CONFIG_FILES="$CONFIG_FILES src/if-gui/Makefile" ;;
     "src/lib/Makefile") CONFIG_FILES="$CONFIG_FILES src/lib/Makefile" ;;
     "src/lib/usb/Makefile") CONFIG_FILES="$CONFIG_FILES src/lib/usb/Makefile" ;;
-    "src/lib/usb/files/Makefile") CONFIG_FILES="$CONFIG_FILES src/lib/usb/files/Makefile" ;;
     "src/lib/usb/all/Makefile") CONFIG_FILES="$CONFIG_FILES src/lib/usb/all/Makefile" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5 ;;

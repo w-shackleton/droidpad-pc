@@ -4,6 +4,7 @@ lib_LTLIBRARIES = libdroidpad.la
 SRC_LINUX =
 
 libdroidpad_la_SOURCES = \
+		   proc.cpp			proc.hpp			\
 		   data.cpp			data.hpp			\
 		   deviceManager.cpp		deviceManager.hpp		\
 		   deviceManagerThreads.cpp	deviceManagerThreads.hpp	\
@@ -15,8 +16,8 @@ if OS_LINUX
   libdroidpad_la_SOURCES += $(SRC_LINUX)
 endif
 
-libdroidpad_la_LIBADD = @WXBASELIBS@
-libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@
+libdroidpad_la_LIBADD = @WXBASELIBS@ $(BOOST_LDFLAGS) $(BOOST_SYSTEM_LIB)
+libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@ -I. -Iprocess
 
 AM_CPPFLAGS = -DPREFIX='"$(prefix)"'
 

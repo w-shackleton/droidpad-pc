@@ -5,20 +5,26 @@
 
 #include "include/adb.hpp"
 #include "deviceManagerThreads.hpp"
+#include "droidpadCallbacks.hpp"
 #include "events.hpp"
 
 namespace droidpad {
 	class DeviceManager : public wxEvtHandler {
 		public:
-			DeviceManager();
+			DeviceManager(DroidPadCallbacks &callbacks);
+
+			void Close();
 
 			DECLARE_EVENT_TABLE();
 
 		private:
-			AdbManager adb;
-			void OnAdbInitialise(AdbEvent &event);
+			AdbManager *adb;
+			void OnInitialised(DMEvent &event);
+			void OnClosed(DMEvent &event);
 
-			threads::AdbInitialise *adbInit;
+			threads::DMInitialise *initThread;
+			threads::DMClose *closeThread;
+			DroidPadCallbacks &callbacks;
 	};
 };
 

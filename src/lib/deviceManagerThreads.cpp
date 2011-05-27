@@ -2,25 +2,45 @@
 
 #include "deviceManager.hpp"
 
+#include <iostream>
+
 using namespace droidpad;
 using namespace droidpad::threads;
+using namespace std;
 
-AdbInitialise::AdbInitialise(DeviceManager &parent, AdbManager &adb) :
+DMInitialise::DMInitialise(DeviceManager &parent, AdbManager &adb) :
 	adb(adb),
 	parent(parent)
 {
 }
 
-void* AdbInitialise::Entry()
+void* DMInitialise::Entry()
 {
+	cout << "Starting ADB" << endl;
 	if(adb.initialise())
 	{
-		AdbEvent evt(dpADB_INITIALISED, ADB_SUCCESS);
+		DMEvent evt(dpDM_INITIALISED, DM_SUCCESS);
 		parent.AddPendingEvent(evt);
 	}
 	else
 	{
-		AdbEvent evt(dpADB_INITIALISED, ADB_FAIL);
+		DMEvent evt(dpDM_INITIALISED, DM_FAIL);
 		parent.AddPendingEvent(evt);
 	}
+}
+
+DMClose::DMClose(DeviceManager &parent, AdbManager **adb) :
+	adb(adb),
+	parent(parent)
+{
+}
+
+void* DMClose::Entry()
+{
+	cout << "Stopping ADB" << endl;
+	delete *adb;
+	*adb = NULL;
+
+	DMEvent evt(dpDM_CLOSED);
+	parent.AddPendingEvent(evt);
 }

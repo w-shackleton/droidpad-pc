@@ -9,16 +9,28 @@ namespace droidpad {
 	class DeviceManager;
 	namespace threads
 	{
-		class AdbInitialise : public wxThread
+		class DMInitialise : public wxThread
 		{
 			public:
-				AdbInitialise(DeviceManager &parent, AdbManager &adb);
+				DMInitialise(DeviceManager &parent, AdbManager &adb);
 				void* Entry();
 			private:
 				AdbManager &adb;
 				DeviceManager &parent;
 		};
 
+		/**
+		  * Manages general closing of things
+		  */
+		class DMClose : public wxThread
+		{
+			public:
+				DMClose(DeviceManager &parent, AdbManager **adb);
+				void* Entry();
+			private:
+				AdbManager **adb;
+				DeviceManager &parent;
+		};
 	};
 };
 

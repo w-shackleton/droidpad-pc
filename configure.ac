@@ -58,6 +58,10 @@ AC_SUBST(WXBASECXXFLAGS, "$WX_CXXFLAGS_ONLY")
 AC_SUBST(WXBASECFLAGS, "$WX_CFLAGS_ONLY")
 AC_SUBST(WXBASELIBS, "$WX_LIBS")
 
+# # Check for boost
+# AX_BOOST_BASE
+# AX_BOOST_SYSTEM
+
 # Check for Windows (for res)
 case "$host" in
 	*mingw*)
@@ -81,11 +85,11 @@ AM_CONDITIONAL([IF_GUI], [test $iface = "gui"])
 AC_CONFIG_FILES([
 Makefile
 data/Makefile
+data/adb/Makefile
 src/Makefile
 src/if-gui/Makefile
 src/lib/Makefile
 src/lib/usb/Makefile
-src/lib/usb/files/Makefile
 src/lib/usb/all/Makefile
 ])
 AC_OUTPUT

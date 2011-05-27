@@ -10,6 +10,9 @@ BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
 	EVT_BUTTON(XRCID("buttonStart"), DroidFrame::OnStart)
 	EVT_BUTTON(XRCID("buttonStop"), DroidFrame::OnStop)
 
+	EVT_MENU(XRCID("menuFileStart"), DroidFrame::OnStart)
+	EVT_MENU(XRCID("menuFileStop"), DroidFrame::OnStop)
+
 	EVT_CLOSE(DroidFrame::OnClose)
 END_EVENT_TABLE()
 
@@ -40,7 +43,7 @@ DroidFrame::DroidFrame() :
 void DroidFrame::init()
 {
 	cout << "Loading" << endl;
-	SetIcon(wxIcon(wxString(Misc::Data::getFilePath(_FRAME_ICON).c_str(), wxConvUTF8), wxBITMAP_TYPE_XPM));
+	SetIcon(wxIcon(wxString(Data::getFilePath(_FRAME_ICON).c_str(), wxConvUTF8), wxBITMAP_TYPE_XPM));
 
 	// Load XML
 	SetMenuBar(wxXmlResource::Get()->LoadMenuBar(this, wxT("menu")));
@@ -56,8 +59,9 @@ void DroidFrame::init()
 	LOADXRC(buttonStart,	buttonStart,		wxButton);
 	LOADXRC(buttonStop,	buttonStop,		wxButton);
 	LOADXRC(devicesRefresh,	buttonDevicesRefresh,	wxButton);
+	LOADXRC(statusText,	statusText,	wxStaticText);
 
-	devices = new DeviceManager;
+	devices = new DeviceManager(*this);
 	PushEventHandler(devices);
 }
 
@@ -73,8 +77,8 @@ DroidFrame::~DroidFrame()
 
 void DroidFrame::OnClose(wxCloseEvent& event)
 {
-	RemoveEventHandler(devices);
-	Destroy();
+	devices->Close();
+	panel->Disable();
 }
 
 void DroidFrame::OnDevicesRefresh(wxCommandEvent& event)
@@ -90,5 +94,26 @@ void DroidFrame::OnStart(wxCommandEvent& event)
 void DroidFrame::OnStop(wxCommandEvent& event)
 {
 	cout << "Stopping DroidPad" << endl;
+}
+
+void DroidFrame::dpInitComplete(bool complete)
+{
+	if(!complete)
+	{
+		wxMessageDialog(this, _("Couldn't start DroidPad. Please check that it was installed correctly, or see log for more information"), _("Couldn't start DroidPad"), wxOK | wxICON_EXCLAMATION).ShowModal();
+		Destroy();
+		return;
+	}
+	panel->Enable();
+	statusText->SetLabel(wxT(""));
+}
+
+void DroidFrame::dpCloseComplete()
+{
+	panel->Enable();
+	statusText->SetLabel(wxT(""));
+
+	RemoveEventHandler(devices);
+	Destroy();
 }
 

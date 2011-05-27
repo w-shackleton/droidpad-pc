@@ -8,7 +8,7 @@
 
 #define STD_TO_WX_STRING(_str) wxString(_str.c_str(), wxConvUTF8)
 
-namespace Misc
+namespace droidpad
 {
 	class Data
 	{

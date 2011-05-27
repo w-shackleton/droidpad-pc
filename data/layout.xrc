@@ -16,7 +16,7 @@
               <object class="sizeritem">
                 <object class="wxListBox" name="devicesList">
                   <content>
-                    <item></item>
+                    <item/>
                   </content>
                   <selection>2</selection>
                 </object>
@@ -63,6 +63,11 @@
             </object>
             <flag>wxALL</flag>
             <border>3</border>
+          </object>
+          <object class="sizeritem">
+            <object class="wxStaticText" name="statusText">
+              <label>Loading...</label>
+            </object>
           </object>
           <orient>wxHORIZONTAL</orient>
         </object>

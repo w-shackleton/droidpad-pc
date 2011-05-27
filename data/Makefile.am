@@ -13,6 +13,8 @@
 #   You should have received a copy of the GNU General Public License
 #   along with DroidPad.  If not, see <http://www.gnu.org/licenses/>.
 
+SUBDIRS = adb
+
 if IF_GUI
   dpdatadir = $(datadir)/droidpad
   dpdata_DATA = layout.xrc iconlarge.xpm

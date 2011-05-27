@@ -76,8 +76,8 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 libdroidpad_la_DEPENDENCIES =
 am__objects_1 =
 @OS_LINUX_TRUE@am__objects_2 = $(am__objects_1)
-am_libdroidpad_la_OBJECTS = libdroidpad_la-data.lo \
-	libdroidpad_la-deviceManager.lo \
+am_libdroidpad_la_OBJECTS = libdroidpad_la-proc.lo \
+	libdroidpad_la-data.lo libdroidpad_la-deviceManager.lo \
 	libdroidpad_la-deviceManagerThreads.lo \
 	libdroidpad_la-events.lo libdroidpad_la-droidpadCallbacks.lo \
 	libdroidpad_la-adb.lo $(am__objects_2)
@@ -312,13 +312,13 @@ top_srcdir = @top_srcdir@
 SUBDIRS = usb
 lib_LTLIBRARIES = libdroidpad.la
 SRC_LINUX = 
-libdroidpad_la_SOURCES = data.cpp data.hpp deviceManager.cpp \
-	deviceManager.hpp deviceManagerThreads.cpp \
+libdroidpad_la_SOURCES = proc.cpp proc.hpp data.cpp data.hpp \
+	deviceManager.cpp deviceManager.hpp deviceManagerThreads.cpp \
 	deviceManagerThreads.hpp events.cpp events.hpp \
 	droidpadCallbacks.cpp droidpadCallbacks.hpp usb/all/adb.cpp \
 	usb/all/adb.hpp $(am__append_1)
-libdroidpad_la_LIBADD = @WXBASELIBS@
-libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@
+libdroidpad_la_LIBADD = @WXBASELIBS@ $(BOOST_LDFLAGS) $(BOOST_SYSTEM_LIB)
+libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@ -I. -Iprocess
 AM_CPPFLAGS = -DPREFIX='"$(prefix)"' $(am__append_2) $(am__append_3)
 all: all-recursive
 
@@ -400,6 +400,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-deviceManagerThreads.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-droidpadCallbacks.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-events.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-proc.Plo@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -424,6 +425,14 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
+
+libdroidpad_la-proc.lo: proc.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -MT libdroidpad_la-proc.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-proc.Tpo -c -o libdroidpad_la-proc.lo `test -f 'proc.cpp' || echo '$(srcdir)/'`proc.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libdroidpad_la-proc.Tpo $(DEPDIR)/libdroidpad_la-proc.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='proc.cpp' object='libdroidpad_la-proc.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-proc.lo `test -f 'proc.cpp' || echo '$(srcdir)/'`proc.cpp
 
 libdroidpad_la-data.lo: data.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -MT libdroidpad_la-data.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-data.Tpo -c -o libdroidpad_la-data.lo `test -f 'data.cpp' || echo '$(srcdir)/'`data.cpp

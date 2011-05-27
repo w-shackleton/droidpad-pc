@@ -4,10 +4,12 @@
 #include <wx/frame.h>
 #include <wx/panel.h>
 #include <wx/button.h>
+#include <wx/stattext.h>
 
 #include "lib/deviceManager.hpp"
+#include "lib/droidpadCallbacks.hpp"
 
-class DroidFrame : public wxFrame
+class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 {
 	public:
 		DroidFrame ();
@@ -19,6 +21,8 @@ class DroidFrame : public wxFrame
 		wxMenuBar *menuBar;
 
 		wxButton *buttonStart, *buttonStop, *buttonDevicesRefresh;
+
+		wxStaticText *statusText;
 
 		enum
 		{
@@ -37,6 +41,11 @@ class DroidFrame : public wxFrame
 		void OnClose(wxCloseEvent& event);
 
 		droidpad::DeviceManager *devices;
+
+	// Callbacks
+	public:
+		void dpInitComplete(bool complete);
+		void dpCloseComplete();
 };
 
 #endif

@@ -12,3 +12,8 @@ src/droidpad.res
 *.libs
 droidpad-0.1.tar.gz
 *.deps
+*.lo
+*.la
+libtool
+doc
+test

@@ -8,19 +8,20 @@
 #include <wx/tokenzr.h>
 
 using namespace std;
+using namespace droidpad;
 
-wxString Misc::Data::datadir = wxT("");
-wxString Misc::Data::confLocation = wxT("");
-wxString Misc::Data::serial = wxT("__ip");
-int Misc::Data::ip1 = 0;
-int Misc::Data::ip2 = 0;
-int Misc::Data::ip3 = 0;
-int Misc::Data::ip4 = 0;
-int Misc::Data::port = 3141;
+wxString Data::datadir = wxT("");
+wxString Data::confLocation = wxT("");
+wxString Data::serial = wxT("__ip");
+int Data::ip1 = 0;
+int Data::ip2 = 0;
+int Data::ip3 = 0;
+int Data::ip4 = 0;
+int Data::port = 3141;
 
 #define CONF_FILE "dp.conf"
 
-bool Misc::Data::initialise()
+bool Data::initialise()
 {
 	std::vector<wxString> datadirs;
 	wxString testFile = wxT("icon.xpm");
@@ -98,12 +99,12 @@ bool Misc::Data::initialise()
 	return true;
 }
 
-wxString Misc::Data::getFilePath(wxString file)
+wxString Data::getFilePath(wxString file)
 {
 	return datadir + wxT("/") + file;
 }
 
-void Misc::Data::savePreferences()
+void Data::savePreferences()
 {
 	wxTextFile config(wxString(confLocation.c_str(), wxConvUTF8) + wxT("/") + wxT(CONF_FILE));
 	if(config.Open())
@@ -121,7 +122,7 @@ void Misc::Data::savePreferences()
 		cout << "ERROR: Couldn't save configuration to file!" << endl;
 }
 
-wxString Misc::stringToUpper(wxString strToConvert)
+wxString stringToUpper(wxString strToConvert)
 {
 	for(unsigned int i=0;i<strToConvert.length();i++)
 	{
@@ -130,7 +131,7 @@ wxString Misc::stringToUpper(wxString strToConvert)
 	return strToConvert;
 }
 
-wxString Misc::stringToLower(wxString strToConvert)
+wxString stringToLower(wxString strToConvert)
 {
 	for(unsigned int i=0;i<strToConvert.length();i++)
 	{

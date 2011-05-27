@@ -2,17 +2,18 @@
 
 using namespace droidpad;
 
-IMPLEMENT_DYNAMIC_CLASS(AdbEvent, wxEvent)
-DEFINE_EVENT_TYPE(dpADB_INITIALISED)
+IMPLEMENT_DYNAMIC_CLASS(DMEvent, wxEvent)
+DEFINE_EVENT_TYPE(dpDM_INITIALISED)
+DEFINE_EVENT_TYPE(dpDM_CLOSED)
 
-AdbEvent::AdbEvent(wxEventType type, int status) :
+DMEvent::DMEvent(wxEventType type, int status) :
 	status(status)
 {
 	SetEventType(type);
 }
 
-wxEvent* AdbEvent::Clone() const
+wxEvent* DMEvent::Clone() const
 {
-	AdbEvent* n = new AdbEvent(GetEventType(), status);
+	DMEvent* n = new DMEvent(GetEventType(), status);
 	return n;
 }

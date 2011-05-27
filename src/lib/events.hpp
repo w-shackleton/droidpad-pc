@@ -4,35 +4,38 @@
 #include <wx/event.h>
 
 BEGIN_DECLARE_EVENT_TYPES()
-	DECLARE_EVENT_TYPE(dpADB_INITIALISED, 1)
+	DECLARE_EVENT_TYPE(dpDM_INITIALISED, 1)
+	DECLARE_EVENT_TYPE(dpDM_CLOSED, 1)
 END_DECLARE_EVENT_TYPES()
 
 namespace droidpad {
-	static int ADB_SUCCESS = 0;
-	static int ADB_FAIL = 1;
+	static int DM_SUCCESS = 0;
+	static int DM_FAIL = 1;
 
-	class AdbEvent : public wxEvent
+	class DMEvent : public wxEvent
 	{
 		public:
-			AdbEvent(wxEventType type = dpADB_INITIALISED, int status = ADB_SUCCESS);
+			DMEvent(wxEventType type = dpDM_INITIALISED, int status = DM_SUCCESS);
 			wxEvent* Clone() const;
 
-			DECLARE_DYNAMIC_CLASS(AdbEvent)
+			inline int getStatus() {return status;}
+
+			DECLARE_DYNAMIC_CLASS(DMEvent)
 
 		private:
 			int status;
 	};
 
-	typedef void (wxEvtHandler::*adbEventFunction)(AdbEvent&);
+	typedef void (wxEvtHandler::*dmEventFunction)(DMEvent&);
 
 };
 
-#define EVT_ADBEVENT(evt, func)					\
+#define EVT_DMEVENT(evt, func)					\
 	DECLARE_EVENT_TABLE_ENTRY(evt,				\
 			-1,					\
 			-1,					\
 			(wxObjectEventFunction)			\
-			(adbEventFunction) & func,		\
+			(dmEventFunction) & func,		\
 			(wxObject *) NULL),
 
 #endif

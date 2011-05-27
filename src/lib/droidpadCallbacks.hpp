@@ -6,7 +6,8 @@ namespace droidpad {
 	{
 		public:
 			virtual ~DroidPadCallbacks();
-			virtual void dpInitComplete() = 0;
+			virtual void dpInitComplete(bool complete) = 0;
+			virtual void dpCloseComplete() = 0;
 	};
 };
 

@@ -1,1 +1,1 @@
-SUBDIRS = files all
+SUBDIRS = all
