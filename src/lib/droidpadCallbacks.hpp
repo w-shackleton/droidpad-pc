@@ -4,6 +4,7 @@
 #include <wx/string.h>
 #include <wx/clntdata.h>
 #include <vector>
+#include <stdint.h>
 
 #define DEVICE_USB 1
 #define DEVICE_NET 2
@@ -14,7 +15,8 @@ namespace droidpad {
 			int type;
 
 			wxString usbId;
-			unsigned int ip;
+			wxString ip;
+			uint16_t port;
 			wxString name;
 
 			AndroidDevice& operator =(const AndroidDevice& b);

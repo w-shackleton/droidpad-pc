@@ -1,0 +1,3 @@
+External 3rd party small libraries etc.
+The mdnsd and 1035 files are from the SourceForge project wxServDisc, upon which mdns.cpp is based.
+b64 is from libb64, also on SourceForge

@@ -6,6 +6,8 @@
 
 #include <wx/thread.h>
 
+#include "net/deviceDiscover.hpp"
+
 using namespace droidpad;
 using namespace droidpad::threads;
 using namespace std;
@@ -56,6 +58,9 @@ DeviceFinder::DeviceFinder(DeviceManager &parent, AdbManager &adb) :
 
 void* DeviceFinder::Entry()
 {
+	devDiscover = new DeviceDiscover(parent);
+	devDiscover->Create(); // TODO: Add error handling
+	devDiscover->Run();
 	cout << "Device finder started" << endl;
 	do {
 		AndroidDeviceList devs;
@@ -64,16 +69,34 @@ void* DeviceFinder::Entry()
 			AndroidDevice dev;
 			dev.type = DEVICE_USB;
 			dev.usbId = usbDevices[i];
-			dev.ip = 0;
+			dev.ip = wxT("");
+			dev.port = 0;
 			dev.name = wxT("");
 
 			devs.push_back(dev);
 		}
+		map<wxString, mdns::Device> netDevices = devDiscover->getDevices();
+
+		map<wxString, mdns::Device>::const_iterator end = netDevices.end();
+		for(map<wxString, mdns::Device>::const_iterator it = netDevices.begin(); it != end; ++it)
+		{
+			AndroidDevice dev;
+			dev.type = DEVICE_NET;
+			dev.usbId = it->second.ip;
+			dev.ip = it->second.ip;
+			dev.port = it->second.port;
+			dev.name = it->second.deviceDescription;
+
+			devs.push_back(dev);
+		}
+
 		wxThread::Sleep(1000);
 
 		DevicesList list(devs);
 		parent.AddPendingEvent(list);
 	} while(running);
+
+	devDiscover->Delete();
 
 	DMEvent evt(dpDEVICE_FINDER_FINISHED, DM_FINISHED);
 	parent.AddPendingEvent(evt);

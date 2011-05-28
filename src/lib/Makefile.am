@@ -10,14 +10,20 @@ libdroidpad_la_SOURCES = \
 		   deviceManagerThreads.cpp	deviceManagerThreads.hpp	\
 		   events.cpp			events.hpp			\
 		   droidpadCallbacks.cpp	droidpadCallbacks.hpp		\
-		   usb/all/adb.cpp		usb/all/adb.hpp
+		   usb/all/adb.cpp		usb/all/adb.hpp			\
+		   ext/1035.c			ext/1035.h			\
+		   ext/mdnsd.c			ext/mdnsd.h			\
+		   ext/b64/base64.cpp		ext/b64/base64.hpp		\
+		   net/mdns.cpp			net/mdns.hpp			\
+		   net/deviceDiscover.cpp	net/deviceDiscover.hpp
 
 if OS_LINUX
   libdroidpad_la_SOURCES += $(SRC_LINUX)
 endif
 
 libdroidpad_la_LIBADD = @WXBASELIBS@
-libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@ -I. -Iprocess
+libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@ -I. -Iext
+libdroidpad_la_CFLAGS = @WXCPPFLAGS@ -I. -Iext
 
 AM_CPPFLAGS = -DPREFIX='"$(prefix)"'
 

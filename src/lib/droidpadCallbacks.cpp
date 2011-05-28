@@ -27,6 +27,7 @@ AndroidDevice::AndroidDevice(const AndroidDevice& dev) :
 	type(dev.type),
 	usbId(dev.usbId),
 	ip(dev.ip),
+	port(dev.port),
 	name(dev.name)
 {
 }
