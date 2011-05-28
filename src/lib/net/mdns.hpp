@@ -9,8 +9,6 @@
 #include <map>
 #include <stdint.h>
 
-#include "1035.h"
-
 #include "mdnsd.h"
 
 // just for convenience
@@ -22,6 +20,12 @@ typedef int SOCKET;
 
 namespace droidpad {
 	namespace mdns {
+
+		class Callbacks {
+			public:
+				virtual void cycle() = 0;
+				virtual void onData() = 0;
+		};
 
 		/*
 		   Generic scanner - C++ implementation of mDNSd
@@ -43,6 +47,8 @@ namespace droidpad {
 			protected:
 				virtual int processResult(mdnsda a) = 0;
 
+				Callbacks *callbacks;
+
 				bool exit;
 			public:
 				MDNS(const wxString& what, int type);
@@ -63,10 +69,10 @@ namespace droidpad {
 		class DeviceFinder : public MDNS
 		{
 			private:
-				virtual int processResult(mdnsda a);
+				int processResult(mdnsda a);
 
 			public:
-				DeviceFinder();
+				DeviceFinder(Callbacks *callbacks);
 
 				inline void stop()
 				{
@@ -79,7 +85,7 @@ namespace droidpad {
 		class InfoFinder : public MDNS
 		{
 			private:
-				virtual int processResult(mdnsda a);
+				int processResult(mdnsda a);
 
 			public:
 				InfoFinder(wxString fullName);
@@ -91,7 +97,7 @@ namespace droidpad {
 		class IPFinder : public MDNS
 		{
 			private:
-				virtual int processResult(mdnsda a);
+				int processResult(mdnsda a);
 
 			public:
 				IPFinder(wxString deviceName);

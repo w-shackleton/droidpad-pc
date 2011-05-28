@@ -7,6 +7,7 @@
 
 namespace droidpad {
 	class DeviceManager;
+	class DeviceDiscover;
 	namespace threads
 	{
 		class DMInitialise : public wxThread
@@ -45,6 +46,7 @@ namespace droidpad {
 			private:
 				AdbManager &adb;
 				DeviceManager &parent;
+				DeviceDiscover *devDiscover;
 
 				bool running;
 		};

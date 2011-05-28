@@ -21,12 +21,15 @@
 #include <arpa/inet.h>
 #endif
 
+#include "1035.h"
+
 #include <b64/base64.hpp>
 
 using namespace std;
 using namespace droidpad::mdns;
 
-MDNS::MDNS(const wxString& what, int type)
+MDNS::MDNS(const wxString& what, int type) :
+	callbacks(NULL)
 {
 	w = what;
 	t = type;
@@ -56,6 +59,7 @@ void MDNS::start()
 
 	while(!exit)
 	{
+		if(callbacks != NULL) callbacks->cycle();
 		tv = mdnsd_sleep(d);
 		FD_ZERO(&fds);
 		FD_SET(s,&fds);
@@ -255,9 +259,10 @@ SOCKET MDNS::msock() const
 	return s;
 }
 
-DeviceFinder::DeviceFinder() :
+DeviceFinder::DeviceFinder(Callbacks *callbacks) :
 	MDNS(wxT("_droidpad._tcp.local."), QTYPE_PTR)
 {
+	this->callbacks = callbacks;
 }
 
 int DeviceFinder::processResult(mdnsda a)
@@ -301,6 +306,7 @@ int DeviceFinder::processResult(mdnsda a)
 	device.port = a->srv.port;
 
 	devices[fullName] = device;
+	if(callbacks != NULL) callbacks->onData();
 }
 
 

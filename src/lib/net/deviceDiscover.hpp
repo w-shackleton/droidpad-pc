@@ -3,19 +3,27 @@
 
 #include <stdint.h>
 #include "net/mdns.hpp"
+#include <wx/thread.h>
 
 namespace droidpad {
-	class DeviceDiscover;
-
 	class DeviceManager;
-	class DeviceDiscover {
+
+	class DeviceDiscover : public wxThread, protected mdns::Callbacks {
 		public:
 			DeviceDiscover(DeviceManager &parent);
 			~DeviceDiscover();
 
-			void getDevices();
+			
+			std::map<wxString, mdns::Device> getDevices();
+
+			bool dataAvailable;
+
+			virtual void* Entry();
 
 		private:
+			void cycle();
+			virtual void onData();
+
 			DeviceManager &parent;
 
 			mdns::DeviceFinder df;
