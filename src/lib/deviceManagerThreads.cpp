@@ -1,6 +1,7 @@
 #include "deviceManagerThreads.hpp"
 
 #include "deviceManager.hpp"
+#include "net/deviceDiscover.hpp"
 
 #include <iostream>
 
@@ -56,6 +57,7 @@ DeviceFinder::DeviceFinder(DeviceManager &parent, AdbManager &adb) :
 
 void* DeviceFinder::Entry()
 {
+	DeviceDiscover d(parent);
 	cout << "Device finder started" << endl;
 	do {
 		AndroidDeviceList devs;
