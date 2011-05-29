@@ -10,8 +10,6 @@
 #include <iostream>
 
 #ifdef OS_WIN32
-// mingw socket includes
-#include <winsock2.h>
 #include <ws2tcpip.h>
 #else
 // unix socket includes

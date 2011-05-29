@@ -17,3 +17,6 @@ droidpad-0.1.tar.gz
 libtool
 doc
 test
+winexport
+src/droidpad.exe
+src/if-gui/droidpad.res

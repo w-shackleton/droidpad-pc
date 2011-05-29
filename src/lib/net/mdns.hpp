@@ -11,6 +11,11 @@
 
 #include "mdnsd.h"
 
+#ifdef OS_WIN32
+// mingw socket includes
+#include <winsock2.h>
+#endif
+
 // just for convenience
 // SOCKET is a unsigned int in win32!!
 // but in unix we expect signed ints!!

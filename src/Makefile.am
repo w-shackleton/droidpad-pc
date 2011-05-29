@@ -1,4 +1,4 @@
-SUBDIRS = if-gui lib
+SUBDIRS = lib
 bin_PROGRAMS = droidpad
 
 SRC_IF_GUI = \
@@ -22,8 +22,21 @@ droidpad_LDADD += lib/libdroidpad.la
 AM_CPPFLAGS = -DPREFIX='"$(prefix)"'
 
 if OS_WIN32
+droidpad_LDFLAGS = -Wl,--enable-auto-import --enable-stdcall-fixup
 if IF_GUI
-droidpad_LDADD += if-gui/droidpad.res
-droidpad_LDFLAGS = -Wl,--enable-auto-import
+# http://www.gnu.org/software/hello/manual/automake/Options.html
+pkg_verbose = $(pkg_verbose_$(V))
+pkg_verbose_ = $(pkg_verbose_$(AM_DEFAULT_VERBOSITY))
+pkg_verbose_0 = @echo "  RES    $@";
+
+droidpad_res_CFLAGS = @WXCPPFLAGS@
+
+if-gui/droidpad.res: if-gui/droidpad.rc
+	$(pkg_verbose)i586-mingw32msvc-windres $(droidpad_res_CFLAGS) if-gui/droidpad.rc -O coff -o if-gui/droidpad.res
+
+droidpad_LDADD += if-gui/droidpad.res -lws2_32
+
+EXTRA_DIST = if-gui/droidpad.rc
+CLEANFILES = if-gui/droidpad.res
 endif
 endif

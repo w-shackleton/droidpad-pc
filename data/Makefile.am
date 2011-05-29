@@ -17,10 +17,24 @@ SUBDIRS = adb
 
 if IF_GUI
   dpdatadir = $(datadir)/droidpad
-  dpdata_DATA = layout.xrc iconlarge.xpm
+  dpdata_DATA = layout.xrc
+if OS_LINUX
+  dpdata_DATA += iconlarge.xpm
+endif
+if OS_WIN32
+  dpdata_DATA += icon.xpm
+endif
 
   pixmapsdir = $(datadir)/pixmaps
   pixmaps_DATA = droidpad.png
+endif
+
+adbdir = $(datadir)/droidpad/adb
+if OS_LINUX
+  adb_DATA = adb/adb
+endif
+if OS_WIN32
+  adb_DATA = adb/adb.exe adb/AdbWinApi.dll adb/AdbWinUsbApi.dll
 endif
 
 # menudir = $(datadir)/applications
@@ -30,4 +44,4 @@ endif
 # menu_DATA = $(menu_in_files:.desktop.in=.desktop)
 # {at}INTLTOOL_DESKTOP_RULE{at}
 
-EXTRA_DIST = $(dpdata_DATA) $(pixmaps_DATA) layout.xrc icon.ico icon.xpm iconlarge.xpm droidpad.png
+EXTRA_DIST = $(dpdata_DATA) $(pixmaps_DATA) layout.xrc icon.ico icon.xpm iconlarge.xpm droidpad.png adb/adb adb/adb.exe adb/AdbWinApi.dll adb/AdbWinUsbApi.dll

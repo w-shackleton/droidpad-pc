@@ -25,6 +25,11 @@ libdroidpad_la_LIBADD = @WXBASELIBS@
 libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@ -I. -Iext
 libdroidpad_la_CFLAGS = @WXCPPFLAGS@ -I. -Iext
 
+if OS_WIN32
+libdroidpad_la_LIBADD += -lws2_32
+libdroidpad_la_LDFLAGS = -Wl,--enable-auto-import
+endif
+
 AM_CPPFLAGS = -DPREFIX='"$(prefix)"'
 
 if OS_LINUX
