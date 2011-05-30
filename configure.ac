@@ -19,6 +19,22 @@ AM_SILENT_RULES([yes])
 
 AC_CONFIG_MACRO_DIR([m4])
 
+dnl this macro is used to get the arguments supplied
+dnl to the configure script (./configure --enable-debug)
+dnl Check if we have enable debug support.
+AC_MSG_CHECKING(whether to enable debugging)
+debug_default="no"
+AC_ARG_ENABLE(debug, [  --enable-debug=[no/yes] turn on debugging
+	                             [default=$debug_default]],, enable_debug=$debug_default)
+dnl Yes, shell scripts can be used
+if test "x$enable_debug" = "xyes"; then
+	CFLAGS="$CFLAGS -g -DDEBUG"
+	CXXFLAGS="$CXXFLAGS -g -DDEBUG"
+	AC_MSG_RESULT(yes)
+else
+	AC_MSG_RESULT(no)
+fi
+
 # Checks for libraries.
 AM_OPTIONS_WXCONFIG
 reqwx=2.8.10

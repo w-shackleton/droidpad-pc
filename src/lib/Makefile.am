@@ -4,6 +4,9 @@ lib_LTLIBRARIES = libdroidpad.la
 SRC_LINUX =
 
 libdroidpad_la_SOURCES = \
+		   include/adb.hpp	\
+		   log.hpp		\
+		   			\
 		   proc.cpp			proc.hpp			\
 		   data.cpp			data.hpp			\
 		   deviceManager.cpp		deviceManager.hpp		\

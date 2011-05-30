@@ -1,9 +1,10 @@
 #include"droidFrame.hpp"
 
+#include "droidApp.hpp"
+
 #include <wx/xrc/xmlres.h>
 #include <wx/icon.h>
 #include <wx/msgdlg.h>
-		void handleXMLError(wxString name);
 
 BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
 	EVT_BUTTON(XRCID("devicesRefresh"), DroidFrame::OnDevicesRefresh)
@@ -16,10 +17,9 @@ BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
 	EVT_CLOSE(DroidFrame::OnClose)
 END_EVENT_TABLE()
 
-#include <iostream>
-using namespace std;
-
 using namespace droidpad;
+
+#include <wx/log.h>
 
 #include "data.hpp"
 
@@ -42,7 +42,6 @@ DroidFrame::DroidFrame() :
 
 void DroidFrame::init()
 {
-	cout << "Loading" << endl;
 	SetIcon(wxIcon(wxString(Data::getFilePath(_FRAME_ICON).c_str(), wxConvUTF8), wxBITMAP_TYPE_XPM));
 
 	// Load XML
@@ -73,6 +72,7 @@ void DroidFrame::handleXMLError(wxString name)
 DroidFrame::~DroidFrame()
 {
 	delete devices;
+	wxGetApp().onDFFinish();
 }
 
 void DroidFrame::OnClose(wxCloseEvent& event)
@@ -83,17 +83,17 @@ void DroidFrame::OnClose(wxCloseEvent& event)
 
 void DroidFrame::OnDevicesRefresh(wxCommandEvent& event)
 {
-	cout << "Refreshing devices" << endl;
+	wxLogInfo(wxT("Refreshing devices"));
 }
 
 void DroidFrame::OnStart(wxCommandEvent& event)
 {
-	cout << "Starting DroidPad" << endl;
+	wxLogInfo(wxT("Starting DP"));
 }
 
 void DroidFrame::OnStop(wxCommandEvent& event)
 {
-	cout << "Stopping DroidPad" << endl;
+	wxLogInfo(wxT("Stopping DP"));
 }
 
 void DroidFrame::dpInitComplete(bool complete)
@@ -116,7 +116,7 @@ void DroidFrame::dpCloseComplete()
 
 void DroidFrame::dpNewDeviceList(AndroidDeviceList &list)
 {
-	cout << "Devices found: " << list.size() << endl;
+	wxLogInfo(wxT("Devices found: %d"), list.size());
 	for(int i = 0; i < list.size(); i++) {
 		wxString label = list[i].usbId + wxT(": ") + list[i].name;
 		if(devListBox->FindString(label) == wxNOT_FOUND) {

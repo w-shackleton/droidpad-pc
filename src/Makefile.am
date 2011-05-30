@@ -40,3 +40,14 @@ EXTRA_DIST = if-gui/droidpad.rc
 CLEANFILES = if-gui/droidpad.res
 endif
 endif
+
+# For all unices
+if OS_UNIX
+AM_CPPFLAGS += -DOS_UNIX
+endif
+if OS_LINUX
+AM_CPPFLAGS += -DOS_LINUX
+endif
+if OS_WIN32
+AM_CPPFLAGS += -DOS_WIN32
+endif

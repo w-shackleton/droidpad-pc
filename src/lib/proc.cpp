@@ -17,7 +17,7 @@ using namespace std;
 #ifdef OS_UNIX
 string droidpad::runProcess(string cmd, string args) {
 	FILE* pipe = popen((cmd + " " + args).c_str(), "r");
-	if (!pipe) throw PROC_FAIL;
+	if (!pipe) throw "Couldn't run adb";
 	char buffer[BUFFER_SIZE];
 	string result = "";
 	while(!feof(pipe)) {
@@ -31,6 +31,8 @@ string droidpad::runProcess(string cmd, string args) {
 #elif OS_WIN32
 // http://ubuntuforums.org/showthread.php?t=610271
 string droidpad::runProcess(string cmd, string args) {
+	string errorToThrow = "Unknown Error";
+
 	STARTUPINFO si;
 	PROCESS_INFORMATION pi;
 	SECURITY_ATTRIBUTES sattr;
@@ -61,9 +63,9 @@ string droidpad::runProcess(string cmd, string args) {
 	if (!CreatePipe(&readfh, &si.hStdOutput, &sattr, 0))
 	{
 		// Error opening the pipe
-		printf("CreatePipe failed (%d).\n", GetLastError());
+		errorToThrow = "CreatePipe failed: " + GetLastError();
 bad1:
-		throw PROC_FAIL;
+		throw errorToThrow;
 	}
 
 	string cmdLine = "\"" + cmd + "\" " + args;
@@ -84,7 +86,7 @@ bad1:
 				&pi)		// Pointer to PROCESS_INFORMATION structure
 	  ) 
 	{
-		printf("CreateProcess failed (%d).\n", GetLastError());
+		errorToThrow = "CreateProcess failed: " + GetLastError();
 bad2:
 		CloseHandle(readfh);
 		CloseHandle(si.hStdOutput);

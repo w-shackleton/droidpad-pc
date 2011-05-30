@@ -3,8 +3,6 @@
 
 #include <string>
 
-#define PROC_FAIL 1
-
 namespace droidpad {
 	std::string runProcess(std::string cmd, std::string args);
 }

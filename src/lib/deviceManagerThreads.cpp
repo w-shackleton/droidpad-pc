@@ -2,7 +2,7 @@
 
 #include "deviceManager.hpp"
 
-#include <iostream>
+#include "log.hpp"
 
 #include <wx/thread.h>
 
@@ -20,7 +20,7 @@ DMInitialise::DMInitialise(DeviceManager &parent, AdbManager &adb) :
 
 void* DMInitialise::Entry()
 {
-	cout << "Starting ADB" << endl;
+	LOGV("Starting ADB");
 	if(adb.initialise())
 	{
 		DMEvent evt(dpDM_INITIALISED, DM_SUCCESS);
@@ -41,9 +41,10 @@ DMClose::DMClose(DeviceManager &parent, AdbManager **adb) :
 
 void* DMClose::Entry()
 {
-	cout << "Stopping ADB" << endl;
+	LOGV("Stopping ADB");
 	delete *adb;
 	*adb = NULL;
+	LOGV("ADB stopped");
 
 	DMEvent evt(dpDM_CLOSED);
 	parent.AddPendingEvent(evt);
@@ -61,7 +62,7 @@ void* DeviceFinder::Entry()
 	devDiscover = new DeviceDiscover(parent);
 	devDiscover->Create(); // TODO: Add error handling
 	devDiscover->Run();
-	cout << "Device finder started" << endl;
+	LOGV("Device finder started");
 	do {
 		AndroidDeviceList devs;
 		vector<wxString> usbDevices = adb.getDeviceIds();
@@ -96,13 +97,15 @@ void* DeviceFinder::Entry()
 		parent.AddPendingEvent(list);
 	} while(running);
 
-	devDiscover->Delete();
 
 	DMEvent evt(dpDEVICE_FINDER_FINISHED, DM_FINISHED);
 	parent.AddPendingEvent(evt);
+	devDiscover->Delete();
+	LOGV("Device finder finished, closing now.");
 }
 
 void DeviceFinder::stop() {
+	LOGV("Stopping Device finder");
 	running = false;
 }
 

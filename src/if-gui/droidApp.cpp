@@ -1,7 +1,6 @@
 #include "droidApp.hpp"
 
 #include <wx/xrc/xmlres.h>
-#include <wx/log.h>
 #include <wx/image.h>
 #include <wx/msgdlg.h>
 
@@ -17,13 +16,22 @@ IMPLEMENT_APP(DroidApp)
 
 bool DroidApp::OnInit()
 {
-#ifndef __WXMSW__
+#ifdef OS_LINUX
 	setenv("UBUNTU_MENUPROXY", "0", 1); // Ubuntu 10.10 fix
 #endif
 
 	if(!wxApp::OnInit())
 		return false;
-	wxLog *logger = new wxLogStream(&cerr); // TODO: Change this to different for MSW
+#ifdef OS_LINUX
+	logger = new wxLogStream(&cerr);
+#elif OS_WIN32
+#ifdef DEBUG
+	logger = new wxLogWindow(NULL, _("DroidPad debug log output"));
+	wxLog::SetVerbose(true);
+#else
+	logger = new wxLogGui();
+#endif
+#endif
 	wxLog::SetActiveTarget(logger);
 	SetAppName(_T("droidpad"));
 	wxInitAllImageHandlers();
@@ -38,7 +46,7 @@ bool DroidApp::OnInit()
 	wxXmlResource::Get()->InitAllHandlers();
 	if(!wxXmlResource::Get()->Load(layoutPath))
 	{
-		cout  << "Could not load resource file " << layoutPath << endl;
+		wxMessageDialog(NULL, _("Could not load application data,\npossibly because application was installed incorrectly?"), _("Error finding data"), wxOK | wxICON_EXCLAMATION).ShowModal();
 		return false;
 	}
 
@@ -46,4 +54,8 @@ bool DroidApp::OnInit()
 	frame->Show(true);
 	SetTopWindow(frame);
 	return true;
+}
+
+void DroidApp::onDFFinish() {
+	ExitMainLoop();
 }
