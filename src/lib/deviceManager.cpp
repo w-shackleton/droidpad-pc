@@ -1,6 +1,6 @@
 #include "deviceManager.hpp"
 
-#include <iostream>
+#include "log.hpp"
 
 using namespace droidpad;
 using namespace droidpad::threads;
@@ -29,12 +29,12 @@ void DeviceManager::Close()
 {
 	finishing = true;
 	deviceFinder->stop();
-	cout << "Closing" << endl;
+	LOGV("Closing DeviceManager");
 }
 
 void DeviceManager::OnInitialised(DMEvent &event)
 {
-	cout << "DeviceManager Initialised" << endl;
+	LOGV("DeviceManager Initialised");
 	callbacks.dpInitComplete(event.getStatus() == DM_SUCCESS);
 
 	deviceFinder = new DeviceFinder(*this, *adb); // These threads delete themselves once started
@@ -44,12 +44,13 @@ void DeviceManager::OnInitialised(DMEvent &event)
 
 void DeviceManager::OnClosed(DMEvent &event)
 {
-	cout << "DeviceManager Closed" << endl;
+	LOGV("DeviceManager Closed");
 	callbacks.dpCloseComplete();
 }
 
 void DeviceManager::OnDeviceFinderFinish(DMEvent &event)
 {
+	LOGV("Starting to close");
 	closeThread = new DMClose(*this, &adb);
 	closeThread->Create();
 	closeThread->Run();

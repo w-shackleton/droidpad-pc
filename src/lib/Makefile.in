@@ -35,8 +35,12 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 @OS_LINUX_TRUE@am__append_1 = $(SRC_LINUX)
-@OS_LINUX_TRUE@am__append_2 = -DOS_LINUX
-@OS_WIN32_TRUE@am__append_3 = -DOS_WIN32
+@OS_WIN32_TRUE@am__append_2 = -lws2_32
+
+# For all unices
+@OS_UNIX_TRUE@am__append_3 = -DOS_UNIX
+@OS_LINUX_TRUE@am__append_4 = -DOS_LINUX
+@OS_WIN32_TRUE@am__append_5 = -DOS_WIN32
 subdir = src/lib
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -73,7 +77,8 @@ am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libdroidpad_la_DEPENDENCIES =
+am__DEPENDENCIES_1 =
+libdroidpad_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am__objects_1 =
 @OS_LINUX_TRUE@am__objects_2 = $(am__objects_1)
 am_libdroidpad_la_OBJECTS = libdroidpad_la-proc.lo \
@@ -90,8 +95,8 @@ am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
 libdroidpad_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CXXLD) \
-	$(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) \
-	$(LDFLAGS) -o $@
+	$(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) \
+	$(libdroidpad_la_LDFLAGS) $(LDFLAGS) -o $@
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -315,18 +320,20 @@ top_srcdir = @top_srcdir@
 SUBDIRS = usb
 lib_LTLIBRARIES = libdroidpad.la
 SRC_LINUX = 
-libdroidpad_la_SOURCES = proc.cpp proc.hpp data.cpp data.hpp \
-	deviceManager.cpp deviceManager.hpp deviceManagerThreads.cpp \
-	deviceManagerThreads.hpp events.cpp events.hpp \
-	droidpadCallbacks.cpp droidpadCallbacks.hpp usb/all/adb.cpp \
-	usb/all/adb.hpp ext/1035.c ext/1035.h ext/mdnsd.c ext/mdnsd.h \
-	ext/b64/base64.cpp ext/b64/base64.hpp net/mdns.cpp \
-	net/mdns.hpp net/deviceDiscover.cpp net/deviceDiscover.hpp \
-	$(am__append_1)
-libdroidpad_la_LIBADD = @WXBASELIBS@
+libdroidpad_la_SOURCES = include/adb.hpp log.hpp proc.cpp proc.hpp \
+	data.cpp data.hpp deviceManager.cpp deviceManager.hpp \
+	deviceManagerThreads.cpp deviceManagerThreads.hpp events.cpp \
+	events.hpp droidpadCallbacks.cpp droidpadCallbacks.hpp \
+	usb/all/adb.cpp usb/all/adb.hpp ext/1035.c ext/1035.h \
+	ext/mdnsd.c ext/mdnsd.h ext/b64/base64.cpp ext/b64/base64.hpp \
+	net/mdns.cpp net/mdns.hpp net/deviceDiscover.cpp \
+	net/deviceDiscover.hpp $(am__append_1)
+libdroidpad_la_LIBADD = @WXBASELIBS@ $(am__append_2)
 libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@ -I. -Iext
 libdroidpad_la_CFLAGS = @WXCPPFLAGS@ -I. -Iext
-AM_CPPFLAGS = -DPREFIX='"$(prefix)"' $(am__append_2) $(am__append_3)
+@OS_WIN32_TRUE@libdroidpad_la_LDFLAGS = -Wl,--enable-auto-import
+AM_CPPFLAGS = -DPREFIX='"$(prefix)"' $(am__append_3) $(am__append_4) \
+	$(am__append_5)
 all: all-recursive
 
 .SUFFIXES:

@@ -10,8 +10,6 @@
 #include <iostream>
 
 #ifdef OS_WIN32
-// mingw socket includes
-#include <winsock2.h>
 #include <ws2tcpip.h>
 #else
 // unix socket includes
@@ -24,6 +22,7 @@
 #include "1035.h"
 
 #include <b64/base64.hpp>
+#include "log.hpp"
 
 using namespace std;
 using namespace droidpad::mdns;
@@ -50,7 +49,7 @@ void MDNS::start()
 
 	if((s = msock()) == 0) 
 	{ 
-		printf(wxString(_("Can't create socket: %s\n")).mb_str(), strerror(errno));
+		wxLogError(_("mDNS: Can't create socket: %s\n"), strerror(errno));
 		exit = true;
 	}
 
@@ -110,7 +109,7 @@ bool MDNS::sendm(struct message* m, SOCKET s, unsigned long int ip, unsigned sho
 
 	if(sendto(s, (char*)message_packet(m), message_packet_len(m), 0,(struct sockaddr *)&to,sizeof(struct sockaddr_in)) != message_packet_len(m))  
 	{ 
-		printf(wxString(_("Can't write to socket: %s\n")).mb_str(), strerror(errno));
+		wxLogError(_("mDNS: Can't write to socket: %s\n"), strerror(errno));
 		return false;
 	}
 
@@ -148,7 +147,7 @@ int MDNS::recvm(struct message* m, SOCKET s, unsigned long int *ip, unsigned sho
 		if(bsize < 0 && errno != EAGAIN)
 #endif
 		{
-			printf("Can't read from socket %d: %s\n", errno,strerror(errno));
+			wxLogMessage(_("mDNS: Can't read from socket: %s\n"), strerror(errno));
 			return bsize;
 		}
 
@@ -166,15 +165,6 @@ int MDNS::ans(mdnsda a, void *arg)
 	MDNS *moi = (MDNS*)arg;
 
 	moi->processResult(a);
-
-#ifdef DEBUG
-	cerr << "--->" << endl;
-	cerr << "key is: " << key.char_str() << endl; 
-	cerr << moi->p->results[key].name.char_str() << endl;
-	cerr << inet_ntoa((in_addr&) moi->p->results[key].ip) << endl;
-	cerr << moi->p->results[key].port << endl;
-	cerr << "<---" << endl;
-#endif
 
 	return 1;
 }
@@ -209,7 +199,7 @@ SOCKET MDNS::msock() const
 	if(WSAStartup(wVersionRequested, &wsaData) != 0)
 	{
 		WSACleanup();
-		printf("Failed to start winsock\r\n");
+		wxLogError(_("mDNS: Failed to start winsock"));
 		return 0;
 	}
 #endif

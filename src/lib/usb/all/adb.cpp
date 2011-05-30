@@ -21,20 +21,19 @@ using namespace std;
 #define ADB_DEVICES "devices"
 
 #include "proc.hpp"
+#include "log.hpp"
 
 AdbManager::AdbManager() {
 	adbCmd = string(Data::getFilePath(ADB_PATH).mb_str());
-	cout << "ADB: " << adbCmd << endl;
+	LOGVwx(wxString(("ADB: " + adbCmd).c_str(), wxConvUTF8));
 }
 
 bool AdbManager::initialise() {
 	try {
-		runProcess(adbCmd + " " + ADB_START);
-	} catch (int e) {
-		if(e == PROC_FAIL) {
-			cout << "Failed to run ADB" << endl;
-			return false;
-		}
+		runProcess(adbCmd, ADB_START);
+	} catch (string e) {
+		LOGEwx(wxString::Format(wxT("Failed to run ADB: %s."), e.c_str()));
+		return false;
 	}
 	return true;
 }

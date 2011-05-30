@@ -7,6 +7,8 @@
 #include <wx/textfile.h>
 #include <wx/tokenzr.h>
 
+#include "log.hpp"
+
 using namespace std;
 using namespace droidpad;
 
@@ -40,13 +42,13 @@ bool Data::initialise()
 		ifstream tstream((datadirs[i] + wxT("/") + testFile).mb_str());
 		if(tstream)
 		{
-			cout << "Found data folder @ \"" << datadirs[i].c_str() << "\"" << endl;
+			LOGVwx(wxString::Format(wxT("Found data folder @ \"%s\"."), datadirs[i].c_str()));
 			datadir = datadirs[i];
 		}
 	}
 	if(datadir == wxT(""))
 	{
-		cout << "ERROR: Could not find data!" << endl;
+		LOGE("ERROR: Could not find data!");
 		return false;
 	}
 
@@ -92,7 +94,7 @@ bool Data::initialise()
 	else
 	{
 		config.Create();
-		cout << "Created new config file." << endl;
+		LOGV("Created new config file.");
 		savePreferences();
 	}
 
@@ -119,7 +121,7 @@ void Data::savePreferences()
 		config.Write();
 	}
 	else
-		cout << "ERROR: Couldn't save configuration to file!" << endl;
+		LOGE("ERROR: Couldn't save configuration to file!");
 }
 
 wxString stringToUpper(wxString strToConvert)

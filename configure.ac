@@ -19,6 +19,22 @@ AM_SILENT_RULES([yes])
 
 AC_CONFIG_MACRO_DIR([m4])
 
+dnl this macro is used to get the arguments supplied
+dnl to the configure script (./configure --enable-debug)
+dnl Check if we have enable debug support.
+AC_MSG_CHECKING(whether to enable debugging)
+debug_default="no"
+AC_ARG_ENABLE(debug, [  --enable-debug=[no/yes] turn on debugging
+	                             [default=$debug_default]],, enable_debug=$debug_default)
+dnl Yes, shell scripts can be used
+if test "x$enable_debug" = "xyes"; then
+	CFLAGS="$CFLAGS -g -DDEBUG"
+	CXXFLAGS="$CXXFLAGS -g -DDEBUG"
+	AC_MSG_RESULT(yes)
+else
+	AC_MSG_RESULT(no)
+fi
+
 # Checks for libraries.
 AM_OPTIONS_WXCONFIG
 reqwx=2.8.10
@@ -58,10 +74,6 @@ AC_SUBST(WXBASECXXFLAGS, "$WX_CXXFLAGS_ONLY")
 AC_SUBST(WXBASECFLAGS, "$WX_CFLAGS_ONLY")
 AC_SUBST(WXBASELIBS, "$WX_LIBS")
 
-# # Check for boost
-# AX_BOOST_BASE
-# AX_BOOST_SYSTEM
-
 # Check for Windows (for res)
 case "$host" in
 	*mingw*)
@@ -76,6 +88,7 @@ case "$host" in
 esac
 AM_CONDITIONAL([OS_WIN32], [test $os = "win32"])
 AM_CONDITIONAL([OS_LINUX], [test $os = "linux"])
+AM_CONDITIONAL([OS_UNIX], [test $os = "linux"])
 
 # TODO: Change this to a variable, to change the interface
 iface="gui"
@@ -87,7 +100,6 @@ Makefile
 data/Makefile
 data/adb/Makefile
 src/Makefile
-src/if-gui/Makefile
 src/lib/Makefile
 src/lib/usb/Makefile
 src/lib/usb/all/Makefile
