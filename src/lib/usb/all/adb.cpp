@@ -29,7 +29,7 @@ AdbManager::AdbManager() {
 
 bool AdbManager::initialise() {
 	try {
-		runProcess(adbCmd + " " + ADB_START);
+		runProcess(adbCmd, ADB_START);
 	} catch (int e) {
 		if(e == PROC_FAIL) {
 			cout << "Failed to run ADB" << endl;

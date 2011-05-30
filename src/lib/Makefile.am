@@ -32,6 +32,10 @@ endif
 
 AM_CPPFLAGS = -DPREFIX='"$(prefix)"'
 
+# For all unices
+if OS_UNIX
+AM_CPPFLAGS += -DOS_UNIX
+endif
 if OS_LINUX
 AM_CPPFLAGS += -DOS_LINUX
 endif

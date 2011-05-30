@@ -72,6 +72,7 @@ case "$host" in
 esac
 AM_CONDITIONAL([OS_WIN32], [test $os = "win32"])
 AM_CONDITIONAL([OS_LINUX], [test $os = "linux"])
+AM_CONDITIONAL([OS_UNIX], [test $os = "linux"])
 
 # TODO: Change this to a variable, to change the interface
 iface="gui"
