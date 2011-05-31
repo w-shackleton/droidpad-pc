@@ -14,6 +14,9 @@ BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
 	EVT_MENU(XRCID("menuFileStart"), DroidFrame::OnStart)
 	EVT_MENU(XRCID("menuFileStop"), DroidFrame::OnStop)
 
+	EVT_LISTBOX(XRCID("devicesList"), DroidFrame::OnListBox)
+	EVT_LISTBOX_DCLICK(XRCID("devicesList"), DroidFrame::OnStart)
+
 	EVT_CLOSE(DroidFrame::OnClose)
 END_EVENT_TABLE()
 
@@ -132,6 +135,13 @@ void DroidFrame::dpNewDeviceList(AndroidDeviceList &list)
 			if(list[j] == *clientData) matches = true;
 		}
 		if(!matches) devListBox->Delete(i);
+	}
+}
+
+void DroidFrame::OnListBox(wxCommandEvent& event)
+{
+	if(devices->getState() == DP_STATE_STOPPED) {
+		buttonStart->Enable(event.IsSelection());
 	}
 }
 

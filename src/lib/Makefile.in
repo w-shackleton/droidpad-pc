@@ -88,7 +88,7 @@ am_libdroidpad_la_OBJECTS = libdroidpad_la-proc.lo \
 	libdroidpad_la-adb.lo libdroidpad_la-1035.lo \
 	libdroidpad_la-mdnsd.lo libdroidpad_la-base64.lo \
 	libdroidpad_la-mdns.lo libdroidpad_la-deviceDiscover.lo \
-	$(am__objects_2)
+	libdroidpad_la-connection.lo $(am__objects_2)
 libdroidpad_la_OBJECTS = $(am_libdroidpad_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -327,7 +327,8 @@ libdroidpad_la_SOURCES = include/adb.hpp log.hpp proc.cpp proc.hpp \
 	usb/all/adb.cpp usb/all/adb.hpp ext/1035.c ext/1035.h \
 	ext/mdnsd.c ext/mdnsd.h ext/b64/base64.cpp ext/b64/base64.hpp \
 	net/mdns.cpp net/mdns.hpp net/deviceDiscover.cpp \
-	net/deviceDiscover.hpp $(am__append_1)
+	net/deviceDiscover.hpp net/connection.cpp net/connection.hpp \
+	$(am__append_1)
 libdroidpad_la_LIBADD = @WXBASELIBS@ $(am__append_2)
 libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@ -I. -Iext
 libdroidpad_la_CFLAGS = @WXCPPFLAGS@ -I. -Iext
@@ -411,6 +412,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-1035.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-adb.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-base64.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-connection.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-data.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-deviceDiscover.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-deviceManager.Plo@am__quote@
@@ -564,6 +566,14 @@ libdroidpad_la-deviceDiscover.lo: net/deviceDiscover.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='net/deviceDiscover.cpp' object='libdroidpad_la-deviceDiscover.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-deviceDiscover.lo `test -f 'net/deviceDiscover.cpp' || echo '$(srcdir)/'`net/deviceDiscover.cpp
+
+libdroidpad_la-connection.lo: net/connection.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -MT libdroidpad_la-connection.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-connection.Tpo -c -o libdroidpad_la-connection.lo `test -f 'net/connection.cpp' || echo '$(srcdir)/'`net/connection.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libdroidpad_la-connection.Tpo $(DEPDIR)/libdroidpad_la-connection.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='net/connection.cpp' object='libdroidpad_la-connection.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-connection.lo `test -f 'net/connection.cpp' || echo '$(srcdir)/'`net/connection.cpp
 
 mostlyclean-libtool:
 	-rm -f *.lo

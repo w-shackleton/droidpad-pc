@@ -17,7 +17,8 @@ END_EVENT_TABLE()
 DeviceManager::DeviceManager(DroidPadCallbacks &callbacks) :
 	wxEvtHandler(),
 	callbacks(callbacks),
-	finishing(false)
+	finishing(false),
+	state(DP_STATE_STOPPED)
 {
 	adb = new AdbManager;
 	initThread = new DMInitialise(*this, *adb);

@@ -18,7 +18,8 @@ libdroidpad_la_SOURCES = \
 		   ext/mdnsd.c			ext/mdnsd.h			\
 		   ext/b64/base64.cpp		ext/b64/base64.hpp		\
 		   net/mdns.cpp			net/mdns.hpp			\
-		   net/deviceDiscover.cpp	net/deviceDiscover.hpp
+		   net/deviceDiscover.cpp	net/deviceDiscover.hpp		\
+		   net/connection.cpp		net/connection.hpp
 
 if OS_LINUX
   libdroidpad_la_SOURCES += $(SRC_LINUX)

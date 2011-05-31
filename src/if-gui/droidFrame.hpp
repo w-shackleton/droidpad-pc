@@ -43,6 +43,8 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 
 		void OnClose(wxCloseEvent& event);
 
+		void OnListBox(wxCommandEvent& event);
+
 		droidpad::DeviceManager *devices;
 
 	// Callbacks

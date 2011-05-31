@@ -8,6 +8,9 @@
 #include "droidpadCallbacks.hpp"
 #include "events.hpp"
 
+#define DP_STATE_STOPPED 0
+#define DP_STATE_STARTED 1
+
 namespace droidpad {
 	class DeviceManager : public wxEvtHandler {
 		public:
@@ -15,9 +18,17 @@ namespace droidpad {
 
 			void Close();
 
+			void Start(int device);
+			
+			inline int getState() {
+				return state;
+			}
+
 			DECLARE_EVENT_TABLE();
 
 		private:
+			int state;
+
 			AdbManager *adb;
 			void OnInitialised(DMEvent &event);
 			void OnClosed(DMEvent &event);
