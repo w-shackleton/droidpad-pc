@@ -1,12 +1,15 @@
 #include "connection.hpp"
 
 using namespace droidpad;
+using namespace std;
 
 DPConnection::DPConnection(wxString host, uint16_t port) :
 	wxSocketClient(wxSOCKET_BLOCK)
 {
 	addr.Hostname(host);
 	addr.Service(port);
+	
+	SetTimeout(10);
 }
 
 DPConnection::~DPConnection() {
@@ -18,13 +21,12 @@ bool DPConnection::Start()
 	return Connect(addr, true);
 }
 
-void DPConnection::GetData()
+wxString DPConnection::GetLine()
 {
 	while(inData.Find('\n') == wxNOT_FOUND) {
 		ParseFromNet();
 	}
-
-	// Parse a new command
+	return inData.Left(inData.Find('\n'));
 }
 
 void DPConnection::ParseFromNet()

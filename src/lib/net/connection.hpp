@@ -2,6 +2,7 @@
 #define DP_CONNECTION_H
 
 #include <wx/socket.h>
+#include <string>
 #include <stdint.h>
 
 #define CONN_BUFFER_SIZE 128
@@ -13,7 +14,7 @@ namespace droidpad {
 			~DPConnection();
 
 			bool Start();
-			void GetData();
+			wxString GetLine();
 
 		private:
 			wxIPV4address addr;

@@ -1,16 +1,19 @@
 #include "deviceManagerThreads.hpp"
 
 #include "deviceManager.hpp"
-
 #include "log.hpp"
 
 #include <wx/thread.h>
+#include <wx/intl.h>
 
 #include "net/deviceDiscover.hpp"
 
 using namespace droidpad;
 using namespace droidpad::threads;
 using namespace std;
+
+#define LOCALHOST "127.0.0.1"
+#define LOCALHOST_PORT 3141
 
 DMInitialise::DMInitialise(DeviceManager &parent, AdbManager &adb) :
 	adb(adb),
@@ -70,9 +73,9 @@ void* DeviceFinder::Entry()
 			AndroidDevice dev;
 			dev.type = DEVICE_USB;
 			dev.usbId = usbDevices[i];
-			dev.ip = wxT("");
-			dev.port = 0;
-			dev.name = wxT("");
+			dev.ip = wxT(LOCALHOST);
+			dev.port = LOCALHOST_PORT;
+			dev.name = _("USB Device");
 
 			devs.push_back(dev);
 		}

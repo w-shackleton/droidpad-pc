@@ -24,6 +24,9 @@ bool DroidApp::OnInit()
 		return false;
 #ifdef OS_LINUX
 	logger = new wxLogStream(&cerr);
+#ifdef DEBUG
+	wxLog::SetVerbose(true);
+#endif
 #elif OS_WIN32
 #ifdef DEBUG
 	logger = new wxLogWindow(NULL, _("DroidPad debug log output"));

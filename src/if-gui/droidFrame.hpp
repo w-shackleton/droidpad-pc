@@ -7,6 +7,8 @@
 #include <wx/stattext.h>
 #include <wx/listbox.h>
 
+#include <map>
+
 #include "lib/deviceManager.hpp"
 #include "lib/droidpadCallbacks.hpp"
 
@@ -42,10 +44,13 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 		void OnStop(wxCommandEvent& event);
 
 		void OnClose(wxCloseEvent& event);
+		void OnClose(wxCommandEvent& event);
 
 		void OnListBox(wxCommandEvent& event);
 
 		droidpad::DeviceManager *devices;
+
+		std::map<int, int>listToDeviceMap;
 
 	// Callbacks
 	public:

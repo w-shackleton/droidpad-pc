@@ -20,6 +20,7 @@ namespace droidpad {
 			wxString name;
 
 			AndroidDevice& operator =(const AndroidDevice& b);
+			operator wxString() const;
 			bool operator ==(const AndroidDevice& b);
 			AndroidDevice(const AndroidDevice& dev);
 			AndroidDevice();

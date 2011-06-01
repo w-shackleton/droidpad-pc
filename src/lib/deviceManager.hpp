@@ -8,13 +8,17 @@
 #include "droidpadCallbacks.hpp"
 #include "events.hpp"
 
+#include "mainThread.hpp"
+
 #define DP_STATE_STOPPED 0
 #define DP_STATE_STARTED 1
 
 namespace droidpad {
 	class DeviceManager : public wxEvtHandler {
+		friend class MainThread;
 		public:
 			DeviceManager(DroidPadCallbacks &callbacks);
+			~DeviceManager();
 
 			void Close();
 
@@ -40,7 +44,10 @@ namespace droidpad {
 			threads::DMInitialise *initThread;
 			threads::DMClose *closeThread;
 			threads::DeviceFinder *deviceFinder;
+			MainThread *mainThread;
 			DroidPadCallbacks &callbacks;
+
+			AndroidDeviceList devices; // Reference?
 	};
 };
 

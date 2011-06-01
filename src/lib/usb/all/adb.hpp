@@ -4,6 +4,8 @@
 #include <wx/string.h>
 #include <vector>
 
+#include <stdint.h>
+
 namespace droidpad {
 	class AdbManager {
 		public:
@@ -13,6 +15,11 @@ namespace droidpad {
 			bool initialise();
 
 			std::vector<wxString> getDeviceIds();
+
+			void forwardDevice(std::string serial, uint16_t from, uint16_t to);
+			inline void forwardDevice(std::string serial, uint16_t port) {
+				forwardDevice(serial, port, port);
+			}
 
 		private:
 			std::string adbCmd;

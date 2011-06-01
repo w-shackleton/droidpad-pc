@@ -14,6 +14,8 @@ BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
 	EVT_MENU(XRCID("menuFileStart"), DroidFrame::OnStart)
 	EVT_MENU(XRCID("menuFileStop"), DroidFrame::OnStop)
 
+	EVT_MENU(XRCID("menuFileQuit"), DroidFrame::OnClose)
+
 	EVT_LISTBOX(XRCID("devicesList"), DroidFrame::OnListBox)
 	EVT_LISTBOX_DCLICK(XRCID("devicesList"), DroidFrame::OnStart)
 
@@ -84,6 +86,13 @@ void DroidFrame::OnClose(wxCloseEvent& event)
 	panel->Disable();
 }
 
+void DroidFrame::OnClose(wxCommandEvent& event)
+{
+	wxCloseEvent e;
+	OnClose(e);
+}
+
+
 void DroidFrame::OnDevicesRefresh(wxCommandEvent& event)
 {
 	wxLogInfo(wxT("Refreshing devices"));
@@ -92,6 +101,8 @@ void DroidFrame::OnDevicesRefresh(wxCommandEvent& event)
 void DroidFrame::OnStart(wxCommandEvent& event)
 {
 	wxLogInfo(wxT("Starting DP"));
+	int deviceNum = listToDeviceMap[devListBox->GetSelection()];
+	devices->Start(deviceNum);
 }
 
 void DroidFrame::OnStop(wxCommandEvent& event)
@@ -124,7 +135,8 @@ void DroidFrame::dpNewDeviceList(AndroidDeviceList &list)
 		wxString label = list[i].usbId + wxT(": ") + list[i].name;
 		if(devListBox->FindString(label) == wxNOT_FOUND) {
 			AndroidDevice *clientData = new AndroidDevice(list[i]);
-			devListBox->Append(label, clientData); // Does wx take ownership here? Hope so.
+			int listPos = devListBox->Append(label, clientData); // Does wx take ownership here? Hope so.
+			listToDeviceMap[listPos] = i;
 		}
 	}
 

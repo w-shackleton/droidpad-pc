@@ -2,7 +2,7 @@
 
 using namespace droidpad;
 
-#include <iostream>
+#include <sstream>
 using namespace std;
 
 #include <wx/tokenzr.h>
@@ -59,3 +59,11 @@ vector<wxString> AdbManager::getDeviceIds() {
 	}
 	return devs;
 }
+
+void AdbManager::forwardDevice(string serial, uint16_t from, uint16_t to)
+{
+	stringstream args;
+	args << "-s " << serial << " forward " << "tcp:" << from << " tcp:" << to;
+	runProcess(adbCmd, args.str());
+}
+

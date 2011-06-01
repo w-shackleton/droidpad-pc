@@ -84,7 +84,7 @@ void MDNS::start()
 	mdnsd_free(d);
 
 #ifdef DEBUG
-	cerr << "scanthread querying " << w.char_str() << " Entry() end.";
+	// cerr << "scanthread querying " << w.char_str() << " Entry() end.";
 #endif
 
 #ifdef OS_WIN32
@@ -292,8 +292,7 @@ int DeviceFinder::processResult(mdnsda a)
 	struct in_addr ip;
 	ip.s_addr =  ntohl(ipFinder.result);
 	device.ip = wxString(inet_ntoa(ip), wxConvUTF8); 
-
-	device.port = a->srv.port;
+	device.port = infoFinder.port;
 
 	devices[fullName] = device;
 	if(callbacks != NULL) callbacks->onData();

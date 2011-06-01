@@ -26,6 +26,11 @@ DeviceManager::DeviceManager(DroidPadCallbacks &callbacks) :
 	initThread->Run();
 }
 
+DeviceManager::~DeviceManager()
+{
+	delete adb;
+}
+
 void DeviceManager::Close()
 {
 	finishing = true;
@@ -60,5 +65,14 @@ void DeviceManager::OnDeviceFinderFinish(DMEvent &event)
 void DeviceManager::OnNewDevicesList(DevicesList &event)
 {
 	callbacks.dpNewDeviceList(event.list);
+	devices = event.list;
+}
+
+void DeviceManager::Start(int device)
+{
+	LOGV("Starting");
+	mainThread = new MainThread(*this, devices[device]);
+	mainThread->Create();
+	mainThread->Run();
 }
 

@@ -10,6 +10,7 @@ libdroidpad_la_SOURCES = \
 		   proc.cpp			proc.hpp			\
 		   data.cpp			data.hpp			\
 		   deviceManager.cpp		deviceManager.hpp		\
+		   mainThread.cpp		mainThread.hpp			\
 		   deviceManagerThreads.cpp	deviceManagerThreads.hpp	\
 		   events.cpp			events.hpp			\
 		   droidpadCallbacks.cpp	droidpadCallbacks.hpp		\
