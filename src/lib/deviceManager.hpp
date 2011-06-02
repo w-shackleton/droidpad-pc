@@ -11,7 +11,8 @@
 #include "mainThread.hpp"
 
 #define DP_STATE_STOPPED 0
-#define DP_STATE_STARTED 1
+#define DP_STATE_STARTING 1
+#define DP_STATE_STARTED 2
 
 namespace droidpad {
 	class DeviceManager : public wxEvtHandler {
@@ -23,6 +24,7 @@ namespace droidpad {
 			void Close();
 
 			void Start(int device);
+			void Stop();
 			
 			inline int getState() {
 				return state;

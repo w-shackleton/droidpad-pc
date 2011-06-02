@@ -19,17 +19,13 @@ MainThread::MainThread(DeviceManager &parent, AndroidDevice &device) :
 	conn = new DPConnection(device.ip, device.port);
 }
 
-MainThread::~MainThread()
-{
-	delete conn;
-}
-
 void* MainThread::Entry()
 {
 	LOGV("Starting DroidPad");
 	LOGVwx(wxT("Using device ") + device);
 	if(!setup()) {
-		// ADD ERROR HANDLING!!!!
+		DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_CONNECT_FAIL);
+		parent.AddPendingEvent(evt);
 	}
 	while(running) {
 		loop();
@@ -49,7 +45,14 @@ bool MainThread::setup()
 		LOGE("Couldn't connect to phone");
 		return false;
 	}
-	// cout << "\"" << conn->GetLine().mb_str() << "\"" << endl;
+	switch(conn->GetMode().type) {
+		case MODE_JS:
+			break;
+		case MODE_MOUSE:
+			break;
+		case MODE_SLIDE:
+			break;
+	}
 	return true;
 }
 
@@ -59,5 +62,6 @@ void MainThread::loop()
 
 void MainThread::finish()
 {
+	delete conn;
 }
 

@@ -39,10 +39,12 @@ bool AdbManager::initialise() {
 }
 
 AdbManager::~AdbManager() {
+#ifndef DEBUG // Don't stop ADB in debug - it loads faster next time.
 	try {
 		runProcess(adbCmd, ADB_STOP);
 	} catch (int e) {
 	}
+#endif
 }
 
 vector<wxString> AdbManager::getDeviceIds() {

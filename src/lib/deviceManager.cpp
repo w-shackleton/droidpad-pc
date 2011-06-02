@@ -18,7 +18,8 @@ DeviceManager::DeviceManager(DroidPadCallbacks &callbacks) :
 	wxEvtHandler(),
 	callbacks(callbacks),
 	finishing(false),
-	state(DP_STATE_STOPPED)
+	state(DP_STATE_STOPPED),
+	mainThread(NULL)
 {
 	adb = new AdbManager;
 	initThread = new DMInitialise(*this, *adb);
@@ -36,6 +37,8 @@ void DeviceManager::Close()
 	finishing = true;
 	deviceFinder->stop();
 	LOGV("Closing DeviceManager");
+
+	Stop();
 }
 
 void DeviceManager::OnInitialised(DMEvent &event)
@@ -74,5 +77,14 @@ void DeviceManager::Start(int device)
 	mainThread = new MainThread(*this, devices[device]);
 	mainThread->Create();
 	mainThread->Run();
+	state = DP_STATE_STARTING;
+}
+
+void DeviceManager::Stop()
+{
+	if(state == DP_STATE_STARTED || state == DP_STATE_STARTING) {
+		mainThread->stop();
+		mainThread->Delete();
+	}
 }
 
