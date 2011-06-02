@@ -4,6 +4,7 @@
 #include <wx/thread.h>
 #include "droidpadCallbacks.hpp"
 #include "include/adb.hpp"
+#include "include/outputMgr.hpp"
 #include "net/connection.hpp"
 
 namespace droidpad {
@@ -22,6 +23,9 @@ namespace droidpad {
 		private:
 			DeviceManager &parent;
 			AndroidDevice &device;
+
+			// The implementation changes per platform here
+			OutputManager *mgr;
 
 			DPConnection *conn;
 

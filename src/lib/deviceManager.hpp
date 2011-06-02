@@ -50,6 +50,9 @@ namespace droidpad {
 			DroidPadCallbacks &callbacks;
 
 			AndroidDeviceList devices; // Reference?
+
+			void OnMainThreadError(DMEvent &event);
+			void OnMainThreadFinish(DMEvent &event);
 	};
 };
 

@@ -11,6 +11,9 @@ BEGIN_EVENT_TABLE(DeviceManager, wxEvtHandler)
 	EVT_DMEVENT(dpDM_CLOSED, DeviceManager::OnClosed)
 	EVT_DMEVENT(dpDEVICE_FINDER_FINISHED, DeviceManager::OnDeviceFinderFinish)
 
+	EVT_DMEVENT(dpTHREAD_ERROR, DeviceManager::OnMainThreadError)
+	EVT_DMEVENT(dpTHREAD_FINISH, DeviceManager::OnMainThreadFinish)
+
 	EVT_DEVICES_LIST(dpDEVICES_LIST, DeviceManager::OnNewDevicesList)
 END_EVENT_TABLE()
 
@@ -84,7 +87,23 @@ void DeviceManager::Stop()
 {
 	if(state == DP_STATE_STARTED || state == DP_STATE_STARTING) {
 		mainThread->stop();
-		mainThread->Delete();
 	}
+}
+
+void DeviceManager::OnMainThreadError(DMEvent &event)
+{
+	switch(event.getStatus()) {
+		case THREAD_ERROR_CONNECT_FAIL:
+			LOGE("Recieved error when connecting");
+			break;
+		case THREAD_ERROR_SETUP_FAIL:
+			LOGE("Recieved error when setting up interfaces");
+			break;
+	}
+	Stop();
+}
+
+void DeviceManager::OnMainThreadFinish(DMEvent &event)
+{
 }
 

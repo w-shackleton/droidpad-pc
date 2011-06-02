@@ -3,13 +3,13 @@
 
 #include <wx/socket.h>
 #include <string>
+#include <vector>
+#include <stdexcept>
 #include <stdint.h>
 
-#define CONN_BUFFER_SIZE 128
+#include "types.hpp"
 
-#define MODE_JS 1
-#define MODE_MOUSE 2
-#define MODE_SLIDE 3
+#define CONN_BUFFER_SIZE 128
 
 namespace droidpad {
 	class ModeSetting {
@@ -21,6 +21,12 @@ namespace droidpad {
 			int numButtons;
 
 			ModeSetting();
+	};
+
+	class DPData {
+		public:
+			std::vector<uint16_t> axes;
+			std::vector<bool> buttons;
 	};
 
 	class DPConnection : private wxSocketClient {
@@ -44,7 +50,8 @@ namespace droidpad {
 			ModeSetting mode;
 
 		public:
-			const ModeSetting &GetMode();
+			const ModeSetting &GetMode() throw (std::runtime_error);
+			const DPData GetData();
 	};
 };
 

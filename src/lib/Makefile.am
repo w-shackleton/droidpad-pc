@@ -1,11 +1,15 @@
 SUBDIRS = usb
 lib_LTLIBRARIES = libdroidpad.la
 
-SRC_LINUX =
+SRC_LINUX =	\
+		output/linux/outputMgr.cpp	output/linux/outputMgr.hpp	\
+		output/linux/dpinput.c		output/linux/dpinput.h
 
 libdroidpad_la_SOURCES = \
 		   include/adb.hpp	\
+		   include/outputMgr.hpp	\
 		   log.hpp		\
+		   types.hpp		\
 		   			\
 		   proc.cpp			proc.hpp			\
 		   data.cpp			data.hpp			\

@@ -15,14 +15,18 @@ BEGIN_DECLARE_EVENT_TYPES()
 
 	DECLARE_LOCAL_EVENT_TYPE(dpTHREAD_STARTED, 5)
 	DECLARE_LOCAL_EVENT_TYPE(dpTHREAD_ERROR, 6)
+	DECLARE_LOCAL_EVENT_TYPE(dpTHREAD_FINISH, 7)
 END_DECLARE_EVENT_TYPES()
 
 namespace droidpad {
-	static const int DM_SUCCESS = 0;
-	static const int DM_FAIL = 1;
-	static const int DM_FINISHED = 2;
+	enum {
+		DM_SUCCESS,
+		DM_FAIL,
+		DM_FINISHED,
 
-	static const int THREAD_ERROR_CONNECT_FAIL = 0;
+		THREAD_ERROR_CONNECT_FAIL,
+		THREAD_ERROR_SETUP_FAIL,
+	};
 
 	class DMEvent : public wxEvent
 	{
