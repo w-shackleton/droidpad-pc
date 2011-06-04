@@ -17,6 +17,7 @@ namespace droidpad {
 	{
 		public:
 			MainThread(DeviceManager &parent, AndroidDevice &device);
+			~MainThread();
 			void* Entry();
 
 			void stop();

@@ -24,7 +24,7 @@ namespace droidpad {
 			void Close();
 
 			void Start(int device);
-			void Stop();
+			void Stop(bool wait = false);
 			
 			inline int getState() {
 				return state;
@@ -51,6 +51,7 @@ namespace droidpad {
 
 			AndroidDeviceList devices; // Reference?
 
+			void OnMainThreadStarted(DMEvent &event);
 			void OnMainThreadError(DMEvent &event);
 			void OnMainThreadFinish(DMEvent &event);
 	};

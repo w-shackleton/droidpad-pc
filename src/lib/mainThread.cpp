@@ -20,6 +20,10 @@ MainThread::MainThread(DeviceManager &parent, AndroidDevice &device) :
 	conn = new DPConnection(device.ip, device.port);
 }
 
+MainThread::~MainThread() {
+	stop();
+}
+
 void* MainThread::Entry()
 {
 	LOGV("Starting DroidPad");
@@ -31,7 +35,7 @@ void* MainThread::Entry()
 		parent.AddPendingEvent(evt);
 	}
 
-	if(!setupDone) { // Skip this if fail
+	if(setupDone) { // Skip this if fail
 		try { // Setup outputmanager
 			const ModeSetting &mode = conn->GetMode();
 			mgr = new OutputManager(conn->GetMode().type, mode.numRawAxes + mode.numAxes, mode.numButtons);
@@ -42,6 +46,9 @@ void* MainThread::Entry()
 			DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_SETUP_FAIL);
 			parent.AddPendingEvent(evt);
 		}
+
+		DMEvent evt(dpTHREAD_STARTED, 0);
+		parent.AddPendingEvent(evt);
 	}
 
 	while(running) {

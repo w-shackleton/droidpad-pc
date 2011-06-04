@@ -36,6 +36,10 @@ namespace droidpad {
 			virtual void dpCloseComplete() = 0;
 
 			virtual void dpNewDeviceList(AndroidDeviceList &list) = 0;
+
+			virtual void threadStarted() = 0;
+			virtual void threadError(wxString failReason) = 0;
+			virtual void threadStopped() = 0;
 	};
 };
 

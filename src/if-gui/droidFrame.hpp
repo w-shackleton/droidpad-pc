@@ -58,6 +58,11 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 		void dpCloseComplete();
 
 		void dpNewDeviceList(droidpad::AndroidDeviceList &list);
+
+		virtual void threadStarted();
+		virtual void threadError(wxString failReason);
+		virtual void threadStopped();
+
 };
 
 #endif

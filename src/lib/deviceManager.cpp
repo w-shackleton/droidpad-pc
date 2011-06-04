@@ -2,6 +2,8 @@
 
 #include "log.hpp"
 
+#include <wx/intl.h>
+
 using namespace droidpad;
 using namespace droidpad::threads;
 using namespace std;
@@ -11,6 +13,7 @@ BEGIN_EVENT_TABLE(DeviceManager, wxEvtHandler)
 	EVT_DMEVENT(dpDM_CLOSED, DeviceManager::OnClosed)
 	EVT_DMEVENT(dpDEVICE_FINDER_FINISHED, DeviceManager::OnDeviceFinderFinish)
 
+	EVT_DMEVENT(dpTHREAD_STARTED, DeviceManager::OnMainThreadStarted)
 	EVT_DMEVENT(dpTHREAD_ERROR, DeviceManager::OnMainThreadError)
 	EVT_DMEVENT(dpTHREAD_FINISH, DeviceManager::OnMainThreadFinish)
 
@@ -83,11 +86,18 @@ void DeviceManager::Start(int device)
 	state = DP_STATE_STARTING;
 }
 
-void DeviceManager::Stop()
+void DeviceManager::Stop(bool wait)
 {
 	if(state == DP_STATE_STARTED || state == DP_STATE_STARTING) {
 		mainThread->stop();
+		mainThread->Delete();
 	}
+}
+
+void DeviceManager::OnMainThreadStarted(DMEvent &event)
+{
+	state = DP_STATE_STARTED;
+	callbacks.threadStarted();
 }
 
 void DeviceManager::OnMainThreadError(DMEvent &event)
@@ -95,15 +105,22 @@ void DeviceManager::OnMainThreadError(DMEvent &event)
 	switch(event.getStatus()) {
 		case THREAD_ERROR_CONNECT_FAIL:
 			LOGE("Recieved error when connecting");
+			callbacks.threadError(_("Couldn't connect to phone"));
 			break;
 		case THREAD_ERROR_SETUP_FAIL:
 			LOGE("Recieved error when setting up interfaces");
+			callbacks.threadError(_("Couldn't setup DroidPad"));
 			break;
+		default:
+			LOGE("Other error from thread");
+			callbacks.threadError(wxString::Format(_("Unknown Error - %d."), event.getStatus()));
 	}
-	Stop();
+	Stop(false);
 }
 
 void DeviceManager::OnMainThreadFinish(DMEvent &event)
 {
+	state = DP_STATE_STOPPED;
+	callbacks.threadStopped();
 }
 

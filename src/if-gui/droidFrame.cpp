@@ -103,11 +103,13 @@ void DroidFrame::OnStart(wxCommandEvent& event)
 	wxLogInfo(wxT("Starting DP"));
 	int deviceNum = listToDeviceMap[devListBox->GetSelection()];
 	devices->Start(deviceNum);
+	buttonStart->Disable();
 }
 
 void DroidFrame::OnStop(wxCommandEvent& event)
 {
 	wxLogInfo(wxT("Stopping DP"));
+	buttonStop->Disable();
 }
 
 void DroidFrame::dpInitComplete(bool complete)
@@ -155,5 +157,20 @@ void DroidFrame::OnListBox(wxCommandEvent& event)
 	if(devices->getState() == DP_STATE_STOPPED) {
 		buttonStart->Enable(event.IsSelection());
 	}
+}
+
+void DroidFrame::threadStarted()
+{
+	buttonStop->Enable();
+}
+
+void DroidFrame::threadError(wxString failReason)
+{
+	wxMessageBox(_("DroidPad couldn't start - ") + failReason);
+}
+
+void DroidFrame::threadStopped()
+{
+	buttonStart->Enable();
 }
 
