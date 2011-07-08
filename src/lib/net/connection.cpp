@@ -136,15 +136,33 @@ const DPData DPConnection::GetData() {
 	wxStringTokenizer tk(line(start, end - start), wxT(";"));
 	while(tk.HasMoreTokens()) {
 		wxString t = tk.GetNextToken();
+		start = 2;
+		end = t.Find(wxT("}"));
+		wxStringTokenizer valTk;
 		if(t.StartsWith(wxT("{"))) { // Axis of some sort
 			switch(t[1]) {
 				case 'A': // 2way axis
-					break;
 				case 'S': // 1way axis
+					if(end < start) break; // Malformed?
+					// cout << t(start, end - start).mb_str() << endl;
+					valTk = wxStringTokenizer(t(start, end - start), wxT(","));
+
+					while(valTk.HasMoreTokens()) {
+						long value;
+						if(valTk.GetNextToken().ToLong(&value)) {
+							data.axes.push_back(value);
+						}
+					}
+
 					break;
 				default: // Must be a raw JS
+					start = 1;
+					if(end < start) break; // Malformed?
 					break;
 			}
+		}
+		else { // Must be a button.
+			data.buttons.push_back(t == wxT("1"));
 		}
 	}
 

@@ -70,6 +70,8 @@ void* MainThread::Entry()
 		parent.AddPendingEvent(evt);
 	}
 
+	LOGV("Setup done");
+
 	while(running) {
 		if(setupDone) {
 			loop();
