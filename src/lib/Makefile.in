@@ -80,9 +80,10 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 libdroidpad_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am__libdroidpad_la_SOURCES_DIST = include/adb.hpp \
-	include/outputMgr.hpp log.hpp types.hpp proc.cpp proc.hpp \
-	data.cpp data.hpp deviceManager.cpp deviceManager.hpp \
-	mainThread.cpp mainThread.hpp deviceManagerThreads.cpp \
+	include/outputMgr.hpp include/platformSettings.hpp log.hpp \
+	types.hpp proc.cpp proc.hpp data.cpp data.hpp \
+	deviceManager.cpp deviceManager.hpp mainThread.cpp \
+	mainThread.hpp deviceManagerThreads.cpp \
 	deviceManagerThreads.hpp events.cpp events.hpp \
 	droidpadCallbacks.cpp droidpadCallbacks.hpp usb/all/adb.cpp \
 	usb/all/adb.hpp ext/1035.c ext/1035.h ext/mdnsd.c ext/mdnsd.h \
@@ -90,7 +91,8 @@ am__libdroidpad_la_SOURCES_DIST = include/adb.hpp \
 	net/mdns.hpp net/deviceDiscover.cpp net/deviceDiscover.hpp \
 	net/connection.cpp net/connection.hpp \
 	output/linux/outputMgr.cpp output/linux/outputMgr.hpp \
-	output/linux/dpinput.c output/linux/dpinput.h
+	output/linux/dpinput.c output/linux/dpinput.h \
+	output/linux/platformSettings.hpp
 am__objects_1 = libdroidpad_la-outputMgr.lo libdroidpad_la-dpinput.lo
 @OS_LINUX_TRUE@am__objects_2 = $(am__objects_1)
 am_libdroidpad_la_OBJECTS = libdroidpad_la-proc.lo \
@@ -354,12 +356,13 @@ SUBDIRS = usb
 lib_LTLIBRARIES = libdroidpad.la
 SRC_LINUX = \
 		output/linux/outputMgr.cpp	output/linux/outputMgr.hpp	\
-		output/linux/dpinput.c		output/linux/dpinput.h
+		output/linux/dpinput.c		output/linux/dpinput.h		\
+		output/linux/platformSettings.hpp
 
-libdroidpad_la_SOURCES = include/adb.hpp include/outputMgr.hpp log.hpp \
-	types.hpp proc.cpp proc.hpp data.cpp data.hpp \
-	deviceManager.cpp deviceManager.hpp mainThread.cpp \
-	mainThread.hpp deviceManagerThreads.cpp \
+libdroidpad_la_SOURCES = include/adb.hpp include/outputMgr.hpp \
+	include/platformSettings.hpp log.hpp types.hpp proc.cpp \
+	proc.hpp data.cpp data.hpp deviceManager.cpp deviceManager.hpp \
+	mainThread.cpp mainThread.hpp deviceManagerThreads.cpp \
 	deviceManagerThreads.hpp events.cpp events.hpp \
 	droidpadCallbacks.cpp droidpadCallbacks.hpp usb/all/adb.cpp \
 	usb/all/adb.hpp ext/1035.c ext/1035.h ext/mdnsd.c ext/mdnsd.h \

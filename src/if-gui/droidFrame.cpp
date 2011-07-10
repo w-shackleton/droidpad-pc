@@ -129,6 +129,7 @@ void DroidFrame::OnStop(wxCommandEvent& event)
 {
 	wxLogInfo(wxT("Stopping DP"));
 	buttonStop->Disable();
+	devices->Stop();
 }
 
 void DroidFrame::dpInitComplete(bool complete)

@@ -44,7 +44,7 @@ namespace droidpad {
 
 	class DPData {
 		public:
-			std::vector<uint16_t> axes;
+			std::vector<int> axes;
 			std::vector<bool> buttons;
 	};
 

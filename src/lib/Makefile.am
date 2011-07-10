@@ -22,11 +22,13 @@ lib_LTLIBRARIES = libdroidpad.la
 
 SRC_LINUX =	\
 		output/linux/outputMgr.cpp	output/linux/outputMgr.hpp	\
-		output/linux/dpinput.c		output/linux/dpinput.h
+		output/linux/dpinput.c		output/linux/dpinput.h		\
+		output/linux/platformSettings.hpp
 
 libdroidpad_la_SOURCES = \
 		   include/adb.hpp	\
 		   include/outputMgr.hpp	\
+		   include/platformSettings.hpp	\
 		   log.hpp		\
 		   types.hpp		\
 		   			\

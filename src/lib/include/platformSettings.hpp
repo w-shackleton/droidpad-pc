@@ -17,24 +17,9 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef DP_LIN_OUTPUT_MGR_H
-#define DP_LIN_OUTPUT_MGR_H
-
-#include "dpinput.h"
-#include <stdexcept>
-#include "platformSettings.hpp"
-
-namespace droidpad {
-	class OutputManager {
-		public:
-			/**
-			  Type is according to those in "types.hpp"
-			  */
-			OutputManager(const int type, const int numAxes, const int numButtons);
-			~OutputManager();
-		private:
-			dpinfo *dpinput;
-	};
-}
+#ifdef OS_LINUX
+#include "output/linux/platformSettings.hpp"
+#endif
+#ifdef OS_WIN32
 
 #endif

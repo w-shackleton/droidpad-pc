@@ -17,24 +17,12 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef DP_LIN_OUTPUT_MGR_H
-#define DP_LIN_OUTPUT_MGR_H
+#ifndef DP_PLATFORM_SETTINGS_H
+#define DP_PLATFORM_SETTINGS_H
 
-#include "dpinput.h"
-#include <stdexcept>
-#include "platformSettings.hpp"
-
-namespace droidpad {
-	class OutputManager {
-		public:
-			/**
-			  Type is according to those in "types.hpp"
-			  */
-			OutputManager(const int type, const int numAxes, const int numButtons);
-			~OutputManager();
-		private:
-			dpinfo *dpinput;
-	};
-}
+// Size of the axis, in each direction.
+#define AXIS_SIZE 16384
+// For analogue axes, the 3 means that the axis rotates around a third of the axis.
+#define AXIS_CUTOFF_MULTIPLIER (AXIS_SIZE * 3)
 
 #endif

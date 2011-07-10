@@ -22,6 +22,9 @@
 #include <wx/tokenzr.h>
 
 #include <iostream>
+#include <sstream>
+#include <cmath>
+#include "include/platformSettings.hpp"
 
 #include "log.hpp"
 
@@ -78,6 +81,7 @@ wxString DPConnection::GetLine()
 
 void DPConnection::ParseFromNet()
 {
+	memset(buffer, 0, CONN_BUFFER_SIZE);
 	Read(buffer, CONN_BUFFER_SIZE);
 	inData += wxString(buffer, wxConvUTF8);
 }
@@ -126,12 +130,28 @@ const ModeSetting &DPConnection::GetMode() throw (runtime_error)
 	return mode;
 }
 
+/*
+AXES LAYOUTS
+  *   *
+   *  *
+\---*-*-\
+ \   **  \
+**\*******\** <-X
+   \  **   \
+    \-*-*---\ <- Phone
+      *  *
+      *   *
+      ^   ^
+      Z   Y
+*/
 const DPData DPConnection::GetData() {
 	DPData data;
 
 	wxString line = GetLine();
 	int start = line.Find(wxT("[")) + 1;
 	int end = line.Find(wxT("]"));
+
+	locale cLocale("C");
 
 	wxStringTokenizer tk(line(start, end - start), wxT(";"));
 	while(tk.HasMoreTokens()) {
@@ -140,6 +160,7 @@ const DPData DPConnection::GetData() {
 		end = t.Find(wxT("}"));
 		wxStringTokenizer valTk;
 		if(t.StartsWith(wxT("{"))) { // Axis of some sort
+
 			switch(t[1]) {
 				case 'A': // 2way axis
 				case 'S': // 1way axis
@@ -148,8 +169,11 @@ const DPData DPConnection::GetData() {
 					valTk = wxStringTokenizer(t(start, end - start), wxT(","));
 
 					while(valTk.HasMoreTokens()) {
-						long value;
-						if(valTk.GetNextToken().ToLong(&value)) {
+						{
+							int value;
+							istringstream inNum(string(valTk.GetNextToken().mb_str()));
+							inNum.imbue(cLocale);
+							inNum >> value;
 							data.axes.push_back(value);
 						}
 					}
@@ -158,6 +182,33 @@ const DPData DPConnection::GetData() {
 				default: // Must be a raw JS
 					start = 1;
 					if(end < start) break; // Malformed?
+					valTk = wxStringTokenizer(t(start, end - start), wxT(","));
+					if(valTk.CountTokens() == 3) { // Else something wrong / malformed
+						int i = 0;
+						float x, y, z, ax, ay;
+						while(valTk.HasMoreTokens()) {
+							{
+								float value;
+								istringstream inNum(string(valTk.GetNextToken().mb_str()));
+								inNum.imbue(cLocale);
+								switch(i) {
+									case 0: inNum >> x; break;
+									case 1: inNum >> y; break;
+									case 2: inNum >> z; break;
+								}
+								i++;
+							}
+						}
+						ax = atan2(x, sqrt(y * y + z * z)) / M_PI * AXIS_CUTOFF_MULTIPLIER;
+						if(ax < -AXIS_SIZE) ax = -AXIS_SIZE;
+						if(ax > +AXIS_SIZE) ax = +AXIS_SIZE;
+						ay = atan2(y, z) / M_PI * AXIS_CUTOFF_MULTIPLIER;
+						if(ay < -AXIS_SIZE) ay = -AXIS_SIZE;
+						if(ay > +AXIS_SIZE) ay = +AXIS_SIZE;
+
+						data.axes.push_back(ax);
+						data.axes.push_back(ay);
+					}
 					break;
 			}
 		}

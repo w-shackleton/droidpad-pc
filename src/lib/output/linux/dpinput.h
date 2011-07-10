@@ -24,9 +24,6 @@ extern "C" {
 #ifndef DP_INPUT_H
 #define DP_INPUT_H
 
-#define AXIS_SIZE 16384
-#define AXIS_CUTOFF_MULTIPLIER (16384 * 3)
-
 #include <fcntl.h>
 #include <linux/input.h>
 
