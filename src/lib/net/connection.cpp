@@ -38,6 +38,12 @@ ModeSetting::ModeSetting() :
 	numAxes(0),
 	numButtons(0) {}
 
+DPMouseData::DPMouseData(const DPJSData& rawData) {
+}
+
+DPSlideData::DPSlideData(const DPJSData& rawData) {
+}
+
 DPConnection::DPConnection(wxString host, uint16_t port) :
 	wxSocketClient(wxSOCKET_BLOCK)
 {
@@ -144,8 +150,8 @@ AXES LAYOUTS
       ^   ^
       Z   Y
 */
-const DPData DPConnection::GetData() {
-	DPData data;
+const DPJSData DPConnection::GetData() {
+	DPJSData data;
 
 	wxString line = GetLine();
 	int start = line.Find(wxT("[")) + 1;

@@ -100,7 +100,9 @@ bool MainThread::setup()
 
 void MainThread::loop()
 {
-	const DPData data = conn->GetData();
+	const DPJSData data = conn->GetData();
+	// TODO: Call corresponding method.
+	mgr->SendJSData(data);
 }
 
 void MainThread::finish()

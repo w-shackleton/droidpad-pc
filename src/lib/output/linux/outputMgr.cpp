@@ -21,10 +21,14 @@
 
 #include "types.hpp"
 
+#include "net/connection.hpp"
+
 using namespace std;
 using namespace droidpad;
 
-OutputManager::OutputManager(const int type, const int numAxes, const int numButtons) {
+OutputManager::OutputManager(const int type, const int numAxes, const int numButtons) :
+	type(type)
+{
 	dpinput = new dpinfo;
 
 	dpinput->axisMin = -AXIS_SIZE;
@@ -43,14 +47,45 @@ OutputManager::OutputManager(const int type, const int numAxes, const int numBut
 			ret = dpinput_setup(dpinput,TYPE_KEYBD);
 			break;
 		default:
+			delete dpinput;
 			throw invalid_argument("Invalid type");
 	}
 	if(ret < 0) {
+		delete dpinput;
 		throw runtime_error("Couldn't setup uinput");
 	}
+
+	axesBuffer = new int[numAxes];
+	axesBufferSize = numAxes;
+	buttonBuffer = new int[numButtons];
+	buttonBufferSize = numButtons;
 }
 
 OutputManager::~OutputManager() {
 	dpinput_close(dpinput);
 	delete dpinput;
+	delete axesBuffer;
+	delete buttonBuffer;
+}
+
+void OutputManager::SendJSData(const DPJSData& data) {
+	int i = 0;
+	for(vector<int>::const_iterator it = data.axes.begin(); it != data.axes.end(); it++) {
+		axesBuffer[i++] = *it;
+	}
+	i = 0;
+	for(vector<bool>::const_iterator it = data.buttons.begin(); it != data.buttons.end(); it++) {
+		buttonBuffer[i++] = *it;
+	}
+
+	switch(type) {
+		case MODE_JS:
+			dpinput_sendNPos(dpinput, axesBuffer, axesBufferSize);
+			dpinput_sendButtons(dpinput, buttonBuffer, buttonBufferSize);
+			break;
+		case MODE_MOUSE:
+			break;
+		case MODE_SLIDE:
+			break;
+	}
 }

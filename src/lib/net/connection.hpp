@@ -42,10 +42,30 @@ namespace droidpad {
 			ModeSetting();
 	};
 
-	class DPData {
+	/**
+	 * Raw data returned from connection. Is castable to the other data types,
+	 * which contain data from it.
+	 */
+	class DPJSData {
 		public:
 			std::vector<int> axes;
 			std::vector<bool> buttons;
+	};
+
+	class DPMouseData {
+		public:
+			DPMouseData(const DPJSData& rawData);
+
+			/**
+			 * scrollDelta: down is positive.
+			 */
+			int x, y, scrollDelta;
+			bool bLeft, bMiddle, bRight;
+	};
+
+	class DPSlideData {
+		public:
+			DPSlideData(const DPJSData& rawData);
 	};
 
 	class DPConnection : private wxSocketClient {
@@ -70,7 +90,7 @@ namespace droidpad {
 
 		public:
 			const ModeSetting &GetMode() throw (std::runtime_error);
-			const DPData GetData();
+			const DPJSData GetData();
 	};
 };
 

@@ -25,6 +25,7 @@
 #include "platformSettings.hpp"
 
 namespace droidpad {
+	class DPJSData;
 	class OutputManager {
 		public:
 			/**
@@ -32,8 +33,16 @@ namespace droidpad {
 			  */
 			OutputManager(const int type, const int numAxes, const int numButtons);
 			~OutputManager();
+
+			void SendJSData(const DPJSData& data);
 		private:
 			dpinfo *dpinput;
+			int type;
+
+			int *axesBuffer;
+			int axesBufferSize;
+			int *buttonBuffer;
+			int buttonBufferSize;
 	};
 }
 
