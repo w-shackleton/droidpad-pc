@@ -156,6 +156,7 @@ int dpinput_setup(dpInfo *info, int type)
 		ioctl(info->ufile, UI_SET_EVBIT, EV_REL);
 		ioctl(info->ufile, UI_SET_RELBIT, REL_X);
 		ioctl(info->ufile, UI_SET_RELBIT, REL_Y);
+		ioctl(info->ufile, UI_SET_RELBIT, REL_WHEEL);
 		
 		ioctl(info->ufile, UI_SET_KEYBIT, BTN_LEFT);
 		ioctl(info->ufile, UI_SET_KEYBIT, BTN_MIDDLE);
@@ -163,6 +164,7 @@ int dpinput_setup(dpInfo *info, int type)
 	}
 	if(type == TYPE_KEYBD)
 	{
+		// All regular keys on a KB
 		for(i = 0; i < 128; i++)
 			ioctl(info->ufile, UI_SET_KEYBIT, i);
 	}
@@ -217,6 +219,24 @@ int dpinput_close(dpInfo *info)
 	close(info->ufile);
 	
 	printf(" ** uinput closed.\n");
+}
+
+int dpinput_sendPos(dpInfo *info, int code, int val)
+{
+	RESET_EVENT();
+	
+	if(info->type == TYPE_JS)
+		event.type = EV_ABS;
+	else if(info->type == TYPE_MOUSE)
+		event.type = EV_REL;
+	event.code = code;
+	event.value = trimMinMax(val, info->axisMin, info->axisMax);
+	write(info->ufile, &event, sizeof(event));
+	
+	event.type = EV_SYN;
+	event.code = SYN_REPORT;
+	event.value = 0;
+	write(info->ufile, &event, sizeof(event));
 }
 
 int dpinput_send2Pos(dpInfo *info, int posX, int posY)

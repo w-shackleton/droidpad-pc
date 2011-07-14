@@ -38,10 +38,36 @@ ModeSetting::ModeSetting() :
 	numAxes(0),
 	numButtons(0) {}
 
-DPMouseData::DPMouseData(const DPJSData& rawData) {
+DPMouseData::DPMouseData(const DPJSData& rawData, const DPJSData& prevData) {
+	if(rawData.axes.size() < 2) {
+		x = 0;
+		y = 0;
+	} else {
+		x = rawData.axes[0];
+		y = rawData.axes[1];
+	}
+	if(rawData.touchpadAxes.size() >= 1 && prevData.touchpadAxes.size() >= 1) {
+		scrollDelta = rawData.touchpadAxes[0] - prevData.touchpadAxes[0];
+	} else
+		scrollDelta = 0;
+	bLeft = rawData.buttons[0];
+	bMiddle = rawData.buttons[1];
+	bRight = rawData.buttons[2];
 }
 
-DPSlideData::DPSlideData(const DPJSData& rawData) {
+DPSlideData::DPSlideData(const DPJSData& rawData, const DPJSData& prevData) {
+	if(rawData.buttons.size() >= 8) {
+		next	= rawData.buttons[0];
+		prev	= rawData.buttons[1];
+		start	= rawData.buttons[2];
+		finish	= rawData.buttons[3];
+		white	= rawData.buttons[4] ^
+			(prevData.buttons.size() < 8 ? 0 : prevData.buttons[4]); // Toggle, but only want
+		black	= rawData.buttons[5] ^
+			(prevData.buttons.size() < 8 ? 0 : prevData.buttons[5]); // to be pressed once.
+		beginning=rawData.buttons[6];
+		end	= rawData.buttons[7];
+	}
 }
 
 DPConnection::DPConnection(wxString host, uint16_t port) :

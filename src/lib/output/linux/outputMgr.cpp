@@ -78,14 +78,28 @@ void OutputManager::SendJSData(const DPJSData& data) {
 		buttonBuffer[i++] = *it;
 	}
 
-	switch(type) {
-		case MODE_JS:
-			dpinput_sendNPos(dpinput, axesBuffer, axesBufferSize);
-			dpinput_sendButtons(dpinput, buttonBuffer, buttonBufferSize);
-			break;
-		case MODE_MOUSE:
-			break;
-		case MODE_SLIDE:
-			break;
-	}
+	dpinput_sendNPos(dpinput, axesBuffer, axesBufferSize);
+	dpinput_sendButtons(dpinput, buttonBuffer, buttonBufferSize);
 }
+
+void OutputManager::SendMouseData(const DPMouseData& data)
+{
+	dpinput_send2Pos(dpinput, data.x, data.y);
+	dpinput_sendPos(dpinput, REL_WHEEL, data.scrollDelta); // TODO: Check how this will work.
+	dpinput_sendButton(dpinput, BTN_LEFT, data.bLeft);
+	dpinput_sendButton(dpinput, BTN_MIDDLE, data.bMiddle);
+	dpinput_sendButton(dpinput, BTN_RIGHT, data.bRight);
+}
+
+void OutputManager::SendSlideData(const DPSlideData& data)
+{
+	dpinput_sendButton(dpinput,	KEY_UP,		data.prev);
+	dpinput_sendButton(dpinput,	KEY_DOWN,	data.next);
+	dpinput_sendButton(dpinput,	KEY_F5,		data.start);
+	dpinput_sendButton(dpinput,	KEY_ESC,	data.finish);
+	dpinput_sendButton(dpinput,	KEY_W,		data.white);
+	dpinput_sendButton(dpinput,	KEY_B,		data.black);
+	dpinput_sendButton(dpinput,	KEY_HOME,	data.beginning);
+	dpinput_sendButton(dpinput,	KEY_END,	data.end);
+}
+

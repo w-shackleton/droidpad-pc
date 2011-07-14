@@ -49,6 +49,8 @@ namespace droidpad {
 
 			DPConnection *conn;
 
+			DPJSData prevData;
+
 			bool running;
 
 			bool setup();

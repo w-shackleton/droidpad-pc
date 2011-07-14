@@ -102,7 +102,18 @@ void MainThread::loop()
 {
 	const DPJSData data = conn->GetData();
 	// TODO: Call corresponding method.
-	mgr->SendJSData(data);
+	switch(conn->GetMode().type) {
+		case MODE_JS:
+			mgr->SendJSData(data);
+			break;
+		case MODE_MOUSE:
+			mgr->SendMouseData(DPMouseData(data, prevData));
+			break;
+		case MODE_SLIDE:
+			mgr->SendSlideData(DPSlideData(data, prevData));
+			break;
+	}
+	prevData = data;
 }
 
 void MainThread::finish()

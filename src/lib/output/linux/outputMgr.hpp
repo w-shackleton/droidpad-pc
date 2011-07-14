@@ -26,6 +26,8 @@
 
 namespace droidpad {
 	class DPJSData;
+	class DPMouseData;
+	class DPSlideData;
 	class OutputManager {
 		public:
 			/**
@@ -35,6 +37,8 @@ namespace droidpad {
 			~OutputManager();
 
 			void SendJSData(const DPJSData& data);
+			void SendMouseData(const DPMouseData& data);
+			void SendSlideData(const DPSlideData& data);
 		private:
 			dpinfo *dpinput;
 			int type;

@@ -49,12 +49,13 @@ namespace droidpad {
 	class DPJSData {
 		public:
 			std::vector<int> axes;
+			std::vector<int> touchpadAxes;
 			std::vector<bool> buttons;
 	};
 
 	class DPMouseData {
 		public:
-			DPMouseData(const DPJSData& rawData);
+			DPMouseData(const DPJSData& rawData, const DPJSData& prevData);
 
 			/**
 			 * scrollDelta: down is positive.
@@ -65,7 +66,9 @@ namespace droidpad {
 
 	class DPSlideData {
 		public:
-			DPSlideData(const DPJSData& rawData);
+			DPSlideData(const DPJSData& rawData, const DPJSData& prevData);
+			// Note: white & black are toggle buttons.
+			bool next, prev, start, finish, white, black, beginning, end;
 	};
 
 	class DPConnection : private wxSocketClient {
@@ -87,7 +90,6 @@ namespace droidpad {
 			void ParseFromNet();
 
 			ModeSetting mode;
-
 		public:
 			const ModeSetting &GetMode() throw (std::runtime_error);
 			const DPJSData GetData();

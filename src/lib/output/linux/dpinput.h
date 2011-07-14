@@ -50,6 +50,7 @@ extern __u16 joystickKeys[];
 int dpinput_setup(dpInfo *info, int type);
 int dpinput_close(dpInfo *info);
 
+int dpinput_sendPos(dpInfo *info, int code, int val);
 int dpinput_send2Pos(dpInfo *info, int posX, int posY);
 int dpinput_sendNPos(dpInfo *info, int pos[], int count);
 int dpinput_sendButtons(dpInfo *info, int buttons[], int count);
