@@ -27,7 +27,7 @@ using namespace std;
 using namespace droidpad;
 
 OutputManager::OutputManager(const int type, const int numAxes, const int numButtons) :
-	type(type)
+	IOutputManager(type, numAxes, numButtons)
 {
 	dpinput = new dpinfo;
 
@@ -84,7 +84,7 @@ void OutputManager::SendJSData(const DPJSData& data) {
 
 void OutputManager::SendMouseData(const DPMouseData& data)
 {
-	dpinput_send2Pos(dpinput, data.x, data.y);
+	dpinput_send2Pos(dpinput, data.x / 400, -data.y / 400); // TODO: Customise?
 	dpinput_sendPos(dpinput, REL_WHEEL, data.scrollDelta); // TODO: Check how this will work.
 	dpinput_sendButton(dpinput, BTN_LEFT, data.bLeft);
 	dpinput_sendButton(dpinput, BTN_MIDDLE, data.bMiddle);

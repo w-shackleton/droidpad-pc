@@ -17,46 +17,11 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef DP_MAIN_THREAD_H
-#define DP_MAIN_THREAD_H
+#include "IOutputMgr.hpp"
 
-#include <wx/thread.h>
-#include "droidpadCallbacks.hpp"
-#include "include/adb.hpp"
-#include "output/IOutputMgr.hpp"
-#include "net/connection.hpp"
+// #include "net/connection.hpp"
 
-namespace droidpad {
-	class DeviceManager;
+using namespace droidpad;
 
-	/**
-	  * Main thread - connects & does all the magick.
-	  */
-	class MainThread : public wxThread
-	{
-		public:
-			MainThread(DeviceManager &parent, AndroidDevice &device);
-			~MainThread();
-			void* Entry();
-
-			void stop();
-		private:
-			DeviceManager &parent;
-			AndroidDevice &device;
-
-			// The implementation changes per platform here
-			IOutputManager *mgr;
-
-			DPConnection *conn;
-
-			DPJSData prevData;
-
-			bool running;
-
-			bool setup();
-			void loop();
-			void finish();
-	};
-}
-
-#endif
+IOutputManager::IOutputManager(const int type, const int numAxes, const int numButtons) :
+	type(type) {}

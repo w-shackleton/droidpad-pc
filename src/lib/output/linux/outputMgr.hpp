@@ -23,12 +23,13 @@
 #include "dpinput.h"
 #include <stdexcept>
 #include "platformSettings.hpp"
+#include "output/IOutputMgr.hpp"
 
 namespace droidpad {
 	class DPJSData;
 	class DPMouseData;
 	class DPSlideData;
-	class OutputManager {
+	class OutputManager : public IOutputManager {
 		public:
 			/**
 			  Type is according to those in "types.hpp"
@@ -41,7 +42,6 @@ namespace droidpad {
 			void SendSlideData(const DPSlideData& data);
 		private:
 			dpinfo *dpinput;
-			int type;
 
 			int *axesBuffer;
 			int axesBufferSize;

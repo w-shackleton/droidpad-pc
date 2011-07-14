@@ -34,6 +34,7 @@ using namespace std;
 #define BUFFER_SIZE 128
 
 #ifdef OS_UNIX
+// I still can't believe how infinitely much easier this is Unix.
 string droidpad::runProcess(string cmd, string args) {
 	FILE* pipe = popen((cmd + " " + args).c_str(), "r");
 	if (!pipe) throw "Couldn't run adb";

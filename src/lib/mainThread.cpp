@@ -20,6 +20,7 @@
 #include "mainThread.hpp"
 
 #include "deviceManager.hpp"
+#include "include/outputMgr.hpp"
 
 #include "events.hpp"
 #include "log.hpp"
@@ -57,7 +58,9 @@ void* MainThread::Entry()
 	if(setupDone) { // Skip this if fail
 		try { // Setup outputmanager
 			const ModeSetting &mode = conn->GetMode();
-			mgr = new OutputManager(conn->GetMode().type, mode.numRawAxes + mode.numAxes, mode.numButtons);
+#ifdef OS_LINUX
+			mgr = new OutputManager(conn->GetMode().type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
+#endif
 		} catch(invalid_argument e) {
 			DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_SETUP_FAIL);
 			parent.AddPendingEvent(evt);
