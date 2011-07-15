@@ -19,7 +19,8 @@
  */
 #ifdef OS_LINUX
 #include "output/linux/platformSettings.hpp"
-#endif
-#ifdef OS_WIN32
-
+#elif defined OS_WIN32
+#include "output/win32/platformSettings.hpp"
+#else
+#error "Platform settings not available for this platform."
 #endif

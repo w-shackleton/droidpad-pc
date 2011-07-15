@@ -17,10 +17,12 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#ifdef OS_LINUX
-#include "output/linux/outputMgr.hpp"
-#elif defined OS_WIN32
-#include "output/win32/outputMgr.hpp"
-#else
-#error "Output manager not available for this platform."
+#ifndef DP_PLATFORM_SETTINGS_H
+#define DP_PLATFORM_SETTINGS_H
+
+// Size of the axis, in each direction.
+#define AXIS_SIZE 16384
+// For analogue axes, the 3 means that the axis rotates around a third of the axis.
+#define AXIS_CUTOFF_MULTIPLIER (AXIS_SIZE * 3)
+
 #endif

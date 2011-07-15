@@ -17,10 +17,32 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#ifdef OS_LINUX
-#include "output/linux/outputMgr.hpp"
-#elif defined OS_WIN32
-#include "output/win32/outputMgr.hpp"
-#else
-#error "Output manager not available for this platform."
-#endif
+#include "outputMgr.hpp"
+
+#include "types.hpp"
+
+#include "net/connection.hpp"
+
+using namespace std;
+using namespace droidpad;
+
+OutputManager::OutputManager(const int type, const int numAxes, const int numButtons) :
+	IOutputManager(type, numAxes, numButtons)
+{
+
+}
+
+OutputManager::~OutputManager() {
+}
+
+void OutputManager::SendJSData(const DPJSData& data) {
+}
+
+void OutputManager::SendMouseData(const DPMouseData& data)
+{
+}
+
+void OutputManager::SendSlideData(const DPSlideData& data)
+{
+}
+
