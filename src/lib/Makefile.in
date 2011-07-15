@@ -90,7 +90,8 @@ am__libdroidpad_la_SOURCES_DIST = include/adb.hpp \
 	ext/b64/base64.cpp ext/b64/base64.hpp net/mdns.cpp \
 	net/mdns.hpp net/deviceDiscover.cpp net/deviceDiscover.hpp \
 	net/connection.cpp net/connection.hpp output/IOutputMgr.cpp \
-	output/IOutputMgr.hpp output/linux/outputMgr.cpp \
+	output/IOutputMgr.hpp output/outputSmoothBuffer.cpp \
+	output/outputSmoothBuffer.hpp output/linux/outputMgr.cpp \
 	output/linux/outputMgr.hpp output/linux/dpinput.c \
 	output/linux/dpinput.h output/linux/platformSettings.hpp
 am__objects_1 = libdroidpad_la-outputMgr.lo libdroidpad_la-dpinput.lo
@@ -104,7 +105,7 @@ am_libdroidpad_la_OBJECTS = libdroidpad_la-proc.lo \
 	libdroidpad_la-mdnsd.lo libdroidpad_la-base64.lo \
 	libdroidpad_la-mdns.lo libdroidpad_la-deviceDiscover.lo \
 	libdroidpad_la-connection.lo libdroidpad_la-IOutputMgr.lo \
-	$(am__objects_2)
+	libdroidpad_la-outputSmoothBuffer.lo $(am__objects_2)
 libdroidpad_la_OBJECTS = $(am_libdroidpad_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -370,7 +371,8 @@ libdroidpad_la_SOURCES = include/adb.hpp include/outputMgr.hpp \
 	ext/b64/base64.cpp ext/b64/base64.hpp net/mdns.cpp \
 	net/mdns.hpp net/deviceDiscover.cpp net/deviceDiscover.hpp \
 	net/connection.cpp net/connection.hpp output/IOutputMgr.cpp \
-	output/IOutputMgr.hpp $(am__append_1)
+	output/IOutputMgr.hpp output/outputSmoothBuffer.cpp \
+	output/outputSmoothBuffer.hpp $(am__append_1)
 libdroidpad_la_LIBADD = @WXBASELIBS@ $(am__append_2)
 libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@ -I. -Iext
 libdroidpad_la_CFLAGS = @WXCPPFLAGS@ -I. -Iext
@@ -467,6 +469,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-mdns.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-mdnsd.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-outputMgr.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-outputSmoothBuffer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-proc.Plo@am__quote@
 
 .c.o:
@@ -644,6 +647,14 @@ libdroidpad_la-IOutputMgr.lo: output/IOutputMgr.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='output/IOutputMgr.cpp' object='libdroidpad_la-IOutputMgr.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-IOutputMgr.lo `test -f 'output/IOutputMgr.cpp' || echo '$(srcdir)/'`output/IOutputMgr.cpp
+
+libdroidpad_la-outputSmoothBuffer.lo: output/outputSmoothBuffer.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -MT libdroidpad_la-outputSmoothBuffer.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-outputSmoothBuffer.Tpo -c -o libdroidpad_la-outputSmoothBuffer.lo `test -f 'output/outputSmoothBuffer.cpp' || echo '$(srcdir)/'`output/outputSmoothBuffer.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libdroidpad_la-outputSmoothBuffer.Tpo $(DEPDIR)/libdroidpad_la-outputSmoothBuffer.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='output/outputSmoothBuffer.cpp' object='libdroidpad_la-outputSmoothBuffer.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-outputSmoothBuffer.lo `test -f 'output/outputSmoothBuffer.cpp' || echo '$(srcdir)/'`output/outputSmoothBuffer.cpp
 
 libdroidpad_la-outputMgr.lo: output/linux/outputMgr.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -MT libdroidpad_la-outputMgr.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-outputMgr.Tpo -c -o libdroidpad_la-outputMgr.lo `test -f 'output/linux/outputMgr.cpp' || echo '$(srcdir)/'`output/linux/outputMgr.cpp

@@ -25,3 +25,5 @@ using namespace droidpad;
 
 IOutputManager::IOutputManager(const int type, const int numAxes, const int numButtons) :
 	type(type) {}
+
+IOutputManager::~IOutputManager() {}

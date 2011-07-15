@@ -38,6 +38,33 @@ ModeSetting::ModeSetting() :
 	numAxes(0),
 	numButtons(0) {}
 
+DPMouseData::DPMouseData() :
+	x(0),
+	y(0),
+	scrollDelta(0),
+	bLeft(false),
+	bMiddle(false),
+	bRight(false)
+{ }
+
+DPJSData::DPJSData()
+{ }
+
+DPJSData::DPJSData(const DPJSData& old) :
+	axes(old.axes),
+	touchpadAxes(old.touchpadAxes),
+	buttons(old.buttons)
+{ }
+
+DPMouseData::DPMouseData(const DPMouseData& old) :
+	x(old.x),
+	y(old.y),
+	scrollDelta(old.scrollDelta),
+	bLeft(old.bLeft),
+	bMiddle(old.bMiddle),
+	bRight(old.bRight)
+{ }
+
 DPMouseData::DPMouseData(const DPJSData& rawData, const DPJSData& prevData) {
 	if(rawData.axes.size() < 2) {
 		x = 0;
@@ -55,6 +82,27 @@ DPMouseData::DPMouseData(const DPJSData& rawData, const DPJSData& prevData) {
 	bRight = rawData.buttons[2];
 }
 
+DPSlideData::DPSlideData() :
+	next(false),
+	prev(false),
+	start(false),
+	finish(false),
+	white(false),
+	black(false),
+	beginning(false),
+	end(false)
+{ }
+DPSlideData::DPSlideData(const DPSlideData& old) :
+	next(old.next),
+	prev(old.prev),
+	start(old.start),
+	finish(old.finish),
+	white(old.white),
+	black(old.black),
+	beginning(old.beginning),
+	end(old.end)
+{
+}
 DPSlideData::DPSlideData(const DPJSData& rawData, const DPJSData& prevData) {
 	if(rawData.buttons.size() >= 8) {
 		next	= rawData.buttons[0];

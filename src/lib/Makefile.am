@@ -46,7 +46,8 @@ libdroidpad_la_SOURCES = \
 		   net/mdns.cpp			net/mdns.hpp			\
 		   net/deviceDiscover.cpp	net/deviceDiscover.hpp		\
 		   net/connection.cpp		net/connection.hpp		\
-		   output/IOutputMgr.cpp	output/IOutputMgr.hpp
+		   output/IOutputMgr.cpp	output/IOutputMgr.hpp		\
+		   output/outputSmoothBuffer.cpp output/outputSmoothBuffer.hpp
 
 if OS_LINUX
   libdroidpad_la_SOURCES += $(SRC_LINUX)

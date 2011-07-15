@@ -21,6 +21,7 @@
 
 #include "deviceManager.hpp"
 #include "include/outputMgr.hpp"
+#include "output/outputSmoothBuffer.hpp"
 
 #include "events.hpp"
 #include "log.hpp"
@@ -35,7 +36,8 @@ MainThread::MainThread(DeviceManager &parent, AndroidDevice &device) :
 	parent(parent),
 	device(device),
 	running(true),
-	mgr(NULL)
+	mgr(NULL),
+	deleteOutputManager(true)
 {
 	conn = new DPConnection(device.ip, device.port);
 }
@@ -59,7 +61,17 @@ void* MainThread::Entry()
 		try { // Setup outputmanager
 			const ModeSetting &mode = conn->GetMode();
 #ifdef OS_LINUX
-			mgr = new OutputManager(conn->GetMode().type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
+			switch(mode.type) {
+				case MODE_JS:
+				case MODE_SLIDE:
+					mgr = new OutputManager(mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
+					break;
+				case MODE_MOUSE:
+					deleteOutputManager = false;
+					OutputManager *innerMgr = new OutputManager(mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
+					mgr = new OutputSmoothBuffer(innerMgr, mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
+					break;
+			}
 #endif
 		} catch(invalid_argument e) {
 			DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_SETUP_FAIL);
@@ -121,7 +133,7 @@ void MainThread::loop()
 
 void MainThread::finish()
 {
-	if(mgr != NULL) delete mgr;
+	if(mgr != NULL || deleteOutputManager) delete mgr;
 	delete conn;
 
 	DMEvent evt(dpTHREAD_FINISH, 0);

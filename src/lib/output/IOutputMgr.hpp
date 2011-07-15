@@ -30,6 +30,7 @@ namespace droidpad {
 			  Type is according to those in "types.hpp"
 			  */
 			IOutputManager(const int type, const int numAxes, const int numButtons);
+			virtual ~IOutputManager();
 
 			virtual void SendJSData(const DPJSData& data) = 0;
 			virtual void SendMouseData(const DPMouseData& data) = 0;

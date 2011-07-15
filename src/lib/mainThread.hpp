@@ -46,6 +46,7 @@ namespace droidpad {
 
 			// The implementation changes per platform here
 			IOutputManager *mgr;
+			bool deleteOutputManager;
 
 			DPConnection *conn;
 

@@ -48,6 +48,8 @@ namespace droidpad {
 	 */
 	class DPJSData {
 		public:
+			DPJSData();
+			DPJSData(const DPJSData& old);
 			std::vector<int> axes;
 			std::vector<int> touchpadAxes;
 			std::vector<bool> buttons;
@@ -55,6 +57,8 @@ namespace droidpad {
 
 	class DPMouseData {
 		public:
+			DPMouseData();
+			DPMouseData(const DPMouseData& old);
 			DPMouseData(const DPJSData& rawData, const DPJSData& prevData);
 
 			/**
@@ -66,6 +70,8 @@ namespace droidpad {
 
 	class DPSlideData {
 		public:
+			DPSlideData();
+			DPSlideData(const DPSlideData& old);
 			DPSlideData(const DPJSData& rawData, const DPJSData& prevData);
 			// Note: white & black are toggle buttons.
 			bool next, prev, start, finish, white, black, beginning, end;
