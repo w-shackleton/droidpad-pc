@@ -32,6 +32,8 @@ namespace droidpad {
 			IOutputManager(const int type, const int numAxes, const int numButtons);
 			virtual ~IOutputManager();
 
+			virtual void BeginToStop();
+
 			virtual void SendJSData(const DPJSData& data) = 0;
 			virtual void SendMouseData(const DPMouseData& data) = 0;
 			virtual void SendSlideData(const DPSlideData& data) = 0;

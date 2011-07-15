@@ -152,21 +152,25 @@ void DPConnection::SendMessage(string message) {
 	Write(message.c_str(), message.length());
 }
 
-wxString DPConnection::GetLine()
+wxString DPConnection::GetLine() throw (runtime_error)
 {
 	while(inData.Find('\n') == wxNOT_FOUND) {
-		ParseFromNet();
+		if(!ParseFromNet()) throw runtime_error("Connection closed");
 	}
 	wxString ret = inData.Left(inData.Find('\n'));
 	inData = inData.Mid(inData.Find('\n') + 1); // Trim old stuff off
 	return ret;
 }
 
-void DPConnection::ParseFromNet()
+/**
+ * Returns true if the parse was successful.
+ */
+bool DPConnection::ParseFromNet()
 {
 	memset(buffer, 0, CONN_BUFFER_SIZE);
 	Read(buffer, CONN_BUFFER_SIZE);
 	inData += wxString(buffer, wxConvUTF8);
+	return !Error();
 }
 
 const ModeSetting &DPConnection::GetMode() throw (runtime_error)
@@ -227,7 +231,8 @@ AXES LAYOUTS
       ^   ^
       Z   Y
 */
-const DPJSData DPConnection::GetData() {
+const DPJSData DPConnection::GetData() throw (runtime_error)
+{
 	DPJSData data;
 
 	wxString line = GetLine();

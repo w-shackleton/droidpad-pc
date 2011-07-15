@@ -89,7 +89,11 @@ void* MainThread::Entry()
 
 	while(running) {
 		if(setupDone) {
-			loop();
+			if(!loop()) {
+				setupDone = false; // Enter waiting loop.
+				DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_CONNECTION_LOST);
+				parent.AddPendingEvent(evt);
+			}
 		} else {
 			wxThread::Sleep(30); // Wait to be killed by parent.
 		}
@@ -113,27 +117,35 @@ bool MainThread::setup()
 	return true;
 }
 
-void MainThread::loop()
+bool MainThread::loop()
 {
-	const DPJSData data = conn->GetData();
-	// TODO: Call corresponding method.
-	switch(conn->GetMode().type) {
-		case MODE_JS:
-			mgr->SendJSData(data);
-			break;
-		case MODE_MOUSE:
-			mgr->SendMouseData(DPMouseData(data, prevData));
-			break;
-		case MODE_SLIDE:
-			mgr->SendSlideData(DPSlideData(data, prevData));
-			break;
+	try {
+		const DPJSData data = conn->GetData();
+		// TODO: Call corresponding method.
+		switch(conn->GetMode().type) {
+			case MODE_JS:
+				mgr->SendJSData(data);
+				break;
+			case MODE_MOUSE:
+				mgr->SendMouseData(DPMouseData(data, prevData));
+				break;
+			case MODE_SLIDE:
+				mgr->SendSlideData(DPSlideData(data, prevData));
+				break;
+		}
+		prevData = data;
+	} catch(runtime_error e) {
+		return false;
 	}
-	prevData = data;
+	return true;
 }
 
 void MainThread::finish()
 {
-	if(mgr != NULL || deleteOutputManager) delete mgr;
+	if(mgr != NULL) {
+		mgr->BeginToStop(); // If it is a thread, stop it.
+		if(deleteOutputManager) delete mgr;
+	}
 	delete conn;
 
 	DMEvent evt(dpTHREAD_FINISH, 0);

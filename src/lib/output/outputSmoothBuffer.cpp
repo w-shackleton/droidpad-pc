@@ -56,6 +56,11 @@ void* OutputSmoothBuffer::Entry()
 	}
 }
 
+void OutputSmoothBuffer::BeginToStop()
+{
+	Delete();
+}
+
 void OutputSmoothBuffer::SendJSData(const DPJSData& data)
 {
 	wxMutexLocker lock(callMutex);

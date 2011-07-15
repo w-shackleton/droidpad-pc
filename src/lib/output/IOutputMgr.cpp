@@ -27,3 +27,5 @@ IOutputManager::IOutputManager(const int type, const int numAxes, const int numB
 	type(type) {}
 
 IOutputManager::~IOutputManager() {}
+
+void IOutputManager::BeginToStop() { }

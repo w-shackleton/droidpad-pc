@@ -35,6 +35,8 @@ namespace droidpad {
 			~OutputSmoothBuffer();
 			void* Entry();
 
+			void BeginToStop();
+
 			void SendJSData   (const DPJSData& data);
 			void SendMouseData(const DPMouseData& data);
 			void SendSlideData(const DPSlideData& data);

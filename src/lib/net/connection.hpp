@@ -93,13 +93,13 @@ namespace droidpad {
 
 			void SendMessage(std::string message);
 
-			wxString GetLine();
-			void ParseFromNet();
+			wxString GetLine() throw (std::runtime_error);
+			bool ParseFromNet();
 
 			ModeSetting mode;
 		public:
 			const ModeSetting &GetMode() throw (std::runtime_error);
-			const DPJSData GetData();
+			const DPJSData GetData() throw (std::runtime_error);
 	};
 };
 

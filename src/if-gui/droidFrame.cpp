@@ -182,6 +182,7 @@ void DroidFrame::OnListBox(wxCommandEvent& event)
 void DroidFrame::threadStarted()
 {
 	buttonStop->Enable();
+	buttonStart->Disable();
 }
 
 void DroidFrame::threadError(wxString failReason)
@@ -192,5 +193,6 @@ void DroidFrame::threadError(wxString failReason)
 void DroidFrame::threadStopped()
 {
 	buttonStart->Enable();
+	buttonStop->Disable();
 }
 

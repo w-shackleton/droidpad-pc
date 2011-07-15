@@ -64,6 +64,7 @@ OutputManager::OutputManager(const int type, const int numAxes, const int numBut
 OutputManager::~OutputManager() {
 	dpinput_close(dpinput);
 	delete dpinput;
+	dpinput = NULL;
 	delete axesBuffer;
 	delete buttonBuffer;
 }

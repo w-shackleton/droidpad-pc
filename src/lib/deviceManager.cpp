@@ -130,6 +130,10 @@ void DeviceManager::OnMainThreadError(DMEvent &event)
 			LOGE("Recieved error when setting up interfaces");
 			callbacks.threadError(_("Couldn't setup DroidPad"));
 			break;
+		case THREAD_ERROR_CONNECTION_LOST:
+			LOGE("Connection to phone lost.");
+			callbacks.threadError(_("Connection to phone lost."));
+			break;
 		default:
 			LOGE("Other error from thread");
 			callbacks.threadError(wxString::Format(_("Unknown Error - %d."), event.getStatus()));

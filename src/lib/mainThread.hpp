@@ -55,7 +55,10 @@ namespace droidpad {
 			bool running;
 
 			bool setup();
-			void loop();
+			/**
+			 * Returns true on success
+			 */
+			bool loop();
 			void finish();
 	};
 }

@@ -102,6 +102,7 @@ ABS_MISC,
 int dpinput_setup(dpInfo *info, int type)
 {
 	struct uinput_user_dev uinp;
+	if(info == NULL) return -2;
 	info->type = type;
 	
 	int i=0, retcode;
@@ -208,6 +209,7 @@ int dpinput_setup(dpInfo *info, int type)
 
 int dpinput_close(dpInfo *info)
 {
+	if(info == NULL) return -2;
 	RESET_EVENT();
 	
 	event.type = SYN_CONFIG;
@@ -219,10 +221,12 @@ int dpinput_close(dpInfo *info)
 	close(info->ufile);
 	
 	printf(" ** uinput closed.\n");
+	return 0;
 }
 
 int dpinput_sendPos(dpInfo *info, int code, int val)
 {
+	if(info == NULL) return -2;
 	RESET_EVENT();
 	
 	if(info->type == TYPE_JS)
@@ -241,6 +245,7 @@ int dpinput_sendPos(dpInfo *info, int code, int val)
 
 int dpinput_send2Pos(dpInfo *info, int posX, int posY)
 {
+	if(info == NULL) return -2;
 	RESET_EVENT();
 	
 	if(info->type == TYPE_JS)
@@ -272,6 +277,7 @@ int dpinput_send2Pos(dpInfo *info, int posX, int posY)
 
 int dpinput_sendNPos(dpInfo *info, int pos[], int count)
 {
+	if(info == NULL) return -2;
 	RESET_EVENT();
 	
 	if(info->type == TYPE_JS)
@@ -296,6 +302,7 @@ int dpinput_sendNPos(dpInfo *info, int pos[], int count)
 
 int dpinput_sendButtons(dpInfo *info, int buttons[], int count)
 {
+	if(info == NULL) return -2;
 	int i;
 	RESET_EVENT();
 	
@@ -320,6 +327,7 @@ int dpinput_sendButtons(dpInfo *info, int buttons[], int count)
 
 int dpinput_sendButton(dpInfo *info, int code, int val)
 {
+	if(info == NULL) return -2;
 	int i;
 	RESET_EVENT();
 	

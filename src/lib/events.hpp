@@ -45,6 +45,7 @@ namespace droidpad {
 
 		THREAD_ERROR_CONNECT_FAIL,
 		THREAD_ERROR_SETUP_FAIL,
+		THREAD_ERROR_CONNECTION_LOST,
 	};
 
 	class DMEvent : public wxEvent
