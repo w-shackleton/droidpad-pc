@@ -305,7 +305,7 @@ int DeviceFinder::processResult(mdnsda a)
 
 	device.deviceDescription = wxString(base64_decode(b64).c_str(), wxConvUTF8);
 #ifdef DEBUG
-	cout << "Device found: " << device.deviceDescription.mb_str() << endl;
+	// cout << "Device found: " << device.deviceDescription.mb_str() << endl;
 #endif
 
 	struct in_addr ip;

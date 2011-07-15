@@ -125,10 +125,13 @@ DPConnection::DPConnection(wxString host, uint16_t port) :
 	addr.Service(port);
 	
 	SetTimeout(10);
+	savedLocale = setlocale(LC_NUMERIC, NULL);
+	setlocale(LC_NUMERIC, "C"); 
 }
 
 DPConnection::~DPConnection() {
 	SendMessage("<STOP>\n");
+	setlocale(LC_NUMERIC, savedLocale);
 	LOGV("Sent Stop message to server");
 	Close();
 }

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+./configure --enable-debug --disable-shared CXXFLAGS="-O0" $@

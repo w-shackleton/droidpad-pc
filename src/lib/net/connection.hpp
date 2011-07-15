@@ -85,6 +85,7 @@ namespace droidpad {
 			bool Start();
 
 		private:
+			char* savedLocale;
 			wxIPV4address addr;
 
 			wxString inData;
