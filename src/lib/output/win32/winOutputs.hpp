@@ -17,40 +17,24 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#include "wOutputMgr.hpp"
 
-#include "types.hpp"
+/*
+   This code contains the functions used to output code on the windows input API,
+   as opposed to the PPJoy API
+   */
+#ifndef DP_WIN_OUTPUTS_H
+#define DP_WIN_OUTPUTS_H
 
-#include "net/connection.hpp"
-#include "log.hpp"
-#include "winOutputs.hpp"
+#include <stdexcept>
 
-#include <windows.h>
+namespace droidpad {
+	namespace win32 {
+		class WinOutputs {
+			public:
+				static bool SendMouseEvent(int dx, int dy, bool left, bool middle, bool right, int scrollDelta);
+				static bool prevLeft, prevMiddle, prevRight;
+		};
+	};
+};
 
-using namespace std;
-using namespace droidpad;
-
-OutputManager::OutputManager(const int type, const int numAxes, const int numButtons) :
-	IOutputManager(type, numAxes, numButtons)
-{
-
-}
-
-OutputManager::~OutputManager() {
-}
-
-void OutputManager::SendJSData(const DPJSData& data) {
-}
-
-void OutputManager::SendMouseData(const DPMouseData& data)
-{
-	if(!droidpad::win32::WinOutputs::SendMouseEvent(data.x / 400, -data.y / 400, data.bLeft, data.bMiddle, data.bRight, data.scrollDelta)) // TODO: Customise scale factors?
-	{
-		LOGWwx(wxT("SendInput failed") + GetLastError());
-	}
-}
-
-void OutputManager::SendSlideData(const DPSlideData& data)
-{
-}
-
+#endif
