@@ -26,13 +26,22 @@
 #define DP_WIN_OUTPUTS_H
 
 #include <stdexcept>
+#include <map>
 
 namespace droidpad {
 	namespace win32 {
 		class WinOutputs {
 			public:
 				static bool SendMouseEvent(int dx, int dy, bool left, bool middle, bool right, int scrollDelta);
+
+				static bool SendKeystroke(int w32keyCode, bool up);
+			private:
 				static bool prevLeft, prevMiddle, prevRight;
+
+				/*
+				   The state of the keys, in win32 keycode format. true is pressed.
+				   */
+				static std::map<int, bool> keyStates;
 		};
 	};
 };

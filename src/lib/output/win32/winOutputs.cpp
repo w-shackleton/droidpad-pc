@@ -24,10 +24,12 @@
 #include <windows.h>
 
 using namespace droidpad::win32;
+using namespace std;
 
 bool WinOutputs::prevLeft;
 bool WinOutputs::prevMiddle;
 bool WinOutputs::prevRight;
+map<int, bool> WinOutputs::keyStates;
 
 bool WinOutputs::SendMouseEvent(int dx, int dy, bool left, bool middle, bool right, int scrollDelta)
 {
@@ -53,3 +55,18 @@ bool WinOutputs::SendMouseEvent(int dx, int dy, bool left, bool middle, bool rig
 	prevRight = right;
 	return SendInput(3, event, sizeof(event[0]));
 }
+
+bool WinOutputs::SendKeystroke(int w32keyCode, bool down)
+{
+	// Check key hasn't been pressed.
+	if(keyStates[w32keyCode] == down) return true; // Don't press if already pressed.
+	keyStates[w32keyCode] = down; // Update cache.
+
+	INPUT event[1];
+	ZeroMemory(event, sizeof(event));
+	event[0].type = INPUT_KEYBOARD;
+	event[0].ki.dwFlags |= down ? 0 : KEYEVENTF_KEYUP;
+	event[0].ki.wVk = w32keyCode;
+	return SendInput(1, event, sizeof(event[0]));
+}
+

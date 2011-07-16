@@ -52,5 +52,13 @@ void OutputManager::SendMouseData(const DPMouseData& data)
 
 void OutputManager::SendSlideData(const DPSlideData& data)
 {
+	droidpad::win32::WinOutputs::SendKeystroke(VK_UP,	data.prev);
+	droidpad::win32::WinOutputs::SendKeystroke(VK_DOWN,	data.next);
+	droidpad::win32::WinOutputs::SendKeystroke(VK_F5,	data.start);
+	droidpad::win32::WinOutputs::SendKeystroke(VK_ESCAPE,	data.finish);
+	droidpad::win32::WinOutputs::SendKeystroke('W',		data.white);
+	droidpad::win32::WinOutputs::SendKeystroke('B',		data.black);
+	droidpad::win32::WinOutputs::SendKeystroke(VK_HOME,	data.beginning);
+	droidpad::win32::WinOutputs::SendKeystroke(VK_END,	data.end);
 }
 
