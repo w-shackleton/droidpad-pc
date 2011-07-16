@@ -96,10 +96,12 @@ am__libdroidpad_la_SOURCES_DIST = include/adb.hpp \
 	output/linux/outputMgr.hpp output/linux/dpinput.c \
 	output/linux/dpinput.h output/linux/platformSettings.hpp \
 	output/win32/wOutputMgr.cpp output/win32/wOutputMgr.hpp \
+	output/win32/winOutputs.cpp output/win32/winOutputs.hpp \
 	output/win32/wPlatformSettings.hpp
 am__objects_1 = libdroidpad_la-outputMgr.lo libdroidpad_la-dpinput.lo
 @OS_LINUX_TRUE@am__objects_2 = $(am__objects_1)
-am__objects_3 = libdroidpad_la-wOutputMgr.lo
+am__objects_3 = libdroidpad_la-wOutputMgr.lo \
+	libdroidpad_la-winOutputs.lo
 @OS_WIN32_TRUE@am__objects_4 = $(am__objects_3)
 am_libdroidpad_la_OBJECTS = libdroidpad_la-proc.lo \
 	libdroidpad_la-data.lo libdroidpad_la-deviceManager.lo \
@@ -369,6 +371,7 @@ SRC_LINUX = \
 
 SRC_WIN32 = \
 		output/win32/wOutputMgr.cpp	output/win32/wOutputMgr.hpp	\
+		output/win32/winOutputs.cpp	output/win32/winOutputs.hpp	\
 		output/win32/wPlatformSettings.hpp
 
 libdroidpad_la_SOURCES = include/adb.hpp include/outputMgr.hpp \
@@ -482,6 +485,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-outputSmoothBuffer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-proc.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-wOutputMgr.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-winOutputs.Plo@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -682,6 +686,14 @@ libdroidpad_la-wOutputMgr.lo: output/win32/wOutputMgr.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='output/win32/wOutputMgr.cpp' object='libdroidpad_la-wOutputMgr.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-wOutputMgr.lo `test -f 'output/win32/wOutputMgr.cpp' || echo '$(srcdir)/'`output/win32/wOutputMgr.cpp
+
+libdroidpad_la-winOutputs.lo: output/win32/winOutputs.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -MT libdroidpad_la-winOutputs.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-winOutputs.Tpo -c -o libdroidpad_la-winOutputs.lo `test -f 'output/win32/winOutputs.cpp' || echo '$(srcdir)/'`output/win32/winOutputs.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libdroidpad_la-winOutputs.Tpo $(DEPDIR)/libdroidpad_la-winOutputs.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='output/win32/winOutputs.cpp' object='libdroidpad_la-winOutputs.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-winOutputs.lo `test -f 'output/win32/winOutputs.cpp' || echo '$(srcdir)/'`output/win32/winOutputs.cpp
 
 mostlyclean-libtool:
 	-rm -f *.lo

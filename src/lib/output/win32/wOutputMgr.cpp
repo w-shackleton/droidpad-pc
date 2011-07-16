@@ -22,6 +22,10 @@
 #include "types.hpp"
 
 #include "net/connection.hpp"
+#include "log.hpp"
+#include "winOutputs.hpp"
+
+#include <windows.h>
 
 using namespace std;
 using namespace droidpad;
@@ -40,9 +44,21 @@ void OutputManager::SendJSData(const DPJSData& data) {
 
 void OutputManager::SendMouseData(const DPMouseData& data)
 {
+	if(!droidpad::win32::WinOutputs::SendMouseEvent(data.x / 400, -data.y / 400, data.bLeft, data.bMiddle, data.bRight, data.scrollDelta)) // TODO: Customise scale factors?
+	{
+		LOGWwx(wxT("SendInput failed") + GetLastError());
+	}
 }
 
 void OutputManager::SendSlideData(const DPSlideData& data)
 {
+	droidpad::win32::WinOutputs::SendKeystroke(VK_UP,	data.prev);
+	droidpad::win32::WinOutputs::SendKeystroke(VK_DOWN,	data.next);
+	droidpad::win32::WinOutputs::SendKeystroke(VK_F5,	data.start);
+	droidpad::win32::WinOutputs::SendKeystroke(VK_ESCAPE,	data.finish);
+	droidpad::win32::WinOutputs::SendKeystroke('W',		data.white);
+	droidpad::win32::WinOutputs::SendKeystroke('B',		data.black);
+	droidpad::win32::WinOutputs::SendKeystroke(VK_HOME,	data.beginning);
+	droidpad::win32::WinOutputs::SendKeystroke(VK_END,	data.end);
 }
 
