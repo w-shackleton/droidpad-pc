@@ -17,7 +17,7 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#include "outputMgr.hpp"
+#include "wOutputMgr.hpp"
 
 #include "types.hpp"
 

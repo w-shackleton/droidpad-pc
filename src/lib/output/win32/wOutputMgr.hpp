@@ -21,7 +21,7 @@
 #define DP_WIN_OUTPUT_MGR_H
 
 #include <stdexcept>
-#include "platformSettings.hpp"
+#include "wPlatformSettings.hpp"
 #include "output/IOutputMgr.hpp"
 
 namespace droidpad {

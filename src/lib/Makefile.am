@@ -24,6 +24,9 @@ SRC_LINUX =	\
 		output/linux/outputMgr.cpp	output/linux/outputMgr.hpp	\
 		output/linux/dpinput.c		output/linux/dpinput.h		\
 		output/linux/platformSettings.hpp
+SRC_WIN32 =	\
+		output/win32/wOutputMgr.cpp	output/win32/wOutputMgr.hpp	\
+		output/win32/wPlatformSettings.hpp
 
 libdroidpad_la_SOURCES = \
 		   include/adb.hpp	\
@@ -51,6 +54,9 @@ libdroidpad_la_SOURCES = \
 
 if OS_LINUX
   libdroidpad_la_SOURCES += $(SRC_LINUX)
+endif
+if OS_WIN32
+  libdroidpad_la_SOURCES += $(SRC_WIN32)
 endif
 
 libdroidpad_la_LIBADD = @WXBASELIBS@

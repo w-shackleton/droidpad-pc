@@ -72,6 +72,18 @@ void* MainThread::Entry()
 					mgr = new OutputSmoothBuffer(innerMgr, mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
 					break;
 			}
+#elif defined OS_WIN32
+			switch(mode.type) {
+				case MODE_JS:
+				case MODE_SLIDE:
+					mgr = new OutputManager(mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
+					break;
+				case MODE_MOUSE:
+					deleteOutputManager = false;
+					OutputManager *innerMgr = new OutputManager(mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
+					mgr = new OutputSmoothBuffer(innerMgr, mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
+					break;
+			}
 #endif
 		} catch(invalid_argument e) {
 			DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_SETUP_FAIL);

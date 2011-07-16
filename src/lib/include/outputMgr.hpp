@@ -20,7 +20,7 @@
 #ifdef OS_LINUX
 #include "output/linux/outputMgr.hpp"
 #elif defined OS_WIN32
-#include "output/win32/outputMgr.hpp"
+#include "output/win32/wOutputMgr.hpp"
 #else
 #error "Output manager not available for this platform."
 #endif
