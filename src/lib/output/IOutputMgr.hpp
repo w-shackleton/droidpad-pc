@@ -34,9 +34,9 @@ namespace droidpad {
 
 			virtual void BeginToStop();
 
-			virtual void SendJSData(const DPJSData& data) = 0;
-			virtual void SendMouseData(const DPMouseData& data) = 0;
-			virtual void SendSlideData(const DPSlideData& data) = 0;
+			virtual void SendJSData(const DPJSData& data, bool firstIteration = true) = 0;
+			virtual void SendMouseData(const DPMouseData& data, bool firstIteration = true) = 0;
+			virtual void SendSlideData(const DPSlideData& data, bool firstIteration = true) = 0;
 		protected:
 			int type;
 	};

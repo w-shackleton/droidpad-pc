@@ -71,12 +71,25 @@ DPMouseData::DPMouseData(const DPJSData& rawData, const DPJSData& prevData) {
 		y = 0;
 	} else {
 		x = rawData.axes[0];
-		y = rawData.axes[1];
+		y = -rawData.axes[1];
 	}
-	if(rawData.touchpadAxes.size() >= 1 && prevData.touchpadAxes.size() >= 1) {
-		scrollDelta = rawData.touchpadAxes[0] - prevData.touchpadAxes[0];
-	} else
+	if(rawData.touchpadAxes.size() == 1 && prevData.touchpadAxes.size() == 1) {
+		incrementalScrollDelta = rawData.touchpadAxes[2] / (50 * 120) - prevData.touchpadAxes[2] / (50 * 120); // Scroll is last.
+		incrementalScrollDelta *= 120;
+		scrollDelta = rawData.touchpadAxes[2] / 50 - prevData.touchpadAxes[2] / 50;
+	} else if(rawData.touchpadAxes.size() >= 3 && prevData.touchpadAxes.size() >= 3) {
+		x = rawData.touchpadAxes[0] - prevData.touchpadAxes[0];
+		y = rawData.touchpadAxes[1] - prevData.touchpadAxes[1];
+		x *= 10;
+		y *= 10;
+
+		incrementalScrollDelta = rawData.touchpadAxes[2] / (50 * 120) - prevData.touchpadAxes[2] / (50 * 120); // Scroll is last.
+		incrementalScrollDelta *= 120;
+		scrollDelta = rawData.touchpadAxes[2] / 50 - prevData.touchpadAxes[2] / 50;
+	} else {
 		scrollDelta = 0;
+		incrementalScrollDelta = 0;
+	}
 	bLeft = rawData.buttons[0];
 	bMiddle = rawData.buttons[1];
 	bRight = rawData.buttons[2];
@@ -125,13 +138,10 @@ DPConnection::DPConnection(wxString host, uint16_t port) :
 	addr.Service(port);
 	
 	SetTimeout(10);
-	savedLocale = setlocale(LC_NUMERIC, NULL);
-	setlocale(LC_NUMERIC, "C"); 
 }
 
 DPConnection::~DPConnection() {
 	SendMessage("<STOP>\n");
-	setlocale(LC_NUMERIC, savedLocale);
 	LOGV("Sent Stop message to server");
 	Close();
 }
@@ -263,6 +273,23 @@ const DPJSData DPConnection::GetData() throw (runtime_error)
 							inNum.imbue(cLocale);
 							inNum >> value;
 							data.axes.push_back(value);
+						}
+					}
+
+					break;
+				case 'C': // 1way touchpad
+				case 'T': // 2way touchpad
+					if(end < start) break; // Malformed?
+					// cout << t(start, end - start).mb_str() << endl;
+					valTk = wxStringTokenizer(t(start, end - start), wxT(","));
+
+					while(valTk.HasMoreTokens()) {
+						{
+							int value;
+							istringstream inNum(string(valTk.GetNextToken().mb_str()));
+							inNum.imbue(cLocale);
+							inNum >> value;
+							data.touchpadAxes.push_back(value);
 						}
 					}
 

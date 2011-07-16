@@ -37,9 +37,9 @@ namespace droidpad {
 
 			void BeginToStop();
 
-			void SendJSData   (const DPJSData& data);
-			void SendMouseData(const DPMouseData& data);
-			void SendSlideData(const DPSlideData& data);
+			void SendJSData   (const DPJSData& data, bool firstIteration = true);
+			void SendMouseData(const DPMouseData& data, bool firstIteration = true);
+			void SendSlideData(const DPSlideData& data, bool firstIteration = true);
 		private:
 			IOutputManager* mgr;
 

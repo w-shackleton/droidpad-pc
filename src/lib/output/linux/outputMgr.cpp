@@ -23,6 +23,8 @@
 
 #include "net/connection.hpp"
 
+#include <iostream>
+
 using namespace std;
 using namespace droidpad;
 
@@ -69,7 +71,7 @@ OutputManager::~OutputManager() {
 	delete buttonBuffer;
 }
 
-void OutputManager::SendJSData(const DPJSData& data) {
+void OutputManager::SendJSData(const DPJSData& data, bool firstIteration) {
 	int i = 0;
 	for(vector<int>::const_iterator it = data.axes.begin(); it != data.axes.end(); it++) {
 		axesBuffer[i++] = *it;
@@ -83,16 +85,16 @@ void OutputManager::SendJSData(const DPJSData& data) {
 	dpinput_sendButtons(dpinput, buttonBuffer, buttonBufferSize);
 }
 
-void OutputManager::SendMouseData(const DPMouseData& data)
+void OutputManager::SendMouseData(const DPMouseData& data, bool firstIteration)
 {
-	dpinput_send2Pos(dpinput, data.x / 400, -data.y / 400); // TODO: Customise?
-	dpinput_sendPos(dpinput, REL_WHEEL, data.scrollDelta); // TODO: Check how this will work.
+	dpinput_send2Pos(dpinput, data.x / 400, data.y / 400); // TODO: Customise?
+	dpinput_sendPos(dpinput, REL_WHEEL, firstIteration ? (-data.incrementalScrollDelta / 120) : 0);
 	dpinput_sendButton(dpinput, BTN_LEFT, data.bLeft);
 	dpinput_sendButton(dpinput, BTN_MIDDLE, data.bMiddle);
 	dpinput_sendButton(dpinput, BTN_RIGHT, data.bRight);
 }
 
-void OutputManager::SendSlideData(const DPSlideData& data)
+void OutputManager::SendSlideData(const DPSlideData& data, bool firstIteration)
 {
 	dpinput_sendButton(dpinput,	KEY_UP,		data.prev);
 	dpinput_sendButton(dpinput,	KEY_DOWN,	data.next);

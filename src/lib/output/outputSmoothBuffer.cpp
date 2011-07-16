@@ -44,13 +44,13 @@ void* OutputSmoothBuffer::Entry()
 		wxMutexLocker lock(callMutex);
 		switch(type) {
 			case MODE_JS:
-				mgr->SendJSData(jsData);
+				mgr->SendJSData(jsData, false);
 				break;
 			case MODE_MOUSE:
-				mgr->SendMouseData(mouseData);
+				mgr->SendMouseData(mouseData, false);
 				break;
 			case MODE_SLIDE:
-				mgr->SendSlideData(slideData);
+				mgr->SendSlideData(slideData, false);
 				break;
 		}
 	}
@@ -61,14 +61,14 @@ void OutputSmoothBuffer::BeginToStop()
 	Delete();
 }
 
-void OutputSmoothBuffer::SendJSData(const DPJSData& data)
+void OutputSmoothBuffer::SendJSData(const DPJSData& data, bool firstIteration)
 {
 	wxMutexLocker lock(callMutex);
 	jsData = data;
 	mgr->SendJSData(data);
 }
 
-void OutputSmoothBuffer::SendMouseData(const DPMouseData& data)
+void OutputSmoothBuffer::SendMouseData(const DPMouseData& data, bool firstIteration)
 {
 	wxMutexLocker lock(callMutex);
 	mouseData = data;
@@ -78,7 +78,7 @@ void OutputSmoothBuffer::SendMouseData(const DPMouseData& data)
 	mgr->SendMouseData(mouseData);
 }
 
-void OutputSmoothBuffer::SendSlideData(const DPSlideData& data)
+void OutputSmoothBuffer::SendSlideData(const DPSlideData& data, bool firstIteration)
 {
 	wxMutexLocker lock(callMutex);
 	slideData = data;

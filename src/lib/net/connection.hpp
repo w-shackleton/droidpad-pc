@@ -62,9 +62,10 @@ namespace droidpad {
 			DPMouseData(const DPJSData& rawData, const DPJSData& prevData);
 
 			/**
-			 * scrollDelta: down is positive.
+			 * scrollDelta: down is positive, same scale as incrementalScrollDelta.
+			 * incrementalScrollDelta: increments are 120.
 			 */
-			int x, y, scrollDelta;
+			int x, y, scrollDelta, incrementalScrollDelta;
 			bool bLeft, bMiddle, bRight;
 	};
 
@@ -85,7 +86,6 @@ namespace droidpad {
 			bool Start();
 
 		private:
-			char* savedLocale;
 			wxIPV4address addr;
 
 			wxString inData;
