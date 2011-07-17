@@ -72,7 +72,7 @@ bool Data::initialise()
 	}
 
 	confLocation = wxStandardPaths::Get().GetUserDataDir();
-	wxMkdir(confLocation);
+	if(!wxDirExists(confLocation)) wxMkdir(confLocation);
 
 	wxTextFile config(wxString(confLocation.c_str(), wxConvUTF8) + wxT("/") + wxT(CONF_FILE));
 	if(config.Open())

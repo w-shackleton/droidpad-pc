@@ -51,6 +51,7 @@ MINGW_FOLDER = /usr/i586-mingw32msvc
 MINGW_FILES =	\
 		$(MINGW_FOLDER)/lib/wxbase28u_gcc_custom.dll		\
 		$(MINGW_FOLDER)/lib/wxbase28u_xml_gcc_custom.dll	\
+		$(MINGW_FOLDER)/lib/wxbase28u_net_gcc_custom.dll	\
 		$(MINGW_FOLDER)/lib/wxmsw28u_adv_gcc_custom.dll		\
 		$(MINGW_FOLDER)/lib/wxmsw28u_core_gcc_custom.dll	\
 		$(MINGW_FOLDER)/lib/wxmsw28u_html_gcc_custom.dll	\

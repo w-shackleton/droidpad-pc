@@ -17,10 +17,33 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#ifdef OS_LINUX
-#include "output/linux/outputMgr.hpp"
-#elif defined OS_WIN32
-#include "output/win32/wOutputMgr.hpp"
-#else
-#error "Output manager not available for this platform."
+
+/*
+   This code contains the functions used to output code on the windows input API,
+   as opposed to the PPJoy API
+   */
+#ifndef DP_WIN_OUTPUTS_H
+#define DP_WIN_OUTPUTS_H
+
+#include <stdexcept>
+#include <map>
+
+namespace droidpad {
+	namespace win32 {
+		class WinOutputs {
+			public:
+				static bool SendMouseEvent(int dx, int dy, bool left, bool middle, bool right, int scrollDelta);
+
+				static bool SendKeystroke(int w32keyCode, bool up);
+			private:
+				static bool prevLeft, prevMiddle, prevRight;
+
+				/*
+				   The state of the keys, in win32 keycode format. true is pressed.
+				   */
+				static std::map<int, bool> keyStates;
+		};
+	};
+};
+
 #endif

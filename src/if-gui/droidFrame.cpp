@@ -33,7 +33,7 @@ BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
 	EVT_MENU(XRCID("menuFileStart"), DroidFrame::OnStart)
 	EVT_MENU(XRCID("menuFileStop"), DroidFrame::OnStop)
 
-	EVT_MENU(XRCID("menuFileQuit"), DroidFrame::OnClose)
+	EVT_MENU(XRCID("menuFileQuit"), DroidFrame::OnMenuClose)
 
 	EVT_LISTBOX(XRCID("devicesList"), DroidFrame::OnListBox)
 	EVT_LISTBOX_DCLICK(XRCID("devicesList"), DroidFrame::OnStart)
@@ -105,7 +105,7 @@ void DroidFrame::OnClose(wxCloseEvent& event)
 	panel->Disable();
 }
 
-void DroidFrame::OnClose(wxCommandEvent& event)
+void DroidFrame::OnMenuClose(wxCommandEvent& event)
 {
 	wxCloseEvent e;
 	OnClose(e);

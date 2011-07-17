@@ -72,7 +72,7 @@ AC_SUBST(WXCXXFLAGS, "$WX_CXXFLAGS_ONLY")
 AC_SUBST(WXCFLAGS, "$WX_CFLAGS_ONLY")
 AC_SUBST(WXLIBS, "$WX_LIBS")
 
-AM_PATH_WXCONFIG($reqwx, wxWin=1, wxWin=0, base)
+AM_PATH_WXCONFIG($reqwx, wxWin=1, wxWin=0, [base net])
 if test "$wxWin" != 1; then
 	AC_MSG_ERROR([
 		wxWidgets must be installed on your system.
