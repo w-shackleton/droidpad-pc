@@ -20,6 +20,7 @@
 #ifndef _DROIDAPP_H
 #define _DROIDAPP_H
 
+#include <fstream>
 #include <wx/app.h>
 #include <wx/log.h>
 
@@ -27,7 +28,10 @@ class DroidApp : public wxApp
 {
 	        virtual bool OnInit();
 
+		virtual int OnExit();
+
 		wxLog *logger;
+		std::ofstream logOut;
 
 	public:
 

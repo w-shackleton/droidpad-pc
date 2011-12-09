@@ -116,6 +116,7 @@ Makefile
 data/Makefile
 data/adb/Makefile
 src/Makefile
+src/lib/ext/win32/Makefile
 src/lib/Makefile
 src/lib/usb/Makefile
 src/lib/usb/all/Makefile

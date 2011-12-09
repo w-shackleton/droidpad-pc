@@ -17,7 +17,7 @@
 # along with DroidPad, in the file COPYING.
 # If not, see <http://www.gnu.org/licenses/>.
 #
-SUBDIRS = usb
+SUBDIRS = usb ext/win32
 lib_LTLIBRARIES = libdroidpad.la
 
 SRC_LINUX =	\
@@ -28,6 +28,7 @@ SRC_WIN32 =	\
 		output/win32/wOutputMgr.cpp	output/win32/wOutputMgr.hpp	\
 		output/win32/winOutputs.cpp	output/win32/winOutputs.hpp	\
 		output/win32/wPlatformSettings.hpp
+
 
 libdroidpad_la_SOURCES = \
 		   include/adb.hpp	\
@@ -65,7 +66,7 @@ libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@ -I. -Iext
 libdroidpad_la_CFLAGS = @WXCPPFLAGS@ -I. -Iext
 
 if OS_WIN32
-libdroidpad_la_LIBADD += -lws2_32
+libdroidpad_la_LIBADD += -lws2_32 ext/win32/libppjoy.la
 libdroidpad_la_LDFLAGS = -Wl,--enable-auto-import
 endif
 

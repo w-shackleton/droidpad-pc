@@ -22,6 +22,7 @@
 #include <wx/xrc/xmlres.h>
 #include <wx/image.h>
 #include <wx/msgdlg.h>
+#include <wx/stdpaths.h>
 
 #include <iostream>
 using namespace std;
@@ -51,7 +52,15 @@ bool DroidApp::OnInit()
 	logger = new wxLogWindow(NULL, _("DroidPad debug log output"));
 	wxLog::SetVerbose(true);
 #else
-	logger = new wxLogGui();
+	// Log errors to a log file.
+	wxString confLocation = wxStandardPaths::Get().GetUserDataDir();
+	if(!wxDirExists(confLocation)) wxMkdir(confLocation);
+	wxString logFile = confLocation + wxT("/log.txt");
+
+	logOut.open(logFile.mb_str(), ios::out | ios::app);
+	logOut << endl;
+	logOut << endl;
+	logger = new wxLogStream(&logOut);
 #endif
 #endif
 	wxLog::SetActiveTarget(logger);
@@ -76,6 +85,10 @@ bool DroidApp::OnInit()
 	frame->Show(true);
 	SetTopWindow(frame);
 	return true;
+}
+
+int DroidApp::OnExit() {
+	logOut.close();
 }
 
 void DroidApp::onDFFinish() {
