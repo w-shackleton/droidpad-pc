@@ -20,34 +20,13 @@
 
 if OS_WIN32
 
-lib_LTLIBRARIES = libppjoy.la
+lib_LTLIBRARIES = libvjoy.la
 
-libppjoy_la_SOURCES =	\
-			ppjoy/branding.h	\
-			ppjoy/ConfigMan.cpp	\
-			ppjoy/ConfigMan.h	\
-			ppjoy/Debug.cpp		\
-			ppjoy/Debug.h		\
-			ppjoy/DeviceSetup.cpp	\
-			ppjoy/DeviceSetup.h	\
-			ppjoy/JoyBus.cpp	\
-			ppjoy/JoyBus.h		\
-			ppjoy/JoyDefs.cpp	\
-			ppjoy/JoyDefs.h		\
-			ppjoy/Mapping.cpp	\
-			ppjoy/Mapping.h		\
-			ppjoy/PPJGUID.h		\
-			ppjoy/PPJIoctl.h	\
-			ppjoy/PPJoyAPI.cpp	\
-			ppjoy/PPJoyAPI.h	\
-			ppjoy/PPJType.h		\
-			ppjoy/README		\
-			ppjoy/stdafx.h		\
-			ppjoy/targetver.h	\
-						\
-			ppjoy/winheader/winioctl.h
+libvjoy_la_SOURCES =	\
+	vjoy/vJoyInstallLib.cpp	vjoy/vJoyInstall.h	\
+	vjoy/stdafx.h		vjoy/public.h		\
+	vjoy/targetver.h	vJoy/winheader/salfix.h
 
-# no warnings is because PPJoy makes LOTS of warnings.
-libppjoy_la_CXXFLAGS = -Ippjoy -I/usr/i586-mingw32msvc/include/ddk -w
+libvjoy_la_CXXFLAGS = -Ivjoy -I/usr/i586-mingw32msvc/include/ddk -w
 
 endif

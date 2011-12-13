@@ -36,7 +36,7 @@ build_triplet = @build@
 host_triplet = @host@
 @OS_LINUX_TRUE@am__append_1 = $(SRC_LINUX)
 @OS_WIN32_TRUE@am__append_2 = $(SRC_WIN32)
-@OS_WIN32_TRUE@am__append_3 = -lws2_32 ext/win32/libppjoy.la
+@OS_WIN32_TRUE@am__append_3 = -lws2_32 ext/win32/libvjoy.la
 
 # For all unices
 @OS_UNIX_TRUE@am__append_4 = -DOS_UNIX
@@ -78,7 +78,7 @@ am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
-@OS_WIN32_TRUE@am__DEPENDENCIES_1 = ext/win32/libppjoy.la
+@OS_WIN32_TRUE@am__DEPENDENCIES_1 = ext/win32/libvjoy.la
 libdroidpad_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am__libdroidpad_la_SOURCES_DIST = include/adb.hpp \
 	include/outputMgr.hpp include/platformSettings.hpp log.hpp \

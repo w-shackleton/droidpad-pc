@@ -90,27 +90,19 @@ am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libppjoy_la_LIBADD =
-am__libppjoy_la_SOURCES_DIST = ppjoy/branding.h ppjoy/ConfigMan.cpp \
-	ppjoy/ConfigMan.h ppjoy/Debug.cpp ppjoy/Debug.h \
-	ppjoy/DeviceSetup.cpp ppjoy/DeviceSetup.h ppjoy/JoyBus.cpp \
-	ppjoy/JoyBus.h ppjoy/JoyDefs.cpp ppjoy/JoyDefs.h \
-	ppjoy/Mapping.cpp ppjoy/Mapping.h ppjoy/PPJGUID.h \
-	ppjoy/PPJIoctl.h ppjoy/PPJoyAPI.cpp ppjoy/PPJoyAPI.h \
-	ppjoy/PPJType.h ppjoy/README ppjoy/stdafx.h ppjoy/targetver.h \
-	ppjoy/winheader/winioctl.h
-@OS_WIN32_TRUE@am_libppjoy_la_OBJECTS = libppjoy_la-ConfigMan.lo \
-@OS_WIN32_TRUE@	libppjoy_la-Debug.lo libppjoy_la-DeviceSetup.lo \
-@OS_WIN32_TRUE@	libppjoy_la-JoyBus.lo libppjoy_la-JoyDefs.lo \
-@OS_WIN32_TRUE@	libppjoy_la-Mapping.lo libppjoy_la-PPJoyAPI.lo
-libppjoy_la_OBJECTS = $(am_libppjoy_la_OBJECTS)
+libvjoy_la_LIBADD =
+am__libvjoy_la_SOURCES_DIST = vjoy/vJoyInstallLib.cpp \
+	vjoy/vJoyInstall.h vjoy/stdafx.h vjoy/public.h \
+	vjoy/targetver.h vJoy/winheader/salfix.h
+@OS_WIN32_TRUE@am_libvjoy_la_OBJECTS = libvjoy_la-vJoyInstallLib.lo
+libvjoy_la_OBJECTS = $(am_libvjoy_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
-libppjoy_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(libppjoy_la_CXXFLAGS) \
+libvjoy_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(libvjoy_la_CXXFLAGS) \
 	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-@OS_WIN32_TRUE@am_libppjoy_la_rpath = -rpath $(libdir)
+@OS_WIN32_TRUE@am_libvjoy_la_rpath = -rpath $(libdir)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -153,8 +145,8 @@ am__v_CCLD_0 = @echo "  CCLD  " $@;
 AM_V_GEN = $(am__v_GEN_$(V))
 am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
 am__v_GEN_0 = @echo "  GEN   " $@;
-SOURCES = $(libppjoy_la_SOURCES)
-DIST_SOURCES = $(am__libppjoy_la_SOURCES_DIST)
+SOURCES = $(libvjoy_la_SOURCES)
+DIST_SOURCES = $(am__libvjoy_la_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -295,35 +287,13 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-@OS_WIN32_TRUE@lib_LTLIBRARIES = libppjoy.la
-@OS_WIN32_TRUE@libppjoy_la_SOURCES = \
-@OS_WIN32_TRUE@			ppjoy/branding.h	\
-@OS_WIN32_TRUE@			ppjoy/ConfigMan.cpp	\
-@OS_WIN32_TRUE@			ppjoy/ConfigMan.h	\
-@OS_WIN32_TRUE@			ppjoy/Debug.cpp		\
-@OS_WIN32_TRUE@			ppjoy/Debug.h		\
-@OS_WIN32_TRUE@			ppjoy/DeviceSetup.cpp	\
-@OS_WIN32_TRUE@			ppjoy/DeviceSetup.h	\
-@OS_WIN32_TRUE@			ppjoy/JoyBus.cpp	\
-@OS_WIN32_TRUE@			ppjoy/JoyBus.h		\
-@OS_WIN32_TRUE@			ppjoy/JoyDefs.cpp	\
-@OS_WIN32_TRUE@			ppjoy/JoyDefs.h		\
-@OS_WIN32_TRUE@			ppjoy/Mapping.cpp	\
-@OS_WIN32_TRUE@			ppjoy/Mapping.h		\
-@OS_WIN32_TRUE@			ppjoy/PPJGUID.h		\
-@OS_WIN32_TRUE@			ppjoy/PPJIoctl.h	\
-@OS_WIN32_TRUE@			ppjoy/PPJoyAPI.cpp	\
-@OS_WIN32_TRUE@			ppjoy/PPJoyAPI.h	\
-@OS_WIN32_TRUE@			ppjoy/PPJType.h		\
-@OS_WIN32_TRUE@			ppjoy/README		\
-@OS_WIN32_TRUE@			ppjoy/stdafx.h		\
-@OS_WIN32_TRUE@			ppjoy/targetver.h	\
-@OS_WIN32_TRUE@						\
-@OS_WIN32_TRUE@			ppjoy/winheader/winioctl.h
+@OS_WIN32_TRUE@lib_LTLIBRARIES = libvjoy.la
+@OS_WIN32_TRUE@libvjoy_la_SOURCES = \
+@OS_WIN32_TRUE@	vjoy/vJoyInstallLib.cpp	vjoy/vJoyInstall.h	\
+@OS_WIN32_TRUE@	vjoy/stdafx.h		vjoy/public.h		\
+@OS_WIN32_TRUE@	vjoy/targetver.h	vJoy/winheader/salfix.h
 
-
-# no warnings is because PPJoy makes LOTS of warnings.
-@OS_WIN32_TRUE@libppjoy_la_CXXFLAGS = -Ippjoy -I/usr/i586-mingw32msvc/include/ddk -w
+@OS_WIN32_TRUE@libvjoy_la_CXXFLAGS = -Ivjoy -I/usr/i586-mingw32msvc/include/ddk -w
 all: all-am
 
 .SUFFIXES:
@@ -389,8 +359,8 @@ clean-libLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
-libppjoy.la: $(libppjoy_la_OBJECTS) $(libppjoy_la_DEPENDENCIES) 
-	$(AM_V_CXXLD)$(libppjoy_la_LINK) $(am_libppjoy_la_rpath) $(libppjoy_la_OBJECTS) $(libppjoy_la_LIBADD) $(LIBS)
+libvjoy.la: $(libvjoy_la_OBJECTS) $(libvjoy_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(libvjoy_la_LINK) $(am_libvjoy_la_rpath) $(libvjoy_la_OBJECTS) $(libvjoy_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -398,13 +368,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libppjoy_la-ConfigMan.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libppjoy_la-Debug.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libppjoy_la-DeviceSetup.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libppjoy_la-JoyBus.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libppjoy_la-JoyDefs.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libppjoy_la-Mapping.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libppjoy_la-PPJoyAPI.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvjoy_la-vJoyInstallLib.Plo@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -430,61 +394,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
-libppjoy_la-ConfigMan.lo: ppjoy/ConfigMan.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libppjoy_la_CXXFLAGS) $(CXXFLAGS) -MT libppjoy_la-ConfigMan.lo -MD -MP -MF $(DEPDIR)/libppjoy_la-ConfigMan.Tpo -c -o libppjoy_la-ConfigMan.lo `test -f 'ppjoy/ConfigMan.cpp' || echo '$(srcdir)/'`ppjoy/ConfigMan.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libppjoy_la-ConfigMan.Tpo $(DEPDIR)/libppjoy_la-ConfigMan.Plo
+libvjoy_la-vJoyInstallLib.lo: vjoy/vJoyInstallLib.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvjoy_la_CXXFLAGS) $(CXXFLAGS) -MT libvjoy_la-vJoyInstallLib.lo -MD -MP -MF $(DEPDIR)/libvjoy_la-vJoyInstallLib.Tpo -c -o libvjoy_la-vJoyInstallLib.lo `test -f 'vjoy/vJoyInstallLib.cpp' || echo '$(srcdir)/'`vjoy/vJoyInstallLib.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libvjoy_la-vJoyInstallLib.Tpo $(DEPDIR)/libvjoy_la-vJoyInstallLib.Plo
 @am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ppjoy/ConfigMan.cpp' object='libppjoy_la-ConfigMan.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='vjoy/vJoyInstallLib.cpp' object='libvjoy_la-vJoyInstallLib.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libppjoy_la_CXXFLAGS) $(CXXFLAGS) -c -o libppjoy_la-ConfigMan.lo `test -f 'ppjoy/ConfigMan.cpp' || echo '$(srcdir)/'`ppjoy/ConfigMan.cpp
-
-libppjoy_la-Debug.lo: ppjoy/Debug.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libppjoy_la_CXXFLAGS) $(CXXFLAGS) -MT libppjoy_la-Debug.lo -MD -MP -MF $(DEPDIR)/libppjoy_la-Debug.Tpo -c -o libppjoy_la-Debug.lo `test -f 'ppjoy/Debug.cpp' || echo '$(srcdir)/'`ppjoy/Debug.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libppjoy_la-Debug.Tpo $(DEPDIR)/libppjoy_la-Debug.Plo
-@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ppjoy/Debug.cpp' object='libppjoy_la-Debug.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libppjoy_la_CXXFLAGS) $(CXXFLAGS) -c -o libppjoy_la-Debug.lo `test -f 'ppjoy/Debug.cpp' || echo '$(srcdir)/'`ppjoy/Debug.cpp
-
-libppjoy_la-DeviceSetup.lo: ppjoy/DeviceSetup.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libppjoy_la_CXXFLAGS) $(CXXFLAGS) -MT libppjoy_la-DeviceSetup.lo -MD -MP -MF $(DEPDIR)/libppjoy_la-DeviceSetup.Tpo -c -o libppjoy_la-DeviceSetup.lo `test -f 'ppjoy/DeviceSetup.cpp' || echo '$(srcdir)/'`ppjoy/DeviceSetup.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libppjoy_la-DeviceSetup.Tpo $(DEPDIR)/libppjoy_la-DeviceSetup.Plo
-@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ppjoy/DeviceSetup.cpp' object='libppjoy_la-DeviceSetup.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libppjoy_la_CXXFLAGS) $(CXXFLAGS) -c -o libppjoy_la-DeviceSetup.lo `test -f 'ppjoy/DeviceSetup.cpp' || echo '$(srcdir)/'`ppjoy/DeviceSetup.cpp
-
-libppjoy_la-JoyBus.lo: ppjoy/JoyBus.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libppjoy_la_CXXFLAGS) $(CXXFLAGS) -MT libppjoy_la-JoyBus.lo -MD -MP -MF $(DEPDIR)/libppjoy_la-JoyBus.Tpo -c -o libppjoy_la-JoyBus.lo `test -f 'ppjoy/JoyBus.cpp' || echo '$(srcdir)/'`ppjoy/JoyBus.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libppjoy_la-JoyBus.Tpo $(DEPDIR)/libppjoy_la-JoyBus.Plo
-@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ppjoy/JoyBus.cpp' object='libppjoy_la-JoyBus.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libppjoy_la_CXXFLAGS) $(CXXFLAGS) -c -o libppjoy_la-JoyBus.lo `test -f 'ppjoy/JoyBus.cpp' || echo '$(srcdir)/'`ppjoy/JoyBus.cpp
-
-libppjoy_la-JoyDefs.lo: ppjoy/JoyDefs.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libppjoy_la_CXXFLAGS) $(CXXFLAGS) -MT libppjoy_la-JoyDefs.lo -MD -MP -MF $(DEPDIR)/libppjoy_la-JoyDefs.Tpo -c -o libppjoy_la-JoyDefs.lo `test -f 'ppjoy/JoyDefs.cpp' || echo '$(srcdir)/'`ppjoy/JoyDefs.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libppjoy_la-JoyDefs.Tpo $(DEPDIR)/libppjoy_la-JoyDefs.Plo
-@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ppjoy/JoyDefs.cpp' object='libppjoy_la-JoyDefs.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libppjoy_la_CXXFLAGS) $(CXXFLAGS) -c -o libppjoy_la-JoyDefs.lo `test -f 'ppjoy/JoyDefs.cpp' || echo '$(srcdir)/'`ppjoy/JoyDefs.cpp
-
-libppjoy_la-Mapping.lo: ppjoy/Mapping.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libppjoy_la_CXXFLAGS) $(CXXFLAGS) -MT libppjoy_la-Mapping.lo -MD -MP -MF $(DEPDIR)/libppjoy_la-Mapping.Tpo -c -o libppjoy_la-Mapping.lo `test -f 'ppjoy/Mapping.cpp' || echo '$(srcdir)/'`ppjoy/Mapping.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libppjoy_la-Mapping.Tpo $(DEPDIR)/libppjoy_la-Mapping.Plo
-@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ppjoy/Mapping.cpp' object='libppjoy_la-Mapping.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libppjoy_la_CXXFLAGS) $(CXXFLAGS) -c -o libppjoy_la-Mapping.lo `test -f 'ppjoy/Mapping.cpp' || echo '$(srcdir)/'`ppjoy/Mapping.cpp
-
-libppjoy_la-PPJoyAPI.lo: ppjoy/PPJoyAPI.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libppjoy_la_CXXFLAGS) $(CXXFLAGS) -MT libppjoy_la-PPJoyAPI.lo -MD -MP -MF $(DEPDIR)/libppjoy_la-PPJoyAPI.Tpo -c -o libppjoy_la-PPJoyAPI.lo `test -f 'ppjoy/PPJoyAPI.cpp' || echo '$(srcdir)/'`ppjoy/PPJoyAPI.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libppjoy_la-PPJoyAPI.Tpo $(DEPDIR)/libppjoy_la-PPJoyAPI.Plo
-@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='ppjoy/PPJoyAPI.cpp' object='libppjoy_la-PPJoyAPI.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libppjoy_la_CXXFLAGS) $(CXXFLAGS) -c -o libppjoy_la-PPJoyAPI.lo `test -f 'ppjoy/PPJoyAPI.cpp' || echo '$(srcdir)/'`ppjoy/PPJoyAPI.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvjoy_la_CXXFLAGS) $(CXXFLAGS) -c -o libvjoy_la-vJoyInstallLib.lo `test -f 'vjoy/vJoyInstallLib.cpp' || echo '$(srcdir)/'`vjoy/vJoyInstallLib.cpp
 
 mostlyclean-libtool:
 	-rm -f *.lo

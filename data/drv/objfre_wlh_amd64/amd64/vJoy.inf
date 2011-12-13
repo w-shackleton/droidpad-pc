@@ -1,0 +1,182 @@
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; 
+;; Installation file for vJoy - Virtual Joystick Driver
+;;
+;; Copyright 2010-2011, Shaul Eizikovich
+;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+[Version]
+Signature="$CHICAGO$"
+Class=HIDClass
+ClassGuid={7632f26a-ea05-488d-a1e3-b3206882fa98}
+Provider=%VENDOR%
+;LayoutFile=layout.inf
+DriverVer=12/13/2011,6.1.7600.16385
+CatalogFile = vJoy.cat
+
+
+;   
+;   In order to use IHV drivers, the SourceDisksNames section must list the 
+;   disk(s) containing the drivers and the SourceDisksFiles section must list 
+;   which disk number each file to be copied is found on.
+;   Disk number 99 is used to avoid a conflict with the disk numbers defined 
+;   in layout.inf
+;
+;   Files used in a driver installation need to be digitally signed otherwise 
+;   installation may fail.  See documentation elsewhere in the DDK regarding 
+;   driver signing.
+
+[SourceDisksFiles]
+vjoy.sys = 99
+hidkmdf.sys = 99
+
+[SourceDisksNames]
+99 = %DISK_NAME%,,,""
+
+[DestinationDirs]
+CopySystemSysFiles = 12      
+CopyFunctionDriver = 12      
+;CopyFilterDriver = 12      
+CopyFilesDLL = 11 
+
+[Manufacturer]
+%VENDOR%=Vendor, NTAMD64, NTAMD64.6.1
+
+
+; For XP and later
+[Vendor.NTAMD64]
+%vjoy%    = vjoy.Inst, root\VID_8191&PID_BEAD&REV_0002
+
+; For Win7 and later so that we can use inbox HID-KMDF mapper
+[Vendor.NTAMD64.6.1]
+%vjoy%    = vjoy.Inst.Win7, root\VID_8191&PID_BEAD&REV_0002
+
+
+;===============================================================
+;   vJoy for XP thru Vista
+;===============================================================
+[vjoy.Inst.NT]
+CopyFiles = CopySystemSysFiles, CopyFunctionDriver, CopyFilesDLL
+Include = input.inf
+Needs   = HID_Inst.NT
+
+[vjoy.Inst.NT.HW]
+AddReg = vjoy.AddReg 
+
+;
+; hidkmdf is the function driver and vJoy is the lower filter
+;
+[vjoy.Inst.NT.Services]
+AddService = hidkmdf,,hidkmdf_Service_Inst,
+AddService = vjoy,0x00000002, vjoy_Service_Inst
+
+[CopyFunctionDriver]
+hidkmdf.sys
+
+[vjoy.AddReg]
+HKR,,"UpperFilters",0x00010000,"hidkmdf"
+
+[hidkmdf_Service_Inst]
+DisplayName    = %hidkmdf.SVCDESC%
+ServiceType    = 1               ; SERVICE_KERNEL_DRIVER
+StartType      = 3               ; SERVICE_DEMAND_START 
+ErrorControl   = 1               ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\hidkmdf.sys
+LoadOrderGroup = PNP Filter
+
+
+;===============================================================
+;   vJoy for Win7
+;   Instead of using hidkmdf.sys as a filter, use the inbox 
+;   mshidkmdf.sys as a mapper filter
+;===============================================================
+[vjoy.Inst.Win7.NT]
+; Just copy the driver. No neeed to copy other system binaries.
+CopyFiles = CopyFunctionDriver
+
+[vjoy.Inst.Win7.NT.HW]
+AddReg = vjoy_Win7_Parameters.AddReg 
+
+;
+; hidkmdf is the function driver and vJoy is the lower filter
+;
+[vjoy.Inst.Win7.NT.Services]
+AddService = vjoy,0x00000002, vjoy_Service_Inst
+
+[vjoy_Win7_Parameters.AddReg]
+HKR,,"UpperFilters",0x00010000,"mshidkmdf"
+;===============================================================
+;   Sections common to all OS versions
+;===============================================================
+
+[CopySystemSysFiles]
+;HidClass.sys,,,0x00000010    ;COPYFLG_NO_OVERWRITE (for win2k)
+;HidParse.sys,,,0x00000010    ;COPYFLG_NO_OVERWRITE (for win2k)
+
+[CopyFunctionDriver]
+vjoy.sys
+
+[CopyFilesDLL]
+;Hid.dll,,,0x00000010    ;COPYFLG_NO_OVERWRITE (for win2k)
+
+[vjoy_Service_Inst]
+DisplayName    = %vjoy%
+ServiceType    = %SERVICE_KERNEL_DRIVER% 
+StartType      = %SERVICE_DEMAND_START% 
+ErrorControl   = %SERVICE_ERROR_IGNORE% 
+ServiceBinary  = %12%\vjoy.sys  
+
+
+;================================================================
+;--- WDF Coinstaller installation ------
+;
+[DestinationDirs]
+vjoy.Inst_CoInstaller_CopyFiles = 11
+
+[vjoy.Inst.NT.CoInstallers]
+AddReg=vjoy.Inst_CoInstaller_AddReg
+CopyFiles=vjoy.Inst_CoInstaller_CopyFiles
+
+[vjoy.Inst_CoInstaller_AddReg]
+HKR,,CoInstallers32,0x00010000, "WdfCoInstaller01009.dll,WdfCoInstaller"
+
+[vjoy.Inst_CoInstaller_CopyFiles]
+WdfCoInstaller01009.dll
+
+[SourceDisksFiles]
+WdfCoInstaller01009.dll=99 ; make sure the number matches with SourceDisksNames
+
+[vjoy.Inst.NT.Wdf]
+KmdfService = vjoy, vjoy_wdfsect
+[vjoy_wdfsect]
+KmdfLibraryVersion = 1.9
+
+[Strings] 
+;  *******Localizable Strings******* 
+VENDOR         = "Shaul Eizikovich" 
+vjoy       	= "vJoy Device (DroidPad)" 
+DISK_NAME      = "vJoy Device Install Disk"
+hidkmdf.SVCDESC= "Filter Driver Service for HID-KMDF Interface layer"
+
+;  *******Non Localizable Strings******* 
+
+SERVICE_BOOT_START     = 0x0 
+SERVICE_SYSTEM_START   = 0x1 
+SERVICE_AUTO_START     = 0x2 
+SERVICE_DEMAND_START   = 0x3 
+SERVICE_DISABLED       = 0x4 
+
+SERVICE_KERNEL_DRIVER  = 0x1 
+SERVICE_ERROR_IGNORE   = 0x0 
+SERVICE_ERROR_NORMAL   = 0x1 
+SERVICE_ERROR_SEVERE   = 0x2 
+SERVICE_ERROR_CRITICAL = 0x3 
+
+REG_EXPAND_SZ          = 0x00020000 
+REG_DWORD              = 0x00010001 
+REG_MULTI_SZ           = 0x00010000
+REG_BINARY             = 0x00000001
+REG_SZ                 = 0x00000000
+
