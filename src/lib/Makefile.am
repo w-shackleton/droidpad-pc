@@ -27,7 +27,8 @@ SRC_LINUX =	\
 SRC_WIN32 =	\
 		output/win32/wOutputMgr.cpp	output/win32/wOutputMgr.hpp	\
 		output/win32/winOutputs.cpp	output/win32/winOutputs.hpp	\
-		output/win32/wPlatformSettings.hpp
+		output/win32/wPlatformSettings.hpp				\
+		winSetup.cpp			winSetup.hpp
 
 
 libdroidpad_la_SOURCES = \

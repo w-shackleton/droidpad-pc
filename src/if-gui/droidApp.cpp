@@ -29,6 +29,7 @@ using namespace std;
 
 #include "droidFrame.hpp"
 #include "data.hpp"
+#include "setup.hpp"
 
 using namespace droidpad;
 
@@ -65,6 +66,14 @@ bool DroidApp::OnInit()
 #endif
 	wxLog::SetActiveTarget(logger);
 	SetAppName(_T("droidpad"));
+
+	if(runSetup) {
+		return dpSetup(*this);
+	}
+	if(runRemove) {
+		return dpRemove(*this);
+	}
+
 	wxInitAllImageHandlers();
 
 	if(!Data::initialise())
@@ -89,8 +98,19 @@ bool DroidApp::OnInit()
 
 int DroidApp::OnExit() {
 	logOut.close();
+	return 0;
 }
 
 void DroidApp::onDFFinish() {
 	ExitMainLoop();
+}
+
+void DroidApp::OnInitCmdLine(wxCmdLineParser& parser) {
+	parser.SetDesc(dp_cmdLineDesc);
+	parser.SetSwitchChars(wxT("-"));
+}
+bool DroidApp::OnCmdLineParsed(wxCmdLineParser& parser) {
+	runSetup = parser.Found(wxT("s"));
+	runRemove = parser.Found(wxT("u"));
+	return true;
 }

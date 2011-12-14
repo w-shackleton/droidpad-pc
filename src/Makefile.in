@@ -58,9 +58,10 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__droidpad_SOURCES_DIST = if-gui/droidFrame.cpp \
-	if-gui/droidFrame.hpp if-gui/droidApp.cpp if-gui/droidApp.hpp
+	if-gui/droidFrame.hpp if-gui/droidApp.cpp if-gui/droidApp.hpp \
+	if-gui/setup.cpp if-gui/setup.h
 am__objects_1 = droidpad-droidFrame.$(OBJEXT) \
-	droidpad-droidApp.$(OBJEXT)
+	droidpad-droidApp.$(OBJEXT) droidpad-setup.$(OBJEXT)
 @IF_GUI_TRUE@am__objects_2 = $(am__objects_1)
 am_droidpad_OBJECTS = $(am__objects_2)
 droidpad_OBJECTS = $(am_droidpad_OBJECTS)
@@ -320,7 +321,8 @@ top_srcdir = @top_srcdir@
 SUBDIRS = lib
 SRC_IF_GUI = \
 		   if-gui/droidFrame.cpp	if-gui/droidFrame.hpp	\
-		   if-gui/droidApp.cpp		if-gui/droidApp.hpp
+		   if-gui/droidApp.cpp		if-gui/droidApp.hpp	\
+		   if-gui/setup.cpp		if-gui/setup.h
 
 droidpad_SOURCES = $(am__append_1)
 @IF_GUI_FALSE@droidpad_LDADD = @WXBASELIBS@ lib/libdroidpad.la \
@@ -428,6 +430,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-droidApp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-droidFrame.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-setup.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -484,6 +487,22 @@ droidpad-droidApp.obj: if-gui/droidApp.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='if-gui/droidApp.cpp' object='droidpad-droidApp.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-droidApp.obj `if test -f 'if-gui/droidApp.cpp'; then $(CYGPATH_W) 'if-gui/droidApp.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/droidApp.cpp'; fi`
+
+droidpad-setup.o: if-gui/setup.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -MT droidpad-setup.o -MD -MP -MF $(DEPDIR)/droidpad-setup.Tpo -c -o droidpad-setup.o `test -f 'if-gui/setup.cpp' || echo '$(srcdir)/'`if-gui/setup.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/droidpad-setup.Tpo $(DEPDIR)/droidpad-setup.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='if-gui/setup.cpp' object='droidpad-setup.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-setup.o `test -f 'if-gui/setup.cpp' || echo '$(srcdir)/'`if-gui/setup.cpp
+
+droidpad-setup.obj: if-gui/setup.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -MT droidpad-setup.obj -MD -MP -MF $(DEPDIR)/droidpad-setup.Tpo -c -o droidpad-setup.obj `if test -f 'if-gui/setup.cpp'; then $(CYGPATH_W) 'if-gui/setup.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/setup.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/droidpad-setup.Tpo $(DEPDIR)/droidpad-setup.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='if-gui/setup.cpp' object='droidpad-setup.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-setup.obj `if test -f 'if-gui/setup.cpp'; then $(CYGPATH_W) 'if-gui/setup.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/setup.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo

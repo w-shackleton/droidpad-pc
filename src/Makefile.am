@@ -22,7 +22,8 @@ bin_PROGRAMS = droidpad
 
 SRC_IF_GUI = \
 		   if-gui/droidFrame.cpp	if-gui/droidFrame.hpp	\
-		   if-gui/droidApp.cpp		if-gui/droidApp.hpp
+		   if-gui/droidApp.cpp		if-gui/droidApp.hpp	\
+		   if-gui/setup.cpp		if-gui/setup.h
 droidpad_SOURCES =
 
 if IF_GUI

@@ -24,6 +24,9 @@
 #include <wx/app.h>
 #include <wx/log.h>
 
+#include <wx/wxprec.h>
+#include <wx/cmdline.h>
+
 class DroidApp : public wxApp
 {
 	        virtual bool OnInit();
@@ -33,11 +36,28 @@ class DroidApp : public wxApp
 		wxLog *logger;
 		std::ofstream logOut;
 
+		bool runSetup;
+		bool runRemove;
+
 	public:
+		virtual void OnInitCmdLine(wxCmdLineParser& parser);
+		virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
 
 		void onDFFinish();
 };
 
 DECLARE_APP(DroidApp)
+
+static const wxCmdLineEntryDesc dp_cmdLineDesc [] =
+{
+	{ wxCMD_LINE_SWITCH, wxT("h"), wxT("help"), wxT("displays help on the command line parameters"),
+		wxCMD_LINE_VAL_NONE, wxCMD_LINE_OPTION_HELP },
+	{ wxCMD_LINE_SWITCH, wxT("s"), wxT("setup"), wxT("sets up DroidPad components"),
+		wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL  },
+	{ wxCMD_LINE_SWITCH, wxT("u"), wxT("remove"), wxT("removes DroidPad components"),
+		wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL  },
+
+	{ wxCMD_LINE_NONE }
+};
 
 #endif

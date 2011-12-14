@@ -48,6 +48,9 @@ namespace droidpad {
 		THREAD_ERROR_CONNECTION_LOST,
 	};
 
+	/**
+	 * Some sort of device manager status notification
+	 */
 	class DMEvent : public wxEvent
 	{
 		public:
@@ -64,6 +67,9 @@ namespace droidpad {
 
 	typedef void (wxEvtHandler::*dmEventFunction)(DMEvent&);
 
+	/**
+	 * Represents a list of potential devices
+	 */
 	class DevicesList : public wxEvent
 	{
 		public:

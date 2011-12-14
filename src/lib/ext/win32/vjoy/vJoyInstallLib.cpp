@@ -991,12 +991,16 @@ EXIT_xxxx
 
 }
 
+// NOTE: ppjoy mode is disabled, so we DON'T want to ever check to see if it is installed.
 BOOL isPPJoyInstalled()
 {
+	return false;
+	/*
 	TCHAR InstanceId[MAX_DEVICE_ID_LEN];
 
 	BOOL installed = FindInstalled(HWID_PPJOY0, InstanceId);
 	return installed;
+	*/
 }
 
 BOOL isvJoyInstalled()
