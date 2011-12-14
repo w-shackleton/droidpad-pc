@@ -28,8 +28,8 @@
 #include <wx/button.h>
 #include <wx/stattext.h>
 
+#ifdef OS_WIN32
 #include "winSetup.hpp"
-
 class WinSetupFrame : public wxFrame {
 	public:
 		WinSetupFrame(int mode);
@@ -53,6 +53,8 @@ class WinSetupFrame : public wxFrame {
 
 		wxStaticText* textPanel_text;
 };
+#endif
+
 
 class DroidApp;
 

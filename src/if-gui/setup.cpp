@@ -11,6 +11,7 @@
 using namespace std;
 using namespace droidpad;
 
+#ifdef OS_WIN32
 BEGIN_EVENT_TABLE(WinSetupFrame, wxFrame)
 	EVT_SETUP(SETUP_INITIALISED, WinSetupFrame::OnSetupInitialised)
 	EVT_SETUP(REMOVE_INITIALISED, WinSetupFrame::OnRemoveInitialised)
@@ -64,6 +65,7 @@ void WinSetupFrame::OnRemoveInitialised(SetupEvent& event) {
 void WinSetupFrame::handleXMLError(wxString name) {
 	wxMessageDialog(this, wxString::Format(_("Error loading layout while loading \"%s\".\nPlease report this as a bug."), name.c_str()), _("Error loading layout"), wxOK | wxICON_EXCLAMATION).ShowModal();
 }
+#endif
 
 
 bool dpSetup(DroidApp& app) {
