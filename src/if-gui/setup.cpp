@@ -18,6 +18,7 @@ BEGIN_EVENT_TABLE(WinSetupFrame, wxFrame)
 	EVT_SETUP(REMOVE_INITIALISED, WinSetupFrame::OnRemoveInitialised)
 
 	EVT_SETUP(SETUP_FINISHED, WinSetupFrame::OnSetupFinished)
+	EVT_SETUP(SETUP_EXIT, WinSetupFrame::OnSetupExit)
 
 	EVT_CLOSE(WinSetupFrame::OnClose)
 END_EVENT_TABLE()
@@ -73,6 +74,7 @@ WinSetupFrame::WinSetupFrame(int mode) :
 }
 
 WinSetupFrame::~WinSetupFrame() {
+	wxGetApp().onDFFinish();
 }
 
 void WinSetupFrame::OnClose(wxCloseEvent& event) {
@@ -85,6 +87,8 @@ void WinSetupFrame::OnClose(wxCloseEvent& event) {
 
 void WinSetupFrame::OnSetupInitialised(SetupEvent& event) {
 	LOGV("Setup initialised");
+	activateView(VIEW_TEXT);
+	textPanel_text->SetLabel(_("Installing DroidPad drivers..."));
 }
 
 void WinSetupFrame::OnRemoveInitialised(SetupEvent& event) {
@@ -93,7 +97,12 @@ void WinSetupFrame::OnRemoveInitialised(SetupEvent& event) {
 
 void WinSetupFrame::OnSetupFinished(SetupEvent& event) {
 	LOGV("Setup finished");
+	activateView(VIEW_TEXT);
+	textPanel_text->SetLabel(_("Done!"));
+}
+void WinSetupFrame::OnSetupExit(SetupEvent& event) {
 	running = false;
+	Destroy();
 }
 
 void WinSetupFrame::activateView(int view) {

@@ -10,6 +10,7 @@ DEFINE_LOCAL_EVENT_TYPE(SETUP_INITIALISED)
 DEFINE_LOCAL_EVENT_TYPE(REMOVE_INITIALISED)
 
 DEFINE_LOCAL_EVENT_TYPE(SETUP_FINISHED)
+DEFINE_LOCAL_EVENT_TYPE(SETUP_EXIT)
 
 IMPLEMENT_DYNAMIC_CLASS(SetupEvent, wxEvent)
 
@@ -34,8 +35,16 @@ void* SetupThread::Entry() {
 		callback.AddPendingEvent(evt);
 		} break;
 	}
+
 	SetupEvent evt(SETUP_FINISHED);
 	callback.AddPendingEvent(evt);
+
+	Sleep(1000);
+
+	{
+		SetupEvent evt(SETUP_EXIT);
+		callback.AddPendingEvent(evt);
+	}
 }
 
 
