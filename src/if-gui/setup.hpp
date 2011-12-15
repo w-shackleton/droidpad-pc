@@ -25,11 +25,20 @@
 
 #include <wx/frame.h>
 #include <wx/panel.h>
+#include <wx/sizer.h>
 #include <wx/button.h>
 #include <wx/stattext.h>
 
+#include "pageSizer.hpp"
+
 #ifdef OS_WIN32
 #include "winSetup.hpp"
+
+enum {
+	VIEW_TEXT,
+	VIEW_OTHER
+};
+
 class WinSetupFrame : public wxFrame {
 	public:
 		WinSetupFrame(int mode);
@@ -41,17 +50,29 @@ class WinSetupFrame : public wxFrame {
 		void OnSetupInitialised(droidpad::SetupEvent& event);
 		
 		void OnRemoveInitialised(droidpad::SetupEvent& event);
+
+		void OnSetupFinished(droidpad::SetupEvent& event);
 	public:
+
+	protected:
+		void activateView(int view);
+
 	private:
 		void handleXMLError(wxString name);
 
 		int mode;
 		droidpad::SetupThread* setup;
 
+		wxPanel *parent, *panel;
+		PageSizer *parentSizer;
+		wxSizer *panelSizer;
+
 		// This panel simply shows some text.
-		wxPanel *textPanel;
+		wxPanel *textPanel, *otherPanel;
 
 		wxStaticText* textPanel_text;
+
+		bool running;
 };
 #endif
 

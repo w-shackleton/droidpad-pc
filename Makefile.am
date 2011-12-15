@@ -59,12 +59,35 @@ MINGW_FILES =	\
 		$(MINGW_FOLDER)/bin/mingwm10.dll			\
 		$(MINGW_FOLDER)/bin/zlib1.dll
 
+DRVDIR_x86 = data/drv/objfre_wxp_x86/i386
+DRVDIR_amd64 = data/drv/objfre_wlh_amd64/amd64
+DRVS_x86 =	\
+	$(DRVDIR_x86)/hidkmdf.sys	\
+	$(DRVDIR_x86)/vjoy.cat		\
+	$(DRVDIR_x86)/vJoy.inf		\
+	$(DRVDIR_x86)/vJoy.sys		\
+	$(DRVDIR_x86)/WdfCoInstaller01009.dll	\
+	$(DRVDIR_x86)/WUDFUpdate_01009.dll
+DRVS_amd64 =	\
+	$(DRVDIR_amd64)/hidkmdf.sys	\
+	$(DRVDIR_amd64)/vjoy.cat		\
+	$(DRVDIR_amd64)/vJoy.inf		\
+	$(DRVDIR_amd64)/vJoy.sys		\
+	$(DRVDIR_amd64)/WdfCoInstaller01009.dll	\
+	$(DRVDIR_amd64)/WUDFUpdate_01009.dll
+
+
 winexport: all
 	@echo "--- EXPORTING to 'winexport' for windows install ---"
 	test -d "winexport" || mkdir winexport
 	test -d "winexport/data" || mkdir winexport/data
 	test -d "winexport/data/adb" || mkdir winexport/data/adb
+	test -d "winexport/data/driver" || mkdir winexport/data/driver
+	test -d "winexport/data/driver/x86" || mkdir winexport/data/driver/x86
+	test -d "winexport/data/driver/amd64" || mkdir winexport/data/driver/amd64
 	cp src/droidpad.exe winexport/
 	cp $(DPDATA) winexport/data
 	cp $(ADB) winexport/data/adb
 	cp $(MINGW_FILES) winexport/
+	cp $(DRVS_x86) winexport/data/driver/x86
+	cp $(DRVS_amd64) winexport/data/driver/amd64

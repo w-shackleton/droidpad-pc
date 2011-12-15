@@ -2,6 +2,7 @@
 
 #include "droidApp.hpp"
 #include "data.hpp"
+#include "log.hpp"
 
 #include <wx/xrc/xmlres.h>
 #include <wx/icon.h>
@@ -15,6 +16,8 @@ using namespace droidpad;
 BEGIN_EVENT_TABLE(WinSetupFrame, wxFrame)
 	EVT_SETUP(SETUP_INITIALISED, WinSetupFrame::OnSetupInitialised)
 	EVT_SETUP(REMOVE_INITIALISED, WinSetupFrame::OnRemoveInitialised)
+
+	EVT_SETUP(SETUP_FINISHED, WinSetupFrame::OnSetupFinished)
 
 	EVT_CLOSE(WinSetupFrame::OnClose)
 END_EVENT_TABLE()
@@ -36,30 +39,73 @@ WinSetupFrame::WinSetupFrame(int mode) :
 {
 	SetIcon(wxIcon(wxString(Data::getFilePath(_FRAME_ICON).c_str(), wxConvUTF8), wxBITMAP_TYPE_XPM));
 
-	textPanel = wxXmlResource::Get()->LoadPanel(this, wxT("setupTextView"));
-	textPanel->SetSizerAndFit(textPanel->GetSizer());
-	wxSize sz;
-	sz.SetHeight(200);
-	sz.SetWidth(500);
-	SetSize(sz);
+	parent = new wxPanel(this);
+	parentSizer = new PageSizer;
+	parent->SetSizer(parentSizer);
 
-	LOADXRC(setupSimpleText, textPanel_text, wxStaticText);
+	// TEXT
+	textPanel = new wxPanel(parent);
+	wxBoxSizer *textPanelSizer = new wxBoxSizer(wxVERTICAL);
+	textPanel->SetSizer(textPanelSizer);
+
+	textPanel_text = new wxStaticText(textPanel, -1, _("Loading..."), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
+	textPanelSizer->Add(textPanel_text, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL);
+
+	parentSizer->Add(textPanel, 1, wxEXPAND | wxALL, 5);
+	
+	// TESTING
+	otherPanel = new wxPanel(parent);
+	wxBoxSizer *otherPanelSizer = new wxBoxSizer(wxVERTICAL);
+	otherPanel->SetSizer(otherPanelSizer);
+
+	wxButton *button = new wxButton(otherPanel, -1, _("Test"));
+	otherPanelSizer->Add(button, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL);
+
+	parentSizer->Add(otherPanel, 1, wxEXPAND | wxALL, 5);
+
+	parentSizer->HidePages();
+	activateView(VIEW_TEXT);
 
 	setup = new SetupThread(*this, mode);
 	setup->Create();
 	setup->Run();
+	running = true;
 }
 
 WinSetupFrame::~WinSetupFrame() {
 }
 
 void WinSetupFrame::OnClose(wxCloseEvent& event) {
+#ifdef DEBUG // If debugging, allow force closing of this.
+	LOGW("WARNING: Force closing DroidPad.");
+	if(running) setup->Delete();
+	Destroy();
+#endif
 }
 
 void WinSetupFrame::OnSetupInitialised(SetupEvent& event) {
+	LOGV("Setup initialised");
 }
 
 void WinSetupFrame::OnRemoveInitialised(SetupEvent& event) {
+	LOGV("Removing initialised");
+}
+
+void WinSetupFrame::OnSetupFinished(SetupEvent& event) {
+	LOGV("Setup finished");
+	running = false;
+}
+
+void WinSetupFrame::activateView(int view) {
+	LOGV("Activating view");
+	switch(view) {
+		case VIEW_TEXT:
+			parentSizer->SetCurrent(0);
+			break;
+		case VIEW_OTHER:
+			parentSizer->SetCurrent(1);
+			break;
+	}
 }
 
 void WinSetupFrame::handleXMLError(wxString name) {

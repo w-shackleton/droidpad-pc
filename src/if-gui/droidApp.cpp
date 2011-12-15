@@ -48,31 +48,26 @@ bool DroidApp::OnInit()
 #ifdef DEBUG
 	wxLog::SetVerbose(true);
 #endif
+	wxLog::SetActiveTarget(logger);
 #elif OS_WIN32
-#ifdef DEBUG
-	logger = new wxLogWindow(NULL, _("DroidPad debug log output"));
-	wxLog::SetVerbose(true);
-#else
 	// Log errors to a log file.
 	wxString confLocation = wxStandardPaths::Get().GetUserDataDir();
 	if(!wxDirExists(confLocation)) wxMkdir(confLocation);
-	wxString logFile = confLocation + wxT("/log.txt");
+	wxString logFile = confLocation + wxT("log.txt");
 
 	logOut.open(logFile.mb_str(), ios::out | ios::app);
 	logOut << endl;
 	logOut << endl;
 	logger = new wxLogStream(&logOut);
-#endif
-#endif
-	wxLog::SetActiveTarget(logger);
-	SetAppName(_T("droidpad"));
 
-	if(runSetup) {
-		return dpSetup(*this);
-	}
-	if(runRemove) {
-		return dpRemove(*this);
-	}
+	wxLog::SetActiveTarget(logger);
+#ifdef DEBUG // Log to UI as well.
+	wxLog* extraLogger = new wxLogWindow(NULL, _("DroidPad debug log output"));
+	new wxLogChain(extraLogger);
+	wxLog::SetVerbose(true);
+#endif
+#endif
+	SetAppName(_T("droidpad"));
 
 	wxInitAllImageHandlers();
 
@@ -88,6 +83,13 @@ bool DroidApp::OnInit()
 	{
 		wxMessageDialog(NULL, _("Could not load application data,\npossibly because application was installed incorrectly?"), _("Error finding data"), wxOK | wxICON_EXCLAMATION).ShowModal();
 		return false;
+	}
+
+	if(runSetup) {
+		return dpSetup(*this);
+	}
+	if(runRemove) {
+		return dpRemove(*this);
 	}
 
 	DroidFrame *frame = new DroidFrame;
