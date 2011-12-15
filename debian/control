@@ -2,9 +2,9 @@ Source: droidpad
 Section: utils
 Priority: optional
 Maintainer: William Shackleton <w.shackleton@gmail.com>
-Build-Depends: debhelper (>= 7.0.50~), autotools-dev, mime-support, gettext, intltool, libcroco3, libxml-parser-perl, locales, libxml2, libgtkmm-2.4-dev, libc6, libexpat1, gawk
-Standards-Version: 3.8.4
-Homepage: https://launchpad.net/droidpad-linux
+Build-Depends: debhelper (>= 7.0.50~), autotools-dev
+Standards-Version: 3.9.2
+Homepage: https://launchpad.net/droidpad-pc
 
 Package: droidpad
 Architecture: any
