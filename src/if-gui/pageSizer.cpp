@@ -33,6 +33,13 @@ void PageSizer::HidePages()
 
 void PageSizer::RecalcSizes()
 {
+	for (wxSizerItemList::compatibility_iterator node = GetChildren().GetFirst();
+			node;
+			node = node->GetNext()) {
+		wxWindow *item = node->GetData()->GetWindow();
+		item->SetSize(wxRect(10000, 10000, 20, 20)); // It works...
+	}
+
 	wxSizerItem *item = GetItem(childPosition);
 	if(!item) return;
 	wxWindow *current = item->GetWindow();
@@ -63,6 +70,14 @@ void PageSizer::RecalcSizes()
 void PageSizer::SetCurrent(int position) {
 	HidePages(); // ???
 	childPosition = position;
+
+	RecalcSizes();
+
+	wxSizerItem *item = GetItem(childPosition);
+	if(!item) return;
+	wxWindow *current = item->GetWindow();
+	if(!current) return;
+	current->Update();
 }
 
 wxSize PageSizer::CalcMin()

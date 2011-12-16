@@ -1,12 +1,7 @@
 #include "stdafx.h"
 #include "vJoyInstall.h"
 
-
-#ifdef GTK
-FILE *stream;
-#else
 extern FILE *stream;
-#endif
 
 // StatusMessageFunc StatusMessage = StatusMessageToStream;
 #define StatusMessage StatusMessageToStream
@@ -21,20 +16,20 @@ BOOL FindInstalled(LPCTSTR hwid, TCHAR *InstanceId)
 
 	if (!hwid)
 	{
-		_stprintf(prt, "FindInstalled: HWID cannot be (null)");
+		_stprintf(prt, _T("FindInstalled: HWID cannot be (null)"));
 		StatusMessage( NULL, prt,  FATAL);
 		return TRUE;
 	};
 
 	if (!InstanceId)
 	{
-		_stprintf(prt, "FindInstalled: Instance ID cannot be (null)");
+		_stprintf(prt, _T("FindInstalled: Instance ID cannot be (null)"));
 		StatusMessage( NULL, prt,  FATAL);
 		return TRUE;
 	};
 
-	//_ftprintf(stream,">> FindInstalled: Serching for HWID %s\n", hwid);
-	_stprintf(prt, "FindInstalled: Searching for HWID %s", hwid);
+	//_ftprintf(stream,_T(">> FindInstalled: Serching for HWID %s\n"), hwid);
+	_stprintf(prt, _T("FindInstalled: Searching for HWID %s"), hwid);
 	StatusMessage( NULL, prt,  INFO);
 
 
@@ -42,8 +37,8 @@ BOOL FindInstalled(LPCTSTR hwid, TCHAR *InstanceId)
 	if (devs == INVALID_HANDLE_VALUE)
 	{
 		 GetErrorString(ErrMsg,1000);
-		//_ftprintf(stream,"[E] FindInstalled: Function SetupDiGetClassDevs failed with error: %s\n", ErrMsg);
-		_stprintf(prt, "FindInstalled: Function SetupDiGetClassDevs failed with error: %s", ErrMsg);
+		//_ftprintf(stream,_T("[E] FindInstalled: Function SetupDiGetClassDevs failed with error: %s\n"), ErrMsg);
+		_stprintf(prt, _T("FindInstalled: Function SetupDiGetClassDevs failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
 		return FALSE;
 	};
@@ -51,8 +46,8 @@ BOOL FindInstalled(LPCTSTR hwid, TCHAR *InstanceId)
 	devInfoListDetail.cbSize = sizeof(devInfoListDetail);
 	if(!SetupDiGetDeviceInfoListDetail(devs,&devInfoListDetail)) {
 		GetErrorString(ErrMsg,1000);
-		//_ftprintf(stream,"[E] FindInstalled: Function SetupDiGetDeviceInfoListDetail failed with error: %s\n", ErrMsg);
-		_stprintf(prt, "FindInstalled: Function SetupDiGetDeviceInfoListDetail failed with error: %s", ErrMsg);
+		//_ftprintf(stream,_T("[E] FindInstalled: Function SetupDiGetDeviceInfoListDetail failed with error: %s\n"), ErrMsg);
+		_stprintf(prt, _T("FindInstalled: Function SetupDiGetDeviceInfoListDetail failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
 		return FALSE;
 	};
@@ -63,14 +58,14 @@ BOOL FindInstalled(LPCTSTR hwid, TCHAR *InstanceId)
 	{
 		//TCHAR devID[MAX_DEVICE_ID_LEN];
 		LPTSTR *hwIds = NULL;
-		if(CM_Get_Device_ID_ExA(devInfo.DevInst,InstanceId,MAX_DEVICE_ID_LEN,0,devInfoListDetail.RemoteMachineHandle)!=CR_SUCCESS) {
+		if(CM_Get_Device_ID_ExW(devInfo.DevInst,InstanceId,MAX_DEVICE_ID_LEN,0,devInfoListDetail.RemoteMachineHandle)!=CR_SUCCESS) {
 			InstanceId[0] = TEXT('\0');
 		};
 		hwIds = GetDevMultiSz(devs,&devInfo,SPDRP_HARDWAREID);
 		if (!hwIds)
 			continue;
 
-		//_ftprintf(stream,">> FindInstalled: hwIds[%d] is %s\n", devIndex, *hwIds);
+		//_ftprintf(stream,_T(">> FindInstalled: hwIds[%d] is %s\n"), devIndex, *hwIds);
 		    
 		// Test is this is the vJoy device (Comparing HWid)
 		// If it is then restart it and return TRUE
@@ -78,8 +73,8 @@ BOOL FindInstalled(LPCTSTR hwid, TCHAR *InstanceId)
 		DelMultiSz((PZPWSTR)hwIds);
 		if (!cmp)
 		{
-			//_ftprintf(stream,">> FindInstalled: DevID[%d] is %s\n", devIndex, InstanceId);
-			 _stprintf(prt, "FindInstalled: DevID[%d] is %s", devIndex, InstanceId);
+			//_ftprintf(stream,_T(">> FindInstalled: DevID[%d] is %s\n"), devIndex, InstanceId);
+			 _stprintf(prt, _T("FindInstalled: DevID[%d] is %s"), devIndex, InstanceId);
 			StatusMessage( NULL, prt,  INFO);
 			// This is done for rare case where the child was removed manually
 			RestartDevice(devs, &devInfo); 
@@ -125,8 +120,8 @@ Return Value:
 
     if(!inf[0]) 
 	{
-		//_ftprintf(stream,"[E] Install: Illegal Inf file\n");
-		 _stprintf(prt, "Install: Illegal Inf file");
+		//_ftprintf(stream,_T("[E] Install: Illegal Inf file\n"));
+		 _stprintf(prt, _T("Install: Illegal Inf file"));
 		StatusMessage( NULL, prt,  ERR);
 		return FALSE;
 
@@ -135,8 +130,8 @@ Return Value:
 
     if(!hwid[0]) 
 	{
-		//_ftprintf(stream,"[E] Install: Illegal  Hardware Id\n");
-		_stprintf(prt, "Install: Illegal  Hardware Id");
+		//_ftprintf(stream,_T("[E] Install: Illegal  Hardware Id\n"));
+		_stprintf(prt, _T("Install: Illegal  Hardware Id"));
 		StatusMessage( NULL, prt,  ERR);
 
 		return FALSE;
@@ -147,13 +142,13 @@ Return Value:
     //
     if(GetFullPathName(inf,MAX_PATH,InfPath,NULL) >= MAX_PATH) 	
 	{
-		//_ftprintf(stream,"[E] Install: InfPath too long\n");
-		_stprintf(prt, "Install: InfPath too long");
+		//_ftprintf(stream,_T("[E] Install: InfPath too long\n"));
+		_stprintf(prt, _T("Install: InfPath too long"));
 		StatusMessage( NULL, prt,  ERR);
 		return FALSE;
 	}
-	//_ftprintf(stream,">> Install: GetFullPathName --> %s \n", InfPath);
-	_stprintf(prt, "Install: GetFullPathName --> %s ", InfPath);
+	//_ftprintf(stream,_T(">> Install: GetFullPathName --> %s \n"), InfPath);
+	_stprintf(prt, _T("Install: GetFullPathName --> %s "), InfPath);
 	StatusMessage( NULL, prt,  INFO);
 
     //
@@ -162,13 +157,13 @@ Return Value:
     ZeroMemory(hwIdList,sizeof(hwIdList));
     if (FAILED(lstrcpy(hwIdList,hwid))) 
 	{
-		//_ftprintf(stream,"[E] Install: Function StringCchCopy failed\n");
-		_stprintf(prt, "Install: Function StringCchCopy failed");
+		//_ftprintf(stream,_T("[E] Install: Function StringCchCopy failed\n"));
+		_stprintf(prt, _T("Install: Function StringCchCopy failed"));
 		StatusMessage( NULL, prt,  ERR);
         goto final;
     }
-	//_ftprintf(stream,">> Install: hwIdList --> %s \n", hwIdList);
-	 _stprintf(prt, "Install: hwIdList --> %s", hwIdList);
+	//_ftprintf(stream,_T(">> Install: hwIdList --> %s \n"), hwIdList);
+	 _stprintf(prt, _T("Install: hwIdList --> %s"), hwIdList);
 	StatusMessage( NULL, prt,  INFO);
 
     //
@@ -177,13 +172,13 @@ Return Value:
     if (!SetupDiGetINFClass(InfPath,&ClassGUID,ClassName,sizeof(ClassName)/sizeof(ClassName[0]),0))
 	{
 		 GetErrorString(ErrMsg,1000);
-		//_ftprintf(stream,"[E] SetupDiGetINFClass failed with error: %s\n", ErrMsg);
-		_stprintf(prt, "SetupDiGetINFClass failed with error: %s", ErrMsg);
+		//_ftprintf(stream,_T("[E] SetupDiGetINFClass failed with error: %s\n"), ErrMsg);
+		_stprintf(prt, _T("SetupDiGetINFClass failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
 		goto final;
 	};
-	//_ftprintf(stream,">> Install: SetupDiGetINFClass --> Class Name %s \n", ClassName);
-	_stprintf(prt, "Install: SetupDiGetINFClass --> Class Name %s", ClassName);
+	//_ftprintf(stream,_T(">> Install: SetupDiGetINFClass --> Class Name %s \n"), ClassName);
+	_stprintf(prt, _T("Install: SetupDiGetINFClass --> Class Name %s"), ClassName);
 	StatusMessage( NULL, prt,  INFO);
 
     //
@@ -193,13 +188,13 @@ Return Value:
     if(DeviceInfoSet == INVALID_HANDLE_VALUE)
 	{
 		 GetErrorString(ErrMsg,1000);
-		//_ftprintf(stream,"[E] SetupDiCreateDeviceInfoList failed with error: %s\n", ErrMsg);
-		_stprintf(prt, "SetupDiCreateDeviceInfoList failed with error: %s", ErrMsg);
+		//_ftprintf(stream,_T("[E] SetupDiCreateDeviceInfoList failed with error: %s\n"), ErrMsg);
+		_stprintf(prt, _T("SetupDiCreateDeviceInfoList failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
 		goto final;
 	};
-	//_ftprintf(stream,">> Install: SetupDiCreateDeviceInfoList OK\n");
-	_stprintf(prt, "Install: SetupDiCreateDeviceInfoList OK");
+	//_ftprintf(stream,_T(">> Install: SetupDiCreateDeviceInfoList OK\n"));
+	_stprintf(prt, _T("Install: SetupDiCreateDeviceInfoList OK"));
 	StatusMessage( NULL, prt,  INFO);
 
     //
@@ -210,13 +205,13 @@ Return Value:
     if (!SetupDiCreateDeviceInfo(DeviceInfoSet, ClassName, &ClassGUID, NULL,  0, DICD_GENERATE_ID, &DeviceInfoData))
 	{
 		 GetErrorString(ErrMsg,1000);
-		//_ftprintf(stream,"[E] SetupDiCreateDeviceInfo failed with error: %s\n", ErrMsg);
-		_stprintf(prt, "SetupDiCreateDeviceInfo failed with error: %s", ErrMsg);
+		//_ftprintf(stream,_T("[E] SetupDiCreateDeviceInfo failed with error: %s\n"), ErrMsg);
+		_stprintf(prt, _T("SetupDiCreateDeviceInfo failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
 		goto final;
 	};
-	//_ftprintf(stream,">> Install: SetupDiCreateDeviceInfo  OK\n");
-	_stprintf(prt, "Install: SetupDiCreateDeviceInfo  OK");
+	//_ftprintf(stream,_T(">> Install: SetupDiCreateDeviceInfo  OK\n"));
+	_stprintf(prt, _T("Install: SetupDiCreateDeviceInfo  OK"));
 	StatusMessage( NULL, prt,  INFO);
 
     //
@@ -225,13 +220,13 @@ Return Value:
     if(!SetupDiSetDeviceRegistryProperty(DeviceInfoSet, &DeviceInfoData, SPDRP_HARDWAREID,(LPBYTE)hwIdList, (lstrlen(hwIdList)+1+1)*sizeof(TCHAR)))
     {
 		 GetErrorString(ErrMsg,1000);
-		//_ftprintf(stream,"[E] SetupDiSetDeviceRegistryProperty failed with error: %s\n", ErrMsg);
-		_stprintf(prt, "SetupDiSetDeviceRegistryProperty failed with error: %s", ErrMsg);
+		//_ftprintf(stream,_T("[E] SetupDiSetDeviceRegistryProperty failed with error: %s\n"), ErrMsg);
+		_stprintf(prt, _T("SetupDiSetDeviceRegistryProperty failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
         goto final;
     }
-	//_ftprintf(stream,">> Install: SetupDiSetDeviceRegistryProperty  OK\n");
-	_stprintf(prt, "Install: SetupDiSetDeviceRegistryProperty  OK");
+	//_ftprintf(stream,_T(">> Install: SetupDiSetDeviceRegistryProperty  OK\n"));
+	_stprintf(prt, _T("Install: SetupDiSetDeviceRegistryProperty  OK"));
 	StatusMessage( NULL, prt,  INFO);
 
     //
@@ -241,33 +236,33 @@ Return Value:
     if (!SetupDiCallClassInstaller(DIF_REGISTERDEVICE, DeviceInfoSet, &DeviceInfoData))
     {
 		GetErrorString(ErrMsg,1000);
-		//_ftprintf(stream,"[E] SetupDiCallClassInstaller failed with error: %s\n", ErrMsg);
-		_stprintf(prt, "SetupDiCallClassInstaller failed with error: %s", ErrMsg);
+		//_ftprintf(stream,_T("[E] SetupDiCallClassInstaller failed with error: %s\n"), ErrMsg);
+		_stprintf(prt, _T("SetupDiCallClassInstaller failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
 		goto final;
 	}
-	//_ftprintf(stream,">> Install: SetupDiCallClassInstaller  OK\n");
-	_stprintf(prt, "Install: SetupDiCallClassInstaller  OK");
+	//_ftprintf(stream,_T(">> Install: SetupDiCallClassInstaller  OK\n"));
+	_stprintf(prt, _T("Install: SetupDiCallClassInstaller  OK"));
 	StatusMessage( NULL, prt,  INFO);
 
 #if 0 // On XP - this causes a pop-up window even if already installed
 	// Preinstalling package
 	TCHAR DestinationInfFileName[MAX_PATH];
-	//_ftprintf(stream,">> Install: Starting SetupCopyOEMInf\n");
-	_stprintf(prt, "Install: Starting SetupCopyOEMInf");
+	//_ftprintf(stream,_T(">> Install: Starting SetupCopyOEMInf\n"));
+	_stprintf(prt, _T("Install: Starting SetupCopyOEMInf"));
 	StatusMessage( NULL, prt,  INFO);
 	if (!SetupCopyOEMInf(InfPath, NULL, SPOST_PATH , NULL, DestinationInfFileName, MAX_PATH, NULL, NULL))
 	{
 		GetErrorString(ErrMsg,1000);
-		//_ftprintf(stream,"[E] SetupCopyOEMInf failed with error: %s\n", ErrMsg);
-		_stprintf(prt, "SetupCopyOEMInf failed with error: %s", ErrMsg);
+		//_ftprintf(stream,_T("[E] SetupCopyOEMInf failed with error: %s\n"), ErrMsg);
+		_stprintf(prt, _T("SetupCopyOEMInf failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
 		goto final;
 	}
 	if (!DestinationInfFileName)
 		DestinationInfFileName[0] = '\0';
-	_ftprintf(stream,">> Install: SetupCopyOEMInf (Destination file name is: [%s])  OK\n", DestinationInfFileName);
-	_stprintf(prt, "Install: SetupCopyOEMInf (Destination file name is: [%s])  OK", DestinationInfFileName);
+	_ftprintf(stream,_T(">> Install: SetupCopyOEMInf (Destination file name is: [%s])  OK\n"), DestinationInfFileName);
+	_stprintf(prt, _T("Install: SetupCopyOEMInf (Destination file name is: [%s])  OK"), DestinationInfFileName);
 	StatusMessage( NULL, prt,  INFO);
 #endif // On XP - ...
 
@@ -276,12 +271,12 @@ Return Value:
 	//
 	// update the driver for the device we just created
 	//
-	//_ftprintf(stream,">> Install: Starting cmdUpdate\n");
-	_stprintf(prt, "Install: Starting cmdUpdate");
+	//_ftprintf(stream,_T(">> Install: Starting cmdUpdate\n"));
+	_stprintf(prt, _T("Install: Starting cmdUpdate"));
 	StatusMessage( NULL, prt,  INFO);
 	failcode = cmdUpdate( INSTALLFLAG_FORCE, inf,  hwid );
-	//_ftprintf(stream,">> Install: Finished cmdUpdate\n");
-	_stprintf(prt, "Install: Finished cmdUpdate");
+	//_ftprintf(stream,_T(">> Install: Finished cmdUpdate\n"));
+	_stprintf(prt, _T("Install: Finished cmdUpdate"));
 	StatusMessage( NULL, prt,  INFO);
 #endif //UPDATE
 
@@ -289,13 +284,13 @@ Return Value:
 	if (!SetupDiGetDeviceInstanceId(DeviceInfoSet, &DeviceInfoData, InstanceId, 1000, NULL))
 	{
 		GetErrorString(ErrMsg,1000);
-		//_ftprintf(stream,"[E] SetupDiGetDeviceInstanceId failed with error: %s\n", ErrMsg);
-		_stprintf(prt, "SetupDiGetDeviceInstanceId failed with error: %s", ErrMsg);
+		//_ftprintf(stream,_T("[E] SetupDiGetDeviceInstanceId failed with error: %s\n"), ErrMsg);
+		_stprintf(prt, _T("SetupDiGetDeviceInstanceId failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
 		goto final;
 	}
-	//_ftprintf(stream,">> Install: SetupDiGetDeviceInstanceId (Device Instance Path=%s) OK\n", InstanceId);
-	_stprintf(prt, "Install: SetupDiGetDeviceInstanceId (Device Instance Path=%s) OK", InstanceId);
+	//_ftprintf(stream,_T(">> Install: SetupDiGetDeviceInstanceId (Device Instance Path=%s) OK\n"), InstanceId);
+	_stprintf(prt, _T("Install: SetupDiGetDeviceInstanceId (Device Instance Path=%s) OK"), InstanceId);
 	StatusMessage( NULL, prt,  INFO);
 
 #ifndef  UPDATE
@@ -326,14 +321,14 @@ BOOL AssignCompatibleId(TCHAR * ParentDeviceNode, TCHAR * CompatibleId)
 
 	if (!ParentDeviceNode)
 	{
-		//_ftprintf(stream,"[E] AssignCompatibleId: Empty ParentDeviceNode\n");
-		_stprintf(prt, "AssignCompatibleId: Empty ParentDeviceNode");
+		//_ftprintf(stream,_T("[E] AssignCompatibleId: Empty ParentDeviceNode\n"));
+		_stprintf(prt, _T("AssignCompatibleId: Empty ParentDeviceNode"));
 		StatusMessage( NULL, prt,  ERR);
 		return FALSE;
 	};
 
-	//_ftprintf(stream,">> AssignCompatibleId: ParentDeviceNode = %s , CompatibleId = %s\n", ParentDeviceNode, CompatibleId);
-	_stprintf(prt, "AssignCompatibleId: ParentDeviceNode = %s , CompatibleId = %s", ParentDeviceNode, CompatibleId);
+	//_ftprintf(stream,_T(">> AssignCompatibleId: ParentDeviceNode = %s , CompatibleId = %s\n"), ParentDeviceNode, CompatibleId);
+	_stprintf(prt, _T("AssignCompatibleId: ParentDeviceNode = %s , CompatibleId = %s"), ParentDeviceNode, CompatibleId);
 	StatusMessage( NULL, prt,  INFO);
 
 	_tcsncpy(buf, ParentDeviceNode, MAX_DEVICE_ID_LEN);
@@ -342,15 +337,15 @@ BOOL AssignCompatibleId(TCHAR * ParentDeviceNode, TCHAR * CompatibleId)
 	rType = CM_Locate_DevNode(&dnDevInst, buf ,0);
 	if (rType != CR_SUCCESS)
 	{
-		//_ftprintf(stream,"[E] AssignCompatibleId: Function CM_Locate_DevNode failed with error: %08X\n", rType);
-		_stprintf(prt, "AssignCompatibleId: Function CM_Locate_DevNode failed with error: %08X", rType);
+		//_ftprintf(stream,_T("[E] AssignCompatibleId: Function CM_Locate_DevNode failed with error: %08X\n"), rType);
+		_stprintf(prt, _T("AssignCompatibleId: Function CM_Locate_DevNode failed with error: %08X"), rType);
 		StatusMessage( NULL, prt,  ERR);
 		return FALSE;
 	}
 	else
 	{
-		//_ftprintf(stream,">> AssignCompatibleId: Function CM_Locate_DevNode OK\n");
-		_stprintf(prt, "AssignCompatibleId: Function CM_Locate_DevNode OK");
+		//_ftprintf(stream,_T(">> AssignCompatibleId: Function CM_Locate_DevNode OK\n"));
+		_stprintf(prt, _T("AssignCompatibleId: Function CM_Locate_DevNode OK"));
 		StatusMessage( NULL, prt,  INFO);
 	};
 
@@ -361,15 +356,15 @@ BOOL AssignCompatibleId(TCHAR * ParentDeviceNode, TCHAR * CompatibleId)
 	rType = CM_Get_Child(&dnDevInst, dnDevInst, 0);
 	if (rType != CR_SUCCESS)
 	{
-		//_ftprintf(stream,"[E] AssignCompatibleId: Function CM_Get_Child failed with error: %08X\n", rType);
-		_stprintf(prt, "AssignCompatibleId: Function CM_Get_Child failed with error: %08X", rType);
+		//_ftprintf(stream,_T("[E] AssignCompatibleId: Function CM_Get_Child failed with error: %08X\n"), rType);
+		_stprintf(prt, _T("AssignCompatibleId: Function CM_Get_Child failed with error: %08X"), rType);
 		StatusMessage( NULL, prt,  ERR);
 		return FALSE;
 	}
 	else
 	{
-		//_ftprintf(stream,">> AssignCompatibleId: Function CM_Get_Child OK\n");
-		_stprintf(prt, "AssignCompatibleId: Function CM_Get_Child OK");
+		//_ftprintf(stream,_T(">> AssignCompatibleId: Function CM_Get_Child OK\n"));
+		_stprintf(prt, _T("AssignCompatibleId: Function CM_Get_Child OK"));
 		StatusMessage( NULL, prt,  INFO);
 	};
 
@@ -377,15 +372,15 @@ BOOL AssignCompatibleId(TCHAR * ParentDeviceNode, TCHAR * CompatibleId)
 	rType = CM_Get_Device_ID_Size(&Len, dnDevInst, 0);
 	if (rType != CR_SUCCESS)
 	{
-		//_ftprintf(stream,"[E] AssignCompatibleId: Function CM_Get_Device_ID_Size failed with error: %08X\n", rType);
-		_stprintf(prt, "AssignCompatibleId: Function CM_Get_Device_ID_Size failed with error: %08X", rType);
+		//_ftprintf(stream,_T("[E] AssignCompatibleId: Function CM_Get_Device_ID_Size failed with error: %08X\n"), rType);
+		_stprintf(prt, _T("AssignCompatibleId: Function CM_Get_Device_ID_Size failed with error: %08X"), rType);
 		StatusMessage( NULL, prt,  ERR);
 		return FALSE;
 	}	
 	else
 	{
-		//_ftprintf(stream,">> AssignCompatibleId: Function CM_Get_Device_ID_Size OK\n");
-		_stprintf(prt, "AssignCompatibleId: Function CM_Get_Device_ID_Size OK");
+		//_ftprintf(stream,_T(">> AssignCompatibleId: Function CM_Get_Device_ID_Size OK\n"));
+		_stprintf(prt, _T("AssignCompatibleId: Function CM_Get_Device_ID_Size OK"));
 		StatusMessage( NULL, prt,  INFO);
 	};
 
@@ -395,16 +390,16 @@ BOOL AssignCompatibleId(TCHAR * ParentDeviceNode, TCHAR * CompatibleId)
 	rType = CM_Get_Device_ID(dnDevInst, DeviceInstanceId, Len, 0);
 	if (rType != CR_SUCCESS)
 	{
-		//_ftprintf(stream,"[E] AssignCompatibleId: Function CM_Get_Device_ID failed with error: %08X\n", rType);
-		_stprintf(prt, "AssignCompatibleId: Function CM_Get_Device_ID failed with error: %08X", rType);
+		//_ftprintf(stream,_T("[E] AssignCompatibleId: Function CM_Get_Device_ID failed with error: %08X\n"), rType);
+		_stprintf(prt, _T("AssignCompatibleId: Function CM_Get_Device_ID failed with error: %08X"), rType);
 		StatusMessage( NULL, prt,  ERR);
 		delete DeviceInstanceId;
 		return FALSE;
 	}
 	else
 	{
-		//_ftprintf(stream,">> AssignCompatibleId: Function CM_Get_Device_ID (Device Instance Path = %s) OK\n",DeviceInstanceId);
-		_stprintf(prt, "AssignCompatibleId: Function CM_Get_Device_ID (Device Instance Path = %s) OK",DeviceInstanceId);
+		//_ftprintf(stream,_T(">> AssignCompatibleId: Function CM_Get_Device_ID (Device Instance Path = %s) OK\n"),DeviceInstanceId);
+		_stprintf(prt, _T("AssignCompatibleId: Function CM_Get_Device_ID (Device Instance Path = %s) OK"),DeviceInstanceId);
 		StatusMessage( NULL, prt,  INFO);
 	};
 
@@ -412,14 +407,14 @@ BOOL AssignCompatibleId(TCHAR * ParentDeviceNode, TCHAR * CompatibleId)
 	rType = CM_Reenumerate_DevNode(dnDevInst, CM_REENUMERATE_RETRY_INSTALLATION );
 	if (rType != CR_SUCCESS)
 	{
-		//_ftprintf(stream,"[E] AssignCompatibleId: Function CM_Reenumerate_DevNode[1] failed with error: %08X\n", rType);
-		_stprintf(prt, "AssignCompatibleId: Function CM_Reenumerate_DevNode[1] failed with error: %08X", rType);
+		//_ftprintf(stream,_T("[E] AssignCompatibleId: Function CM_Reenumerate_DevNode[1] failed with error: %08X\n"), rType);
+		_stprintf(prt, _T("AssignCompatibleId: Function CM_Reenumerate_DevNode[1] failed with error: %08X"), rType);
 		StatusMessage( NULL, prt,  ERR);
 	}
 	else
 	{
-		//_ftprintf(stream,">> AssignCompatibleId: Function CM_Reenumerate_DevNode[1] OK\n");
-		_stprintf(prt, "AssignCompatibleId: Function CM_Reenumerate_DevNode[1] OK");
+		//_ftprintf(stream,_T(">> AssignCompatibleId: Function CM_Reenumerate_DevNode[1] OK\n"));
+		_stprintf(prt, _T("AssignCompatibleId: Function CM_Reenumerate_DevNode[1] OK"));
 		StatusMessage( NULL, prt,  INFO);
 	};
 
@@ -427,37 +422,37 @@ BOOL AssignCompatibleId(TCHAR * ParentDeviceNode, TCHAR * CompatibleId)
 	rType = CM_Locate_DevNode(&childDevInst, DeviceInstanceId, CM_LOCATE_DEVNODE_NORMAL);
 	if (rType == CR_NO_SUCH_DEVNODE)
 	{
-		//_ftprintf(stream,">> AssignCompatibleId: DeviceInstanceId %s is missing\n", DeviceInstanceId);
-		_stprintf(prt, "AssignCompatibleId: DeviceInstanceId %s is missing", DeviceInstanceId);
+		//_ftprintf(stream,_T(">> AssignCompatibleId: DeviceInstanceId %s is missing\n"), DeviceInstanceId);
+		_stprintf(prt, _T("AssignCompatibleId: DeviceInstanceId %s is missing"), DeviceInstanceId);
 		StatusMessage( NULL, prt,  INFO);
 		rType = CM_Reenumerate_DevNode(dnDevInst, CM_REENUMERATE_RETRY_INSTALLATION );
 		if (rType != CR_SUCCESS)
 		{
-			//_ftprintf(stream,"[E] AssignCompatibleId: Function CM_Reenumerate_DevNode failed with error: %08X\n", rType);
-			_stprintf(prt, "AssignCompatibleId: Function CM_Reenumerate_DevNode failed with error: %08X", rType);
+			//_ftprintf(stream,_T("[E] AssignCompatibleId: Function CM_Reenumerate_DevNode failed with error: %08X\n"), rType);
+			_stprintf(prt, _T("AssignCompatibleId: Function CM_Reenumerate_DevNode failed with error: %08X"), rType);
 			StatusMessage( NULL, prt,  ERR);
 			delete DeviceInstanceId;
 			return FALSE;
 		}
 		else
 		{
-			//_ftprintf(stream,">> AssignCompatibleId: Function CM_Reenumerate_DevNode  OK\n");
-			_stprintf(prt, "AssignCompatibleId: Function CM_Reenumerate_DevNode  OK");
+			//_ftprintf(stream,_T(">> AssignCompatibleId: Function CM_Reenumerate_DevNode  OK\n"));
+			_stprintf(prt, _T("AssignCompatibleId: Function CM_Reenumerate_DevNode  OK"));
 			StatusMessage( NULL, prt,  INFO);
 		};
 
 	} else if (rType != CR_SUCCESS)
 	{
-		//_ftprintf(stream,"[E] AssignCompatibleId: Function CM_Locate_DevNode failed with error: %08X\n", rType);
-		_stprintf(prt, "AssignCompatibleId: Function CM_Locate_DevNode failed with error: %08X", rType);
+		//_ftprintf(stream,_T("[E] AssignCompatibleId: Function CM_Locate_DevNode failed with error: %08X\n"), rType);
+		_stprintf(prt, _T("AssignCompatibleId: Function CM_Locate_DevNode failed with error: %08X"), rType);
 		StatusMessage( NULL, prt,  ERR);
 		delete DeviceInstanceId;
 		return FALSE;
 	}
 	else
 	{
-		//_ftprintf(stream,">> AssignCompatibleId: Function CM_Locate_DevNode (Device Instance Path = %s) OK\n",DeviceInstanceId);
-		_stprintf(prt, "AssignCompatibleId: Function CM_Locate_DevNode (Device Instance Path = %s) OK",DeviceInstanceId);
+		//_ftprintf(stream,_T(">> AssignCompatibleId: Function CM_Locate_DevNode (Device Instance Path = %s) OK\n"),DeviceInstanceId);
+		_stprintf(prt, _T("AssignCompatibleId: Function CM_Locate_DevNode (Device Instance Path = %s) OK"),DeviceInstanceId);
 		StatusMessage( NULL, prt,  INFO);
 	};
 
@@ -468,16 +463,16 @@ BOOL AssignCompatibleId(TCHAR * ParentDeviceNode, TCHAR * CompatibleId)
 	if (DeviceInfoSet == INVALID_HANDLE_VALUE)
 	{
 		 GetErrorString(ErrMsg,1000);
-		//_ftprintf(stream,"[E] SetupDiCreateDeviceInfoList failed with error: %s\n", ErrMsg);
-		_stprintf(prt, "SetupDiCreateDeviceInfoList failed with error: %s", ErrMsg);
+		//_ftprintf(stream,_T("[E] SetupDiCreateDeviceInfoList failed with error: %s\n"), ErrMsg);
+		_stprintf(prt, _T("SetupDiCreateDeviceInfoList failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
 		delete DeviceInstanceId;
 		return FALSE;
 	}
 	else
 	{
-		//_ftprintf(stream,">> AssignCompatibleId: Function SetupDiCreateDeviceInfoList OK\n");
-		_stprintf(prt, "AssignCompatibleId: Function SetupDiCreateDeviceInfoList OK");
+		//_ftprintf(stream,_T(">> AssignCompatibleId: Function SetupDiCreateDeviceInfoList OK\n"));
+		_stprintf(prt, _T("AssignCompatibleId: Function SetupDiCreateDeviceInfoList OK"));
 		StatusMessage( NULL, prt,  INFO);
 	};
 
@@ -487,16 +482,16 @@ BOOL AssignCompatibleId(TCHAR * ParentDeviceNode, TCHAR * CompatibleId)
 	if (!rDi)
 	{
 		 GetErrorString(ErrMsg,1000);
-		//_ftprintf(stream,"[E] SetupDiOpenDeviceInfo failed with error: %s\n", ErrMsg);
-		_stprintf(prt, "SetupDiOpenDeviceInfo failed with error: %s", ErrMsg);
+		//_ftprintf(stream,_T("[E] SetupDiOpenDeviceInfo failed with error: %s\n"), ErrMsg);
+		_stprintf(prt, _T("SetupDiOpenDeviceInfo failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
 		delete DeviceInstanceId;
 		return FALSE;
 	}
 	else
 	{
-		//_ftprintf(stream,">> AssignCompatibleId: Function SetupDiOpenDeviceInfo OK\n");
-		_stprintf(prt, "AssignCompatibleId: Function SetupDiOpenDeviceInfo OK");
+		//_ftprintf(stream,_T(">> AssignCompatibleId: Function SetupDiOpenDeviceInfo OK\n"));
+		_stprintf(prt, _T("AssignCompatibleId: Function SetupDiOpenDeviceInfo OK"));
 		StatusMessage( NULL, prt,  INFO);
 	};
 
@@ -512,20 +507,20 @@ BOOL AssignCompatibleId(TCHAR * ParentDeviceNode, TCHAR * CompatibleId)
 	if (!rDi)
 	{
 		 GetErrorString(ErrMsg,1000);
-		//_ftprintf(stream,"[E] SetupDiSetDeviceRegistryProperty failed with error: %s\n", ErrMsg);
-		_stprintf(prt, "SetupDiSetDeviceRegistryProperty failed with error: %s", ErrMsg);
+		//_ftprintf(stream,_T("[E] SetupDiSetDeviceRegistryProperty failed with error: %s\n"), ErrMsg);
+		_stprintf(prt, _T("SetupDiSetDeviceRegistryProperty failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
 		return FALSE;
 	}
 	else
 	{
-		//_ftprintf(stream,">> AssignCompatibleId: Function SetupDiSetDeviceRegistryProperty OK\n");
-		_stprintf(prt, "AssignCompatibleId: Function SetupDiSetDeviceRegistryProperty OK");
+		//_ftprintf(stream,_T(">> AssignCompatibleId: Function SetupDiSetDeviceRegistryProperty OK\n"));
+		_stprintf(prt, _T("AssignCompatibleId: Function SetupDiSetDeviceRegistryProperty OK"));
 		StatusMessage( NULL, prt,  INFO);
 	};
 
-	//_ftprintf(stream,">> AssignCompatibleId was OK\n");
-	_stprintf(prt, "AssignCompatibleId was OK");
+	//_ftprintf(stream,_T(">> AssignCompatibleId was OK\n"));
+	_stprintf(prt, _T("AssignCompatibleId was OK"));
 	StatusMessage( NULL, prt,  INFO);
 	return TRUE;
 
@@ -565,17 +560,17 @@ Return Value:
 	//
 	if(GetFullPathName(inf,MAX_PATH,InfPath,NULL) >= MAX_PATH) 	
 	{
-		//_ftprintf(stream,"[E] cmdUpdateNI: InfPath too long\n");
+		//_ftprintf(stream,_T("[E] cmdUpdateNI: InfPath too long\n"));
 		return FALSE;
 	}
-	//_ftprintf(stream,">> cmdUpdateNI: GetFullPathName --> %s \n", InfPath);
-	_stprintf(prt, "cmdUpdateNI: GetFullPathName --> %s", InfPath);
+	//_ftprintf(stream,_T(">> cmdUpdateNI: GetFullPathName --> %s \n"), InfPath);
+	_stprintf(prt, _T("cmdUpdateNI: GetFullPathName --> %s"), InfPath);
 	StatusMessage( NULL, prt,  INFO);
-    setupapiMod = LoadLibrary(TEXT("setupapi.dll"));
+    setupapiMod = LoadLibrary(_T("setupapi.dll"));
     if(!setupapiMod) 
 	{
-		//_ftprintf(stream,"[E] cmdUpdateNI: LoadLibrary failed to load setupapi.dll\n");
-		_stprintf(prt, "cmdUpdateNI: LoadLibrary failed to load setupapi.dll");
+		//_ftprintf(stream,_T("[E] cmdUpdateNI: LoadLibrary failed to load setupapi.dll\n"));
+		_stprintf(prt, _T("cmdUpdateNI: LoadLibrary failed to load setupapi.dll"));
 		StatusMessage( NULL, prt,  ERR);
         return cmdUpdate(Flags,InfPath,  hwid);
     }
@@ -583,27 +578,27 @@ Return Value:
     if(!SetNIFn)
     {
         FreeLibrary(setupapiMod);
-		//_ftprintf(stream,"[E] cmdUpdateNI: GetProcAddress failed to get SETUPSETNONINTERACTIVEMODE\n");
-		_stprintf(prt, "cmdUpdateNI: GetProcAddress failed to get SETUPSETNONINTERACTIVEMODE");
+		//_ftprintf(stream,_T("[E] cmdUpdateNI: GetProcAddress failed to get SETUPSETNONINTERACTIVEMODE\n"));
+		_stprintf(prt, _T("cmdUpdateNI: GetProcAddress failed to get SETUPSETNONINTERACTIVEMODE"));
 		StatusMessage( NULL, prt,  ERR);
         return cmdUpdate(Flags,InfPath,  hwid);
     }
 
     prev = SetNIFn(TRUE);
-	//_ftprintf(stream,">> cmdUpdateNI: SetNIFn(TRUE) returned %d\n", prev);
-	_stprintf(prt, "cmdUpdateNI: SetNIFn(TRUE) returned %d", prev);
+	//_ftprintf(stream,_T(">> cmdUpdateNI: SetNIFn(TRUE) returned %d\n"), prev);
+	_stprintf(prt, _T("cmdUpdateNI: SetNIFn(TRUE) returned %d"), prev);
 	StatusMessage( NULL, prt,  INFO);
-	//_ftprintf(stream,">> cmdUpdateNI: Calling cmdUpdate with InfPath=%s\n", InfPath);
-	_stprintf(prt, "cmdUpdateNI: Calling cmdUpdate with InfPath=%s", InfPath);
+	//_ftprintf(stream,_T(">> cmdUpdateNI: Calling cmdUpdate with InfPath=%s\n"), InfPath);
+	_stprintf(prt, _T("cmdUpdateNI: Calling cmdUpdate with InfPath=%s"), InfPath);
 	StatusMessage( NULL, prt,  INFO);
-    res = cmdUpdate(Flags,TEXT(InfPath),  hwid);
-	//_ftprintf(stream,">> cmdUpdateNI: cmdUpdate returned %d\n", res);
-	_stprintf(prt, "cmdUpdateNI: cmdUpdate returned %d", res);
+    res = cmdUpdate(Flags,InfPath,  hwid);
+	//_ftprintf(stream,_T(">> cmdUpdateNI: cmdUpdate returned %d\n"), res);
+	_stprintf(prt, _T("cmdUpdateNI: cmdUpdate returned %d"), res);
 	StatusMessage( NULL, prt,  INFO);
     SetNIFn(prev);
     FreeLibrary(setupapiMod);
-	//_ftprintf(stream,">> cmdUpdateNI returns value %d\n", res);
-	_stprintf(prt, "cmdUpdateNI returns value %d", res);
+	//_ftprintf(stream,_T(">> cmdUpdateNI returns value %d\n"), res);
+	_stprintf(prt, _T("cmdUpdateNI returns value %d"), res);
 	StatusMessage( NULL, prt,  INFO);
     return res;
 }
@@ -642,32 +637,32 @@ Return Value:
     //
     // Inf must be a full pathname
     //
-    res = GetFullPathName(TEXT(inf),MAX_PATH,InfPath,NULL);
+    res = GetFullPathName(inf,MAX_PATH,InfPath,NULL);
     if((res >= MAX_PATH) || (res == 0)) {
 		//
 		// inf pathname too long
 		//
-		//_ftprintf(stream,"[E] cmdUpdate:  GetFullPathName for file %s returned: %d\n", InfPath, res);
-		_stprintf(prt, "cmdUpdate:  GetFullPathName for file %s returned: %d", InfPath, res);
+		//_ftprintf(stream,_T("[E] cmdUpdate:  GetFullPathName for file %s returned: %d\n"), InfPath, res);
+		_stprintf(prt, _T("cmdUpdate:  GetFullPathName for file %s returned: %d"), InfPath, res);
 		StatusMessage( NULL, prt,  ERR);
 
         return EXIT_FAIL;
     }
-	//_ftprintf(stream,">> cmdUpdate: GetFullPathName --> %s \n", InfPath);
-	_stprintf(prt, "cmdUpdate: GetFullPathName --> %s ", InfPath);
+	//_ftprintf(stream,_T(">> cmdUpdate: GetFullPathName --> %s \n"), InfPath);
+	_stprintf(prt, _T("cmdUpdate: GetFullPathName --> %s "), InfPath);
 	StatusMessage( NULL, prt,  INFO);
 
     if(GetFileAttributes(InfPath)==(DWORD)(-1)) {
         //
         // inf doesn't exist
         //
-		//_ftprintf(stream,"[E] cmdUpdate:  GetFileAttributes failed\n");
-		_stprintf(prt, "cmdUpdate:  GetFileAttributes failed");
+		//_ftprintf(stream,_T("[E] cmdUpdate:  GetFileAttributes failed\n"));
+		_stprintf(prt, _T("cmdUpdate:  GetFileAttributes failed"));
 		StatusMessage( NULL, prt,  ERR);
         return EXIT_FAIL;
     }
-	//_ftprintf(stream,">> cmdUpdate: Install: Starting cmdUpdate \n");
-	_stprintf(prt, "cmdUpdate: Install: Starting cmdUpdate");
+	//_ftprintf(stream,_T(">> cmdUpdate: Install: Starting cmdUpdate \n"));
+	_stprintf(prt, _T("cmdUpdate: Install: Starting cmdUpdate"));
 	StatusMessage( NULL, prt,  INFO);
 
     inf = InfPath;
@@ -676,33 +671,33 @@ Return Value:
     //
     // make use of UpdateDriverForPlugAndPlayDevices
     //
-    newdevMod = LoadLibrary(TEXT("newdev.dll"));
+    newdevMod = LoadLibrary(_T("newdev.dll"));
     if(!newdevMod) 
 	{
-		//_ftprintf(stream,"[E] cmdUpdate:  Failed to load file newdev.dll\n");
-		_stprintf(prt, "cmdUpdate:  Failed to load file newdev.dll");
+		//_ftprintf(stream,_T("[E] cmdUpdate:  Failed to load file newdev.dll\n"));
+		_stprintf(prt, _T("cmdUpdate:  Failed to load file newdev.dll"));
 		StatusMessage( NULL, prt,  ERR);
 		goto final;
 	}
 	else
 	{
-		//_ftprintf(stream,">> cmdUpdate:  File newdev.dll loaded OK\n");
-		_stprintf(prt, "cmdUpdate:  File newdev.dll loaded OK");
+		//_ftprintf(stream,_T(">> cmdUpdate:  File newdev.dll loaded OK\n"));
+		_stprintf(prt, _T("cmdUpdate:  File newdev.dll loaded OK"));
 		StatusMessage( NULL, prt,  INFO);
 	};
 
     UpdateFn = (UpdateDriverForPlugAndPlayDevicesProto)GetProcAddress(newdevMod,UPDATEDRIVERFORPLUGANDPLAYDEVICES);
     if(!UpdateFn)
     {
-		//_ftprintf(stream,"[E] cmdUpdate:  Failed to get UPDATEDRIVERFORPLUGANDPLAYDEVICES\n");
-		_stprintf(prt, "cmdUpdate:  Failed to get UPDATEDRIVERFORPLUGANDPLAYDEVICES");
+		//_ftprintf(stream,_T("[E] cmdUpdate:  Failed to get UPDATEDRIVERFORPLUGANDPLAYDEVICES\n"));
+		_stprintf(prt, _T("cmdUpdate:  Failed to get UPDATEDRIVERFORPLUGANDPLAYDEVICES"));
 		StatusMessage( NULL, prt,  ERR);
         goto final;
     }
 	else
 	{
-		//_ftprintf(stream,">> cmdUpdate:  UPDATEDRIVERFORPLUGANDPLAYDEVICES got OK\n");
-		_stprintf(prt, "cmdUpdate:  UPDATEDRIVERFORPLUGANDPLAYDEVICES got OK");
+		//_ftprintf(stream,_T(">> cmdUpdate:  UPDATEDRIVERFORPLUGANDPLAYDEVICES got OK\n"));
+		_stprintf(prt, _T("cmdUpdate:  UPDATEDRIVERFORPLUGANDPLAYDEVICES got OK"));
 		StatusMessage( NULL, prt,  INFO);
 	};
 
@@ -711,21 +706,21 @@ Return Value:
 	ret = CMP_WaitNoPendingInstallEvents(30000);
 	if (ret == WAIT_OBJECT_0)
 	{
-		//_ftprintf(stream,">> cmdUpdate:  CMP_WaitNoPendingInstallEvents returned WAIT_OBJECT_0\n");
-		_stprintf(prt, "cmdUpdate:  CMP_WaitNoPendingInstallEvents returned WAIT_OBJECT_0");
+		//_ftprintf(stream,_T(">> cmdUpdate:  CMP_WaitNoPendingInstallEvents returned WAIT_OBJECT_0\n"));
+		_stprintf(prt, _T("cmdUpdate:  CMP_WaitNoPendingInstallEvents returned WAIT_OBJECT_0"));
 		StatusMessage( NULL, prt,  INFO);
 	}
 	else if (ret == WAIT_TIMEOUT)
 	{
-		//_ftprintf(stream,">> cmdUpdate:  CMP_WaitNoPendingInstallEvents returned WAIT_TIMEOUT\n");
-		_stprintf(prt, "cmdUpdate:  CMP_WaitNoPendingInstallEvents returned WAIT_TIMEOUT");
+		//_ftprintf(stream,_T(">> cmdUpdate:  CMP_WaitNoPendingInstallEvents returned WAIT_TIMEOUT\n"));
+		_stprintf(prt, _T("cmdUpdate:  CMP_WaitNoPendingInstallEvents returned WAIT_TIMEOUT"));
 		StatusMessage( NULL, prt,  INFO);
 	}
 	else
 	{
 		GetErrorString(ErrMsg,1000);
-		//_ftprintf(stream,"[E] cmdUpdate:  CMP_WaitNoPendingInstallEvents failed with error: %s\n", ErrMsg);
- 		_stprintf(prt, "cmdUpdate:  CMP_WaitNoPendingInstallEvents failed with error: %s", ErrMsg);
+		//_ftprintf(stream,_T("[E] cmdUpdate:  CMP_WaitNoPendingInstallEvents failed with error: %s\n"), ErrMsg);
+ 		_stprintf(prt, _T("cmdUpdate:  CMP_WaitNoPendingInstallEvents failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
        goto final;
     }
@@ -733,15 +728,15 @@ Return Value:
     if(!UpdateFn(NULL,hwid,InfPath,flags,NULL)) 
 	{
 		GetErrorString(ErrMsg,1000);
-		//_ftprintf(stream,"[E] cmdUpdate:  UPDATEDRIVERFORPLUGANDPLAYDEVICES(hwid=%s, InfPath=%s) failed with error: %s\n", hwid, InfPath, ErrMsg);
- 		_stprintf(prt, "cmdUpdate:  UPDATEDRIVERFORPLUGANDPLAYDEVICES(hwid=%s, InfPath=%s) failed with error: %s", hwid, InfPath, ErrMsg);
+		//_ftprintf(stream,_T("[E] cmdUpdate:  UPDATEDRIVERFORPLUGANDPLAYDEVICES(hwid=%s, InfPath=%s) failed with error: %s\n"), hwid, InfPath, ErrMsg);
+ 		_stprintf(prt, _T("cmdUpdate:  UPDATEDRIVERFORPLUGANDPLAYDEVICES(hwid=%s, InfPath=%s) failed with error: %s"), hwid, InfPath, ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
         goto final;
     }
 	else
 	{
-		//_ftprintf(stream,">> cmdUpdate:  UPDATEDRIVERFORPLUGANDPLAYDEVICES(hwid=%s, InfPath=%s) executed OK\n", hwid, InfPath);
-		_stprintf(prt, "cmdUpdate:  UPDATEDRIVERFORPLUGANDPLAYDEVICES(hwid=%s, InfPath=%s) executed OK", hwid, InfPath);
+		//_ftprintf(stream,_T(">> cmdUpdate:  UPDATEDRIVERFORPLUGANDPLAYDEVICES(hwid=%s, InfPath=%s) executed OK\n"), hwid, InfPath);
+		_stprintf(prt, _T("cmdUpdate:  UPDATEDRIVERFORPLUGANDPLAYDEVICES(hwid=%s, InfPath=%s) executed OK"), hwid, InfPath);
 		StatusMessage( NULL, prt,  INFO);
 	};
 
@@ -755,8 +750,8 @@ final:
         FreeLibrary(newdevMod);
 	}
 
-	//_ftprintf(stream,">> cmdUpdate returns code %d\n", failcode);
-	_stprintf(prt, "cmdUpdate returns code %d", failcode);
+	//_ftprintf(stream,_T(">> cmdUpdate returns code %d\n"), failcode);
+	_stprintf(prt, _T("cmdUpdate returns code %d"), failcode);
 	StatusMessage( NULL, prt,  INFO);
 	return failcode;
 }
@@ -772,8 +767,8 @@ int RemoveDevice(TCHAR *ParentDeviceNode, BOOL DelInf )
 	BOOL rDi;
 	CONFIGRET  rType;
 
-	//_ftprintf(stream,">> RemoveDevice: ParentDeviceNode = %s\n", ParentDeviceNode);
-	_stprintf(prt, "RemoveDevice: ParentDeviceNode = %s", ParentDeviceNode);
+	//_ftprintf(stream,_T(">> RemoveDevice: ParentDeviceNode = %s\n"), ParentDeviceNode);
+	_stprintf(prt, _T("RemoveDevice: ParentDeviceNode = %s"), ParentDeviceNode);
 	StatusMessage( NULL, prt,  INFO);
 
 	// Accessing the HW registry key
@@ -781,15 +776,15 @@ int RemoveDevice(TCHAR *ParentDeviceNode, BOOL DelInf )
 	if (DeviceInfoSet == INVALID_HANDLE_VALUE)
 	{
 		GetErrorString(ErrMsg,1000);
-		//_ftprintf(stream,"[E] RemoveDevice: Function SetupDiCreateDeviceInfoList failed with error: %s\n", ErrMsg);
-		_stprintf(prt, "RemoveDevice: Function SetupDiCreateDeviceInfoList failed with error: %s", ErrMsg);
+		//_ftprintf(stream,_T("[E] RemoveDevice: Function SetupDiCreateDeviceInfoList failed with error: %s\n"), ErrMsg);
+		_stprintf(prt, _T("RemoveDevice: Function SetupDiCreateDeviceInfoList failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
 		return -101;
 	}
 	else
 	{
-		//_ftprintf(stream,">> RemoveDevice: Function SetupDiCreateDeviceInfoList OK\n");
-		_stprintf(prt, "RemoveDevice: Function SetupDiCreateDeviceInfoList OK");
+		//_ftprintf(stream,_T(">> RemoveDevice: Function SetupDiCreateDeviceInfoList OK\n"));
+		_stprintf(prt, _T("RemoveDevice: Function SetupDiCreateDeviceInfoList OK"));
 		StatusMessage( NULL, prt,  INFO);
 	};
 
@@ -798,15 +793,15 @@ int RemoveDevice(TCHAR *ParentDeviceNode, BOOL DelInf )
 	rType = CM_Locate_DevNode(&dnDevInst, ParentDeviceNode ,0);
 	if (rType != CR_SUCCESS)
 	{
-		//_ftprintf(stream,"[E] RemoveDevice: Function CM_Locate_DevNode failed with error: %08X\n", rType);
-		_stprintf(prt, "RemoveDevice: Function CM_Locate_DevNode failed with error: %08X", rType);
+		//_ftprintf(stream,_T("[E] RemoveDevice: Function CM_Locate_DevNode failed with error: %08X\n"), rType);
+		_stprintf(prt, _T("RemoveDevice: Function CM_Locate_DevNode failed with error: %08X"), rType);
 		StatusMessage( NULL, prt,  ERR);
 		return -102;
 	}
 	else
 	{
-		//_ftprintf(stream,">> RemoveDevice: Function CM_Locate_DevNode OK\n");
-		_stprintf(prt, "RemoveDevice: Function CM_Locate_DevNode failed with error: %08X", rType);
+		//_ftprintf(stream,_T(">> RemoveDevice: Function CM_Locate_DevNode OK\n"));
+		_stprintf(prt, _T("RemoveDevice: Function CM_Locate_DevNode failed with error: %08X"), rType);
 		StatusMessage( NULL, prt,  INFO);
 	};
 
@@ -815,15 +810,15 @@ int RemoveDevice(TCHAR *ParentDeviceNode, BOOL DelInf )
 	rType = CM_Get_Device_ID_Size(&Len, dnDevInst, 0);
 	if (rType != CR_SUCCESS)
 	{
-		//_ftprintf(stream,"[E] RemoveDevice: Function CM_Get_Device_ID_Size failed with error: %08X\n", rType);
-		_stprintf(prt, "RemoveDevice: Function CM_Get_Device_ID_Size failed with error: %08X", rType);
+		//_ftprintf(stream,_T("[E] RemoveDevice: Function CM_Get_Device_ID_Size failed with error: %08X\n"), rType);
+		_stprintf(prt, _T("RemoveDevice: Function CM_Get_Device_ID_Size failed with error: %08X"), rType);
 		StatusMessage( NULL, prt,  ERR);
 		return -103;
 	}	
 	else
 	{
-		//_ftprintf(stream,">> RemoveDevice: Function CM_Get_Device_ID_Size OK\n");
-		_stprintf(prt, "RemoveDevice: Function CM_Get_Device_ID_Size OK");
+		//_ftprintf(stream,_T(">> RemoveDevice: Function CM_Get_Device_ID_Size OK\n"));
+		_stprintf(prt, _T("RemoveDevice: Function CM_Get_Device_ID_Size OK"));
 		StatusMessage( NULL, prt,  INFO);
 	};
 
@@ -833,16 +828,16 @@ int RemoveDevice(TCHAR *ParentDeviceNode, BOOL DelInf )
 	rType = CM_Get_Device_ID(dnDevInst, DeviceInstanceId, Len, 0);
 	if (rType != CR_SUCCESS)
 	{
-		//_ftprintf(stream,"[E] RemoveDevice: Function CM_Get_Device_ID failed with error: %08X\n", rType);
-		_stprintf(prt, "RemoveDevice: Function CM_Get_Device_ID failed with error: %08X", rType);
+		//_ftprintf(stream,_T("[E] RemoveDevice: Function CM_Get_Device_ID failed with error: %08X\n"), rType);
+		_stprintf(prt, _T("RemoveDevice: Function CM_Get_Device_ID failed with error: %08X"), rType);
 		StatusMessage( NULL, prt,  ERR);
 		delete DeviceInstanceId;
 		return -104;
 	}
 	else
 	{
-		//_ftprintf(stream,">> RemoveDevice: Function CM_Get_Device_ID (Device Instance Path = %s) OK\n",DeviceInstanceId);
-		_stprintf(prt, "RemoveDevice: Function CM_Get_Device_ID (Device Instance Path = %s) OK",DeviceInstanceId);
+		//_ftprintf(stream,_T(">> RemoveDevice: Function CM_Get_Device_ID (Device Instance Path = %s) OK\n"),DeviceInstanceId);
+		_stprintf(prt, _T("RemoveDevice: Function CM_Get_Device_ID (Device Instance Path = %s) OK"),DeviceInstanceId);
 		StatusMessage( NULL, prt,  INFO);
 	};
 
@@ -853,15 +848,15 @@ int RemoveDevice(TCHAR *ParentDeviceNode, BOOL DelInf )
 	if (!rDi)
 	{
 		 GetErrorString(ErrMsg,1000);
-		//_ftprintf(stream,"[E] RemoveDevice: Function SetupDiOpenDeviceInfo failed with error: %s\n", ErrMsg);
-		_stprintf(prt, "RemoveDevice: Function SetupDiOpenDeviceInfo failed with error: %s", ErrMsg);
+		//_ftprintf(stream,_T("[E] RemoveDevice: Function SetupDiOpenDeviceInfo failed with error: %s\n"), ErrMsg);
+		_stprintf(prt, _T("RemoveDevice: Function SetupDiOpenDeviceInfo failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
 		return -105;
 	}
 	else
 	{
-		//_ftprintf(stream,">> RemoveDevice: Function SetupDiOpenDeviceInfo OK\n");
-		_stprintf(prt, "RemoveDevice: Function SetupDiOpenDeviceInfo OK");
+		//_ftprintf(stream,_T(">> RemoveDevice: Function SetupDiOpenDeviceInfo OK\n"));
+		_stprintf(prt, _T("RemoveDevice: Function SetupDiOpenDeviceInfo OK"));
 		StatusMessage( NULL, prt,  INFO);
 	};
 
@@ -875,15 +870,15 @@ int RemoveDevice(TCHAR *ParentDeviceNode, BOOL DelInf )
 	if (!rDi)
 	{
 		 GetErrorString(ErrMsg,1000);
-		//_ftprintf(stream,"[E] RemoveDevice: Function SetupDiRemoveDevice failed with error: %s\n", ErrMsg);
-		_stprintf(prt, "RemoveDevice: Function SetupDiRemoveDevice failed with error: %s", ErrMsg);
+		//_ftprintf(stream,_T("[E] RemoveDevice: Function SetupDiRemoveDevice failed with error: %s\n"), ErrMsg);
+		_stprintf(prt, _T("RemoveDevice: Function SetupDiRemoveDevice failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
 		return -106;
 	}
 	else
 	{
-		//_ftprintf(stream,">> RemoveDevice: Function SetupDiRemoveDevice OK\n");
-		_stprintf(prt, "RemoveDevice: Function SetupDiRemoveDevice OK");
+		//_ftprintf(stream,_T(">> RemoveDevice: Function SetupDiRemoveDevice OK\n"));
+		_stprintf(prt, _T("RemoveDevice: Function SetupDiRemoveDevice OK"));
 		StatusMessage( NULL, prt,  INFO);
 	};
 
@@ -892,18 +887,47 @@ int RemoveDevice(TCHAR *ParentDeviceNode, BOOL DelInf )
 		return 0;
 
 	////// If Requested to Delete INF file from inf directoy ///////
-	_stprintf(prt, "RemoveDevice: Going to remove file %s", OEMInfFileName);
+	_stprintf(prt, _T("RemoveDevice: Going to remove file %s"), OEMInfFileName);
 	StatusMessage( NULL, prt,  INFO);
+
+	// ADDED BY WILL
+
+    //
+    // make use of SetupUninstall...
+    //
+    HMODULE newdevMod = NULL;
+    newdevMod = LoadLibrary(_T("setupapi.dll"));
+    if(!newdevMod) 
+	{
+		//_ftprintf(stream,_T("[E] cmdUpdate:  Failed to load file newdev.dll\n"));
+		_stprintf(prt, _T("cmdUpdate:  Failed to load file setupapi.dll"));
+		StatusMessage( NULL, prt,  ERR);
+		goto final;
+	}
+	else
+	{
+		//_ftprintf(stream,_T(">> cmdUpdate:  File newdev.dll loaded OK\n"));
+		_stprintf(prt, _T("cmdUpdate:  File setupapi.dll loaded OK"));
+		StatusMessage( NULL, prt,  INFO);
+	};
+	SetupUninstallOEMInfProto SetupUninstallOEMInf;
+        SetupUninstallOEMInf = (SetupUninstallOEMInfProto)GetProcAddress(newdevMod,SETUPUNINSTALLOEMINF);
+
 	rDi = SetupUninstallOEMInf(OEMInfFileName, SUOI_FORCEDELETE, NULL);
 	if (!rDi)
 	{
 		GetErrorString(ErrMsg,1000);
-		_stprintf(prt, "RemoveDevice: Function SetupUninstallOEMInf failed with error: %s", ErrMsg);
+		_stprintf(prt, _T("RemoveDevice: Function SetupUninstallOEMInf failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
 		return -116;
 	};
-	_stprintf(prt, "RemoveDevice: File %s removed", OEMInfFileName);
+	_stprintf(prt, _T("RemoveDevice: File %s removed"), OEMInfFileName);
 	StatusMessage( NULL, prt,  INFO);
+
+final:
+    if(newdevMod) {
+        FreeLibrary(newdevMod);
+	}
 
 	return 0;
 }
@@ -1024,8 +1048,8 @@ int Installation(LPCTSTR DeviceHWID, TCHAR * InfFile)
 	//////////////// Test if PPJoy (virtual joystick 1)///////////////////////////
 	if (isPPJoyInstalled())
 	{
-		//_ftprintf(stream,"[E] Install failed: PPJoy (virtual joystick 1) is already installed \n");
-		_stprintf(prt, "Install failed: PPJoy (virtual joystick 1) is already installed");
+		//_ftprintf(stream,_T("[E] Install failed: PPJoy (virtual joystick 1) is already installed \n"));
+		_stprintf(prt, _T("Install failed: PPJoy (virtual joystick 1) is already installed"));
 		StatusMessage( NULL, prt,  ERR);
 		return -7;
 	}
@@ -1037,8 +1061,8 @@ int Installation(LPCTSTR DeviceHWID, TCHAR * InfFile)
 	InstanceId[0] = '\0';
 	if (FindInstalled(DeviceHWID,InstanceId))
 	{
-		//_ftprintf(stream,"[E] Device already installed - Install failed\n");
-		_stprintf(prt, "Device already installed - Install failed");
+		//_ftprintf(stream,_T("[E] Device already installed - Install failed\n"));
+		_stprintf(prt, _T("Device already installed - Install failed"));
 		StatusMessage( NULL, prt,  WARN);
 		return -2;
 	}
@@ -1046,8 +1070,8 @@ int Installation(LPCTSTR DeviceHWID, TCHAR * InfFile)
 	{	// Not installed so install it
 		if (!Install(InfFile, DeviceHWID,InstanceId))
 		{
-			//_ftprintf(stream,"[E] Install failed\n");
-			_stprintf(prt, "Install failed");
+			//_ftprintf(stream,_T("[E] Install failed\n"));
+			_stprintf(prt, _T("Install failed"));
 			StatusMessage( NULL, prt,  ERR);
 			return -1;
 		};
@@ -1062,7 +1086,7 @@ int Installation(LPCTSTR DeviceHWID, TCHAR * InfFile)
 		return -5;
 	};
 	GetInputInfFullPath(InfPath);
-	 _stprintf(prt, "installation(): InputInfFullPath --> %s", InfPath);
+	 _stprintf(prt, _T("installation(): InputInfFullPath --> %s"), InfPath);
 	StatusMessage( NULL, prt,  INFO);
 	cmdUpdateNI( INSTALLFLAG_FORCE ,InfPath, COMPATIBLE_ID );
 	return 0;
@@ -1077,15 +1101,15 @@ int Removal(TCHAR * DeviceHWID, TCHAR * InfFile, BOOL DelInf)
 	InstanceId[0] = '\0';
 	if (!FindInstalled(DeviceHWID,InstanceId))
 	{
-		//_ftprintf(stream,">> Removal(): Device %s not installed\n",DeviceHWID);
-		_stprintf(prt, "Removal(): Device %s not installed",DeviceHWID);
+		//_ftprintf(stream,_T(">> Removal(): Device %s not installed\n"),DeviceHWID);
+		_stprintf(prt, _T("Removal(): Device %s not installed"),DeviceHWID);
 		StatusMessage( NULL, prt,  WARN);
 		return -100;
 	};
 
 	// Installed - Continue;
-	//_ftprintf(stream,">> Removal(): Device %s is installed (InstanceId %s) -- Removing\n",DeviceHWID, InstanceId);
-	_stprintf(prt, "Removal(): Device %s is installed (InstanceId %s) -- Removing",DeviceHWID, InstanceId);
+	//_ftprintf(stream,_T(">> Removal(): Device %s is installed (InstanceId %s) -- Removing\n"),DeviceHWID, InstanceId);
+	_stprintf(prt, _T("Removal(): Device %s is installed (InstanceId %s) -- Removing"),DeviceHWID, InstanceId);
 	StatusMessage( NULL, prt,  INFO);
 	int result = RemoveDevice(InstanceId, DelInf);
 	return result;
@@ -1100,8 +1124,8 @@ int Repair(TCHAR * DeviceHWID, TCHAR * InfFile)
 	//////////////// Test if PPJoy (virtual joystick 1)///////////////////////////
 	if (isPPJoyInstalled())
 	{
-		//_ftprintf(stream,"[E] Repair failed: PPJoy (virtual joystick 1) is already installed \n");
-		_stprintf(prt, "Repair failed: PPJoy (virtual joystick 1) is already installed ");
+		//_ftprintf(stream,_T("[E] Repair failed: PPJoy (virtual joystick 1) is already installed \n"));
+		_stprintf(prt, _T("Repair failed: PPJoy (virtual joystick 1) is already installed "));
 		StatusMessage( NULL, prt,  ERR);
 		return -7;
 	}
@@ -1113,19 +1137,19 @@ int Repair(TCHAR * DeviceHWID, TCHAR * InfFile)
 	InstanceId[0] = '\0';
 	if (FindInstalled(DeviceHWID,InstanceId))
 	{
-		//_ftprintf(stream,">> Device already installed - Repairing\n");
-		_stprintf(prt, "Device already installed - Repairing");
+		//_ftprintf(stream,_T(">> Device already installed - Repairing\n"));
+		_stprintf(prt, _T("Device already installed - Repairing"));
 		StatusMessage( NULL, prt,  WARN);
 	}
 	else
 	{	// Not installed so install it
-		//_ftprintf(stream,">> Device not installed - Installing\n");
-		_stprintf(prt, "Device not installed - Installing");
+		//_ftprintf(stream,_T(">> Device not installed - Installing\n"));
+		_stprintf(prt, _T("Device not installed - Installing"));
 		StatusMessage( NULL, prt,  INFO);
 		if (!Install(InfFile, DeviceHWID,InstanceId))
 		{
-			//_ftprintf(stream,"[E] Install failed\n");
-			_stprintf(prt, "Install failed");
+			//_ftprintf(stream,_T("[E] Install failed\n"));
+			_stprintf(prt, _T("Install failed"));
 			StatusMessage( NULL, prt,  ERR);
 			return -1;
 		};
@@ -1140,8 +1164,8 @@ int Repair(TCHAR * DeviceHWID, TCHAR * InfFile)
 		return -5;
 	};
 	GetInputInfFullPath(InfPath);
-	//_ftprintf(stream,">> Repair(): InputInfFullPath --> %s \n", InfPath);
-	_stprintf(prt, "Repair(): InputInfFullPath --> %s", InfPath);
+	//_ftprintf(stream,_T(">> Repair(): InputInfFullPath --> %s \n"), InfPath);
+	_stprintf(prt, _T("Repair(): InputInfFullPath --> %s"), InfPath);
 	StatusMessage( NULL, prt,  INFO);
 	cmdUpdateNI( INSTALLFLAG_FORCE ,InfPath, COMPATIBLE_ID );
 	return 0;
@@ -1156,7 +1180,7 @@ BOOL GetErrorString(TCHAR * Msg, int Size)
 	int nTChars = FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,  NULL, errorcode, 0, (LPTSTR)&s,  0, NULL);
 	if (!nTChars)
 	{
-		_stprintf(Msg, TEXT("Unknown Error: %08x"),errorcode);
+		_stprintf(Msg, _T("Unknown Error: %08x"),errorcode);
 		return FALSE;
 	};
 
@@ -1172,9 +1196,9 @@ BOOL GetInputInfFullPath(TCHAR * Str)
 	TCHAR * buffer;
 
 	buffer = tbuffer;
-	buffer = _tgetenv(TEXT("WINDIR"));
+	buffer = _tgetenv(_T("WINDIR"));
 
-	_stprintf(Str, TEXT("%s\\Inf\\Input.inf"),buffer);
+	_stprintf(Str, _T("%s\\Inf\\Input.inf"),buffer);
 	return TRUE;
 }
 
@@ -1377,7 +1401,7 @@ void PrintHeader(FILE * dst)
 
 
 
-	_ftprintf(dst, "+++++++ +++++++ +++++++ +++++++ +++++++ +++++++ +++++++ +++++++ +++++++ +++++++ \n");
+	_ftprintf(dst, _T("+++++++ +++++++ +++++++ +++++++ +++++++ +++++++ +++++++ +++++++ +++++++ +++++++ \n"));
 
 	//// Time of log file ////////////////////////////////////////////
 	// Get time as 64-bit integer.
@@ -1385,41 +1409,41 @@ void PrintHeader(FILE * dst)
 	// Convert to local time.
 	newtime = localtime( &long_time );
 	// Use strftime to build a customized time string. 
-	_ftprintf(dst, "+++++++ +++++++ %s",  asctime( newtime ) );
+	_ftprintf(dst, _T("+++++++ +++++++ %s"),  asctime( newtime ) );
 
 	//// System information /////////////////////////////////////////
 	ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
 	osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
 	lposvi = &osvi;
 	GetVersionEx((LPOSVERSIONINFO)lposvi);
-	_ftprintf(dst, "+++++++ +++++++ OS: %d.%d %s ", osvi.dwMajorVersion,   osvi.dwMinorVersion, osvi.szCSDVersion );
+	_ftprintf(dst, _T("+++++++ +++++++ OS: %d.%d %s "), osvi.dwMajorVersion,   osvi.dwMinorVersion, osvi.szCSDVersion );
 
 	GetNativeSystemInfo(&sysinfo);
 	if (sysinfo.wProcessorArchitecture==PROCESSOR_ARCHITECTURE_AMD64)
-		_ftprintf(dst, " (x64)" );
+		_ftprintf(dst, _T(" (x64)") );
 	else if (sysinfo.wProcessorArchitecture==PROCESSOR_ARCHITECTURE_INTEL)
-		_ftprintf(dst, " (x86)" );
+		_ftprintf(dst, _T(" (x86)") );
 	else
-	_ftprintf(dst, " (ARCH?)" );
+	_ftprintf(dst, _T(" (ARCH?)") );
 
 	// XP
 	if ( osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 1 )
 	{
-		_ftprintf(dst, TEXT("[ Windows XP "));
+		_ftprintf(dst, _T("[ Windows XP "));
 		if( osvi.wSuiteMask & VER_SUITE_PERSONAL )
-			_ftprintf(dst,  TEXT( "Home Edition ]" ));
-		else _ftprintf(dst,  TEXT( "Professional ]" ));
+			_ftprintf(dst,  _T("Home Edition ]"));
+		else _ftprintf(dst,  _T("Professional ]"));
 	};
 
 	// Vista/W7
 	if ( osvi.dwMajorVersion == 6 )
 	{
-		pGPI = (PGPI) GetProcAddress(GetModuleHandle(TEXT("kernel32.dll")), "GetProductInfo");
+		pGPI = (PGPI) GetProcAddress(GetModuleHandle(_T("kernel32.dll")), "GetProductInfo");
 		pGPI( osvi.dwMajorVersion, osvi.dwMinorVersion, 0, 0, &ProdType);
 
 	};
 
-	 _ftprintf(dst,"\n");
+	 _ftprintf(dst,_T("\n"));
 }
 
 BOOL StatusMessageToStream(void * reserved, TCHAR * buffer,  ERRLEVEL level)
@@ -1429,22 +1453,22 @@ BOOL StatusMessageToStream(void * reserved, TCHAR * buffer,  ERRLEVEL level)
 	switch (level)
 	{
 	case INFO:
-		Prefix = "[I] ";
+		Prefix = _T("[I] ");
 		break;
 	case WARN:
-		Prefix = "[W] ";
+		Prefix = _T("[W] ");
 		break;
 	case ERR:
-		Prefix = "[E] ";
+		Prefix = _T("[E] ");
 		break;
 	case FATAL:
-		Prefix = "[F] ";
+		Prefix = _T("[F] ");
 		break;
 	default:
 		return FALSE;
 	}
 	 
-	_ftprintf(stream,"%s %s\n", Prefix, buffer);
+	_ftprintf(stream,_T("%s %s\n"), Prefix, buffer);
 	return TRUE;
 }
 
@@ -1458,7 +1482,7 @@ BOOL GetOEMInfFileName( HDEVINFO DeviceInfoSet, SP_DEVINFO_DATA DeviceInfoData, 
 	TCHAR ErrMsg[1000];
 	BOOL bRes=TRUE;
 
-	StatusMessage( NULL, "GetOEMInfFileName: Starting",  INFO);
+	StatusMessage( NULL, _T("GetOEMInfFileName: Starting"),  INFO);
 
 	//// Preparations
 	SP_DEVINSTALL_PARAMS deviceInstallParams;
@@ -1468,35 +1492,35 @@ BOOL GetOEMInfFileName( HDEVINFO DeviceInfoSet, SP_DEVINFO_DATA DeviceInfoData, 
 	if (!bRes)
 	{
 		GetErrorString(ErrMsg,1000);
-		_stprintf(prt, "GetOEMInfFileName: Function SetupDiGetDeviceInstallParams failed with error: %s", ErrMsg);
+		_stprintf(prt, _T("GetOEMInfFileName: Function SetupDiGetDeviceInstallParams failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
 		return FALSE;
 	}
 	else
-		StatusMessage( NULL, "GetOEMInfFileName: Function SetupDiGetDeviceInstallParams OK",  INFO);
+		StatusMessage( NULL, _T("GetOEMInfFileName: Function SetupDiGetDeviceInstallParams OK"),  INFO);
 
 	deviceInstallParams.FlagsEx |= (DI_FLAGSEX_INSTALLEDDRIVER | DI_FLAGSEX_ALLOWEXCLUDEDDRVS);
 	bRes = SetupDiSetDeviceInstallParams(DeviceInfoSet, &DeviceInfoData, &deviceInstallParams);
 	if (!bRes)
 	{
 		GetErrorString(ErrMsg,1000);
-		_stprintf(prt, "GetOEMInfFileName: Function SetupDiSetDeviceInstallParams failed with error: %s", ErrMsg);
+		_stprintf(prt, _T("GetOEMInfFileName: Function SetupDiSetDeviceInstallParams failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
 		return FALSE;
 	}
 	else
-		StatusMessage( NULL, "GetOEMInfFileName: Function SetupDiSetDeviceInstallParams OK",  INFO);
+		StatusMessage( NULL, _T("GetOEMInfFileName: Function SetupDiSetDeviceInstallParams OK"),  INFO);
 
 	bRes = 	SetupDiBuildDriverInfoList(DeviceInfoSet, &DeviceInfoData, SPDIT_CLASSDRIVER);
 	if (!bRes)
 	{
 		GetErrorString(ErrMsg,1000);
-		_stprintf(prt, "GetOEMInfFileName: Function SetupDiBuildDriverInfoList failed with error: %s", ErrMsg);
+		_stprintf(prt, _T("GetOEMInfFileName: Function SetupDiBuildDriverInfoList failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
 		return FALSE;
 	}
 	else
-		StatusMessage( NULL, "GetOEMInfFileName: Function SetupDiBuildDriverInfoList OK",  INFO);
+		StatusMessage( NULL, _T("GetOEMInfFileName: Function SetupDiBuildDriverInfoList OK"),  INFO);
 
 	// Get some details about the driver:
 	SP_DRVINFO_DATA driverInfoData;
@@ -1506,13 +1530,13 @@ BOOL GetOEMInfFileName( HDEVINFO DeviceInfoSet, SP_DEVINFO_DATA DeviceInfoData, 
 	if (!bRes)
 	{
 		GetErrorString(ErrMsg,1000);
-		_stprintf(prt, "GetOEMInfFileName: Function SetupDiEnumDriverInfo failed with error: %s", ErrMsg);
+		_stprintf(prt, _T("GetOEMInfFileName: Function SetupDiEnumDriverInfo failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
 		return FALSE;
 	}
 	else
 	{
-		_stprintf(prt, "GetOEMInfFileName: Function SetupDiEnumDriverInfo for \"%s\" OK", driverInfoData.Description);
+		_stprintf(prt, _T("GetOEMInfFileName: Function SetupDiEnumDriverInfo for \"%s\" OK"), driverInfoData.Description);
 		StatusMessage( NULL, prt,  INFO);
 	};
 
@@ -1525,20 +1549,20 @@ BOOL GetOEMInfFileName( HDEVINFO DeviceInfoSet, SP_DEVINFO_DATA DeviceInfoData, 
 		DWORD errorcode = GetLastError();
 		if (errorcode == ERROR_INSUFFICIENT_BUFFER)
 		{
-			_stprintf(prt, "GetOEMInfFileName: Function SetupDiGetDriverInfoDetail OK. INF file is %s", driverInfoDetail.InfFileName);
+			_stprintf(prt, _T("GetOEMInfFileName: Function SetupDiGetDriverInfoDetail OK. INF file is %s"), driverInfoDetail.InfFileName);
 			StatusMessage( NULL, prt,  INFO);
 		}
 		else
 		{
 			GetErrorString(ErrMsg,1000);
-			_stprintf(prt, "GetOEMInfFileName: Function SetupDiGetDriverInfoDetail failed with error: %s", ErrMsg);
+			_stprintf(prt, _T("GetOEMInfFileName: Function SetupDiGetDriverInfoDetail failed with error: %s"), ErrMsg);
 			StatusMessage( NULL, prt,  ERR);
 			return FALSE;
 		};
 	}
 	else
 	{
-		_stprintf(prt, "GetOEMInfFileName: Function SetupDiGetDriverInfoDetail OK. INF file is %s", driverInfoDetail.InfFileName);
+		_stprintf(prt, _T("GetOEMInfFileName: Function SetupDiGetDriverInfoDetail OK. INF file is %s"), driverInfoDetail.InfFileName);
 		StatusMessage( NULL, prt,  INFO);
 	};
 
@@ -1548,13 +1572,13 @@ BOOL GetOEMInfFileName( HDEVINFO DeviceInfoSet, SP_DEVINFO_DATA DeviceInfoData, 
 	if (size || p)
 	{
 		_tcsncpy(OEMInfFileName, p, size);
-		_stprintf(prt, "GetOEMInfFileName: Function GetFullPathName OK. INF file is %s", p);
+		_stprintf(prt, _T("GetOEMInfFileName: Function GetFullPathName OK. INF file is %s"), p);
 		StatusMessage( NULL, prt,  INFO);
 	}
 	else
 	{
 		GetErrorString(ErrMsg,1000);
-		_stprintf(prt, "GetOEMInfFileName: Function GetFullPathName failed with error: %s", ErrMsg);
+		_stprintf(prt, _T("GetOEMInfFileName: Function GetFullPathName failed with error: %s"), ErrMsg);
 		StatusMessage( NULL, prt,  ERR);
 		return FALSE;
 	};

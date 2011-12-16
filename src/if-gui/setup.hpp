@@ -36,10 +36,14 @@
 
 enum {
 	VIEW_TEXT,
-	VIEW_OTHER
+	VIEW_ERROR
 };
 
 class WinSetupFrame : public wxFrame {
+	enum {
+		ID_ERROR_OK,
+	};
+
 	public:
 		WinSetupFrame(int mode);
 		~WinSetupFrame();
@@ -53,6 +57,9 @@ class WinSetupFrame : public wxFrame {
 
 		void OnSetupFinished(droidpad::SetupEvent& event);
 		void OnSetupExit(droidpad::SetupEvent& event);
+
+		void OnSetupError(droidpad::SetupEvent& event);
+		void OnErrorOkClick(wxCommandEvent& event);
 	public:
 
 	protected:
@@ -69,9 +76,9 @@ class WinSetupFrame : public wxFrame {
 		wxSizer *panelSizer;
 
 		// This panel simply shows some text.
-		wxPanel *textPanel, *otherPanel;
+		wxPanel *textPanel, *errorPanel;
 
-		wxStaticText* textPanel_text;
+		wxStaticText* textPanel_text, *errorPanel_text;
 
 		bool running;
 };

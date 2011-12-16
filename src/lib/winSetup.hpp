@@ -23,11 +23,14 @@
 
 #include <wx/thread.h>
 #include <wx/event.h>
+#include <wx/string.h>
 
 BEGIN_DECLARE_EVENT_TYPES()
 	DECLARE_LOCAL_EVENT_TYPE(SETUP_BLANKSTATUS, 0)
 	DECLARE_LOCAL_EVENT_TYPE(SETUP_INITIALISED, 1)
 	DECLARE_LOCAL_EVENT_TYPE(REMOVE_INITIALISED, 2)
+
+	DECLARE_LOCAL_EVENT_TYPE(SETUP_ERROR, 50)
 
 	DECLARE_LOCAL_EVENT_TYPE(SETUP_FINISHED, 100)
 	DECLARE_LOCAL_EVENT_TYPE(SETUP_EXIT, 101)
@@ -47,6 +50,8 @@ namespace droidpad {
 			void* Entry();
 
 		private:
+			void Cleanup();
+
 			int mode;
 			wxEvtHandler &callback;
 	};
@@ -57,10 +62,16 @@ namespace droidpad {
 	class SetupEvent : public wxEvent
 	{
 		public:
-			SetupEvent(wxEventType type = SETUP_BLANKSTATUS);
+			SetupEvent(wxEventType type = SETUP_BLANKSTATUS, wxString message = wxT(""));
 			wxEvent* Clone() const;
 
+			inline wxString GetMessage() {
+				return message;
+			}
+
 			DECLARE_DYNAMIC_CLASS(SetupEvent)
+		private:
+			wxString message;
 	};
 
 	typedef void (wxEvtHandler::*setupEventFunction)(SetupEvent&);

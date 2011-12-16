@@ -44,6 +44,7 @@ AM_CPPFLAGS = -DPREFIX='"$(prefix)"'
 
 if OS_WIN32
 droidpad_LDFLAGS = -Wl,--enable-auto-import --enable-stdcall-fixup
+droidpad_LDADD += -lws2_32 lib/ext/win32/libvjoy.la
 if IF_GUI
 # http://www.gnu.org/software/hello/manual/automake/Options.html
 pkg_verbose = $(pkg_verbose_$(V))
@@ -55,7 +56,7 @@ droidpad_res_CFLAGS = @WXCPPFLAGS@
 if-gui/droidpad.res: if-gui/droidpad.rc
 	$(pkg_verbose)i586-mingw32msvc-windres $(droidpad_res_CFLAGS) if-gui/droidpad.rc -O coff -o if-gui/droidpad.res
 
-droidpad_LDADD += if-gui/droidpad.res -lws2_32
+droidpad_LDADD += if-gui/droidpad.res -lws2_32 /usr/i586-mingw32msvc/lib/libsetupapi.a
 
 EXTRA_DIST = if-gui/droidpad.rc
 CLEANFILES = if-gui/droidpad.res

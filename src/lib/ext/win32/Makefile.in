@@ -87,11 +87,13 @@ am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libvjoy_la_LIBADD =
+libvjoy_la_DEPENDENCIES =
 am__libvjoy_la_SOURCES_DIST = vjoy/vJoyInstallLib.cpp \
 	vjoy/vJoyInstall.h vjoy/stdafx.h vjoy/public.h \
-	vjoy/targetver.h vJoy/winheader/salfix.h
-@OS_WIN32_TRUE@am_libvjoy_la_OBJECTS = libvjoy_la-vJoyInstallLib.lo
+	vjoy/targetver.h vJoy/winheader/salfix.h winUtil.cpp \
+	winUtil.hpp vjoy.cpp vjoy.hpp
+@OS_WIN32_TRUE@am_libvjoy_la_OBJECTS = libvjoy_la-vJoyInstallLib.lo \
+@OS_WIN32_TRUE@	libvjoy_la-winUtil.lo libvjoy_la-vjoy.lo
 libvjoy_la_OBJECTS = $(am_libvjoy_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -288,9 +290,12 @@ top_srcdir = @top_srcdir@
 @OS_WIN32_TRUE@libvjoy_la_SOURCES = \
 @OS_WIN32_TRUE@	vjoy/vJoyInstallLib.cpp	vjoy/vJoyInstall.h	\
 @OS_WIN32_TRUE@	vjoy/stdafx.h		vjoy/public.h		\
-@OS_WIN32_TRUE@	vjoy/targetver.h	vJoy/winheader/salfix.h
+@OS_WIN32_TRUE@	vjoy/targetver.h	vJoy/winheader/salfix.h	\
+@OS_WIN32_TRUE@	winUtil.cpp		winUtil.hpp		\
+@OS_WIN32_TRUE@	vjoy.cpp		vjoy.hpp
 
-@OS_WIN32_TRUE@libvjoy_la_CXXFLAGS = -Ivjoy -I/usr/i586-mingw32msvc/include/ddk -w
+@OS_WIN32_TRUE@libvjoy_la_CXXFLAGS = -Ivjoy -I/usr/i586-mingw32msvc/include/ddk -w @WXCPPFLAGS@
+@OS_WIN32_TRUE@libvjoy_la_LIBADD = @WXBASELIBS@
 all: all-am
 
 .SUFFIXES:
@@ -366,6 +371,8 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvjoy_la-vJoyInstallLib.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvjoy_la-vjoy.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvjoy_la-winUtil.Plo@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -398,6 +405,22 @@ libvjoy_la-vJoyInstallLib.lo: vjoy/vJoyInstallLib.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='vjoy/vJoyInstallLib.cpp' object='libvjoy_la-vJoyInstallLib.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvjoy_la_CXXFLAGS) $(CXXFLAGS) -c -o libvjoy_la-vJoyInstallLib.lo `test -f 'vjoy/vJoyInstallLib.cpp' || echo '$(srcdir)/'`vjoy/vJoyInstallLib.cpp
+
+libvjoy_la-winUtil.lo: winUtil.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvjoy_la_CXXFLAGS) $(CXXFLAGS) -MT libvjoy_la-winUtil.lo -MD -MP -MF $(DEPDIR)/libvjoy_la-winUtil.Tpo -c -o libvjoy_la-winUtil.lo `test -f 'winUtil.cpp' || echo '$(srcdir)/'`winUtil.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libvjoy_la-winUtil.Tpo $(DEPDIR)/libvjoy_la-winUtil.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='winUtil.cpp' object='libvjoy_la-winUtil.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvjoy_la_CXXFLAGS) $(CXXFLAGS) -c -o libvjoy_la-winUtil.lo `test -f 'winUtil.cpp' || echo '$(srcdir)/'`winUtil.cpp
+
+libvjoy_la-vjoy.lo: vjoy.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvjoy_la_CXXFLAGS) $(CXXFLAGS) -MT libvjoy_la-vjoy.lo -MD -MP -MF $(DEPDIR)/libvjoy_la-vjoy.Tpo -c -o libvjoy_la-vjoy.lo `test -f 'vjoy.cpp' || echo '$(srcdir)/'`vjoy.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libvjoy_la-vjoy.Tpo $(DEPDIR)/libvjoy_la-vjoy.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='vjoy.cpp' object='libvjoy_la-vjoy.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvjoy_la_CXXFLAGS) $(CXXFLAGS) -c -o libvjoy_la-vjoy.lo `test -f 'vjoy.cpp' || echo '$(srcdir)/'`vjoy.cpp
 
 mostlyclean-libtool:
 	-rm -f *.lo

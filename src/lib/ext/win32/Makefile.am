@@ -25,8 +25,11 @@ lib_LTLIBRARIES = libvjoy.la
 libvjoy_la_SOURCES =	\
 	vjoy/vJoyInstallLib.cpp	vjoy/vJoyInstall.h	\
 	vjoy/stdafx.h		vjoy/public.h		\
-	vjoy/targetver.h	vJoy/winheader/salfix.h
+	vjoy/targetver.h	vJoy/winheader/salfix.h	\
+	winUtil.cpp		winUtil.hpp		\
+	vjoy.cpp		vjoy.hpp
 
-libvjoy_la_CXXFLAGS = -Ivjoy -I/usr/i586-mingw32msvc/include/ddk -w
+libvjoy_la_CXXFLAGS = -Ivjoy -I/usr/i586-mingw32msvc/include/ddk -w @WXCPPFLAGS@
+libvjoy_la_LIBADD = @WXBASELIBS@
 
 endif

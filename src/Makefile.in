@@ -36,12 +36,13 @@ build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = droidpad$(EXEEXT)
 @IF_GUI_TRUE@am__append_1 = $(SRC_IF_GUI)
-@IF_GUI_TRUE@@OS_WIN32_TRUE@am__append_2 = if-gui/droidpad.res -lws2_32
+@OS_WIN32_TRUE@am__append_2 = -lws2_32 lib/ext/win32/libvjoy.la
+@IF_GUI_TRUE@@OS_WIN32_TRUE@am__append_3 = if-gui/droidpad.res -lws2_32 /usr/i586-mingw32msvc/lib/libsetupapi.a
 
 # For all unices
-@OS_UNIX_TRUE@am__append_3 = -DOS_UNIX
-@OS_LINUX_TRUE@am__append_4 = -DOS_LINUX
-@OS_WIN32_TRUE@am__append_5 = -DOS_WIN32
+@OS_UNIX_TRUE@am__append_4 = -DOS_UNIX
+@OS_LINUX_TRUE@am__append_5 = -DOS_LINUX
+@OS_WIN32_TRUE@am__append_6 = -DOS_WIN32
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -64,11 +65,13 @@ am__objects_1 = droidpad-droidFrame.$(OBJEXT) \
 @IF_GUI_TRUE@am__objects_2 = $(am__objects_1)
 am_droidpad_OBJECTS = $(am__objects_2)
 droidpad_OBJECTS = $(am_droidpad_OBJECTS)
-@IF_GUI_TRUE@@OS_WIN32_TRUE@am__DEPENDENCIES_1 = if-gui/droidpad.res
+@OS_WIN32_TRUE@am__DEPENDENCIES_1 = lib/ext/win32/libvjoy.la
+@IF_GUI_TRUE@@OS_WIN32_TRUE@am__DEPENDENCIES_2 = if-gui/droidpad.res \
+@IF_GUI_TRUE@@OS_WIN32_TRUE@	/usr/i586-mingw32msvc/lib/libsetupapi.a
 @IF_GUI_FALSE@droidpad_DEPENDENCIES = lib/libdroidpad.la \
-@IF_GUI_FALSE@	$(am__DEPENDENCIES_1)
+@IF_GUI_FALSE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_2)
 @IF_GUI_TRUE@droidpad_DEPENDENCIES = lib/libdroidpad.la \
-@IF_GUI_TRUE@	$(am__DEPENDENCIES_1)
+@IF_GUI_TRUE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_2)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
@@ -326,13 +329,13 @@ SRC_IF_GUI = \
 
 droidpad_SOURCES = $(am__append_1)
 @IF_GUI_FALSE@droidpad_LDADD = @WXBASELIBS@ lib/libdroidpad.la \
-@IF_GUI_FALSE@	$(am__append_2)
+@IF_GUI_FALSE@	$(am__append_2) $(am__append_3)
 @IF_GUI_TRUE@droidpad_LDADD = @WXLIBS@ lib/libdroidpad.la \
-@IF_GUI_TRUE@	$(am__append_2)
+@IF_GUI_TRUE@	$(am__append_2) $(am__append_3)
 @IF_GUI_FALSE@droidpad_CXXFLAGS = @WXBASECPPFLAGS@ -Ilib
 @IF_GUI_TRUE@droidpad_CXXFLAGS = @WXCPPFLAGS@ -Ilib
-AM_CPPFLAGS = -DPREFIX='"$(prefix)"' $(am__append_3) $(am__append_4) \
-	$(am__append_5)
+AM_CPPFLAGS = -DPREFIX='"$(prefix)"' $(am__append_4) $(am__append_5) \
+	$(am__append_6)
 @OS_WIN32_TRUE@droidpad_LDFLAGS = -Wl,--enable-auto-import --enable-stdcall-fixup
 # http://www.gnu.org/software/hello/manual/automake/Options.html
 @IF_GUI_TRUE@@OS_WIN32_TRUE@pkg_verbose = $(pkg_verbose_$(V))

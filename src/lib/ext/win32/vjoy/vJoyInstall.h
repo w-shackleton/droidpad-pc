@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <time.h>
 
-
 #ifdef _UNICODE
 #define UPDATEDRIVERFORPLUGANDPLAYDEVICES "UpdateDriverForPlugAndPlayDevicesW"
 #define SETUPUNINSTALLOEMINF "SetupUninstallOEMInfW"

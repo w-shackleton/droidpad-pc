@@ -19,6 +19,9 @@ BEGIN_EVENT_TABLE(WinSetupFrame, wxFrame)
 
 	EVT_SETUP(SETUP_FINISHED, WinSetupFrame::OnSetupFinished)
 	EVT_SETUP(SETUP_EXIT, WinSetupFrame::OnSetupExit)
+	EVT_SETUP(SETUP_ERROR, WinSetupFrame::OnSetupError)
+
+	EVT_BUTTON(ID_ERROR_OK, WinSetupFrame::OnErrorOkClick)
 
 	EVT_CLOSE(WinSetupFrame::OnClose)
 END_EVENT_TABLE()
@@ -55,14 +58,19 @@ WinSetupFrame::WinSetupFrame(int mode) :
 	parentSizer->Add(textPanel, 1, wxEXPAND | wxALL, 5);
 	
 	// TESTING
-	otherPanel = new wxPanel(parent);
-	wxBoxSizer *otherPanelSizer = new wxBoxSizer(wxVERTICAL);
-	otherPanel->SetSizer(otherPanelSizer);
+	errorPanel = new wxPanel(parent);
+	wxBoxSizer *errorPanelSizer = new wxBoxSizer(wxVERTICAL);
+	errorPanel->SetSizer(errorPanelSizer);
 
-	wxButton *button = new wxButton(otherPanel, -1, _("Test"));
-	otherPanelSizer->Add(button, 1, wxEXPAND | wxALIGN_CENTER_HORIZONTAL);
+	wxStaticText *errorText = new wxStaticText(errorPanel, -1, _("Something went wrong while installing DroidPad."), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
+	errorPanel_text = new wxStaticText(errorPanel, -1, _(""), wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE);
+	wxButton *button = new wxButton(errorPanel, ID_ERROR_OK, _("OK"));
 
-	parentSizer->Add(otherPanel, 1, wxEXPAND | wxALL, 5);
+	errorPanelSizer->Add(errorText, 0, wxEXPAND | wxALIGN_CENTER_HORIZONTAL);
+	errorPanelSizer->Add(errorPanel_text, 0, wxEXPAND | wxALIGN_CENTER_HORIZONTAL);
+	errorPanelSizer->Add(button, 0, wxALIGN_CENTER_HORIZONTAL);
+
+	parentSizer->Add(errorPanel, 1, wxEXPAND | wxALL, 5);
 
 	parentSizer->HidePages();
 	activateView(VIEW_TEXT);
@@ -105,16 +113,28 @@ void WinSetupFrame::OnSetupExit(SetupEvent& event) {
 	Destroy();
 }
 
+void WinSetupFrame::OnSetupError(SetupEvent& event) {
+	running = false;
+
+	errorPanel_text->SetLabel(event.GetMessage());
+	activateView(VIEW_ERROR);
+}
+
+void WinSetupFrame::OnErrorOkClick(wxCommandEvent& event) {
+	Destroy();
+}
+
 void WinSetupFrame::activateView(int view) {
 	LOGV("Activating view");
 	switch(view) {
 		case VIEW_TEXT:
 			parentSizer->SetCurrent(0);
 			break;
-		case VIEW_OTHER:
+		case VIEW_ERROR:
 			parentSizer->SetCurrent(1);
 			break;
 	}
+	Update();
 }
 
 void WinSetupFrame::handleXMLError(wxString name) {
