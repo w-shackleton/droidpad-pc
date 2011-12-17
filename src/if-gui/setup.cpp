@@ -112,7 +112,12 @@ void WinSetupFrame::OnSetupRemovingOld(SetupEvent& event) {
 }
 void WinSetupFrame::OnSetupInstallingNew(SetupEvent& event) {
 	activateView(VIEW_TEXT);
-	textPanel_text->SetLabel(_("Installing DroidPad drivers..."));
+	textPanel_text->SetLabel(_("Installing new DroidPad drivers..."));
+}
+
+void WinSetupFrame::OnRemoveRemoving(SetupEvent& event) {
+	textPanel_text->SetLabel(_("Removing DroidPad drivers..."));
+	activateView(VIEW_TEXT);
 }
 
 void WinSetupFrame::OnSetupFinished(SetupEvent& event) {

@@ -22,6 +22,8 @@ DEFINE_LOCAL_EVENT_TYPE(REMOVE_INITIALISED)
 DEFINE_LOCAL_EVENT_TYPE(SETUP_REMOVING_OLD)
 DEFINE_LOCAL_EVENT_TYPE(SETUP_INSTALLING_NEW)
 
+DEFINE_LOCAL_EVENT_TYPE(REMOVE_REMOVING)
+
 DEFINE_LOCAL_EVENT_TYPE(SETUP_ERROR)
 
 DEFINE_LOCAL_EVENT_TYPE(SETUP_FINISHED)
@@ -105,10 +107,20 @@ void* SetupThread::Entry() {
 			}
 			if(!vJoyInstall(infFileLocation, hwId)) {
 				LOGE("ERROR: Couldn't install new vJoy version!");
+				{
+					SetupEvent evt(SETUP_ERROR, _("New driver couldn't be installed correctly."));
+					callback.AddPendingEvent(evt);
+					Cleanup();
+					return NULL;
+				}
 			}
 
 			break;
 		case MODE_REMOVE: // Remove
+			{
+				SetupEvent evt(REMOVE_REMOVING);
+				callback.AddPendingEvent(evt);
+			}
 			vJoyPurge(infFileLocation, hwId);
 			break;
 	}
