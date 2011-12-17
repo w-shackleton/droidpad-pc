@@ -10,10 +10,11 @@
 [Version]
 Signature="$CHICAGO$"
 Class=HIDClass
-ClassGuid={7632f26a-ea05-488d-a1e3-b3206882fa98}
+; ClassGuid={7632f26a-ea05-488d-a1e3-b3206882fa98}
+ClassGuid={745a17a0-74d3-11d0-b6fe-00a0c90f57da}
 Provider=%VENDOR%
 ;LayoutFile=layout.inf
-DriverVer=12/13/2011,6.1.7600.16385
+DriverVer=12/17/2011,6.1.7600.16385
 CatalogFile = vJoy.cat
 
 
