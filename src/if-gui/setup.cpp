@@ -21,6 +21,9 @@ BEGIN_EVENT_TABLE(WinSetupFrame, wxFrame)
 	EVT_SETUP(SETUP_EXIT, WinSetupFrame::OnSetupExit)
 	EVT_SETUP(SETUP_ERROR, WinSetupFrame::OnSetupError)
 
+	EVT_SETUP(SETUP_REMOVING_OLD, WinSetupFrame::OnSetupRemovingOld)
+	EVT_SETUP(SETUP_INSTALLING_NEW, WinSetupFrame::OnSetupInstallingNew)
+
 	EVT_BUTTON(ID_ERROR_OK, WinSetupFrame::OnErrorOkClick)
 
 	EVT_CLOSE(WinSetupFrame::OnClose)
@@ -103,6 +106,15 @@ void WinSetupFrame::OnRemoveInitialised(SetupEvent& event) {
 	LOGV("Removing initialised");
 }
 
+void WinSetupFrame::OnSetupRemovingOld(SetupEvent& event) {
+	activateView(VIEW_TEXT);
+	textPanel_text->SetLabel(_("Removing old DroidPad drivers..."));
+}
+void WinSetupFrame::OnSetupInstallingNew(SetupEvent& event) {
+	activateView(VIEW_TEXT);
+	textPanel_text->SetLabel(_("Installing DroidPad drivers..."));
+}
+
 void WinSetupFrame::OnSetupFinished(SetupEvent& event) {
 	LOGV("Setup finished");
 	activateView(VIEW_TEXT);
@@ -125,7 +137,6 @@ void WinSetupFrame::OnErrorOkClick(wxCommandEvent& event) {
 }
 
 void WinSetupFrame::activateView(int view) {
-	LOGV("Activating view");
 	switch(view) {
 		case VIEW_TEXT:
 			parentSizer->SetCurrent(0);

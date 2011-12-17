@@ -53,7 +53,7 @@ bool DroidApp::OnInit()
 	// Log errors to a log file.
 	wxString confLocation = wxStandardPaths::Get().GetUserDataDir();
 	if(!wxDirExists(confLocation)) wxMkdir(confLocation);
-	wxString logFile = confLocation + wxT("log.txt");
+	wxString logFile = confLocation + wxT("/log.txt");
 
 	logOut.open(logFile.mb_str(), ios::out | ios::app);
 	logOut << endl;
@@ -63,7 +63,6 @@ bool DroidApp::OnInit()
 	wxLog::SetActiveTarget(logger);
 #ifdef DEBUG // Log to UI as well.
 	wxLog* extraLogger = new wxLogWindow(NULL, _("DroidPad debug log output"));
-	new wxLogChain(extraLogger);
 	wxLog::SetVerbose(true);
 #endif
 #endif

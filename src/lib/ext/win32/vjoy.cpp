@@ -1,27 +1,8 @@
-#ifdef UNICODE
-#warning "UNICODE HERE!"
-#endif
-
 #include "vjoy.hpp"
-
-#undef UNICODE
-#undef _UNICODE
-
-#ifdef UNICODE
-#warning "UNICODE HERE!"
-#endif
 
 #include "stdafx.h"
 
-#ifdef UNICODE
-#warning "UNICODE HERE!"
-#endif
-
 #include "vJoyInstall.h"
-
-#ifdef UNICODE
-#warning "UNICODE HERE!"
-#endif
 
 #include <windows.h>
 
@@ -46,4 +27,17 @@ bool vJoyIsInstalled() {
 
 void vJoyCloseLog() {
 	fclose(stream);
+}
+
+bool vJoyInstall(wxString infPath, wxString hwId) {
+	return Installation(hwId.c_str(), infPath.wchar_str()) == 0;
+}
+bool vJoyRemove(wxString infPath, wxString hwId) {
+	return Removal(hwId.wchar_str(), infPath.wchar_str(), false) == 0;
+}
+bool vJoyPurge(wxString infPath, wxString hwId) {
+	return Removal(hwId.wchar_str(), infPath.wchar_str(), true) == 0;
+}
+bool vJoyRepair(wxString infPath, wxString hwId) {
+	return Repair(hwId.wchar_str(), infPath.wchar_str()) == 0;
 }

@@ -55,6 +55,9 @@ class WinSetupFrame : public wxFrame {
 		
 		void OnRemoveInitialised(droidpad::SetupEvent& event);
 
+		void OnSetupRemovingOld(droidpad::SetupEvent& event);
+		void OnSetupInstallingNew(droidpad::SetupEvent& event);
+
 		void OnSetupFinished(droidpad::SetupEvent& event);
 		void OnSetupExit(droidpad::SetupEvent& event);
 

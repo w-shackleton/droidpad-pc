@@ -31,7 +31,10 @@ void vJoyOpenLog(wxString location);
 
 void vJoyCloseLog();
 
-void vJoyInstall(wxString infPath, wxString hwId);
+bool vJoyInstall(wxString infPath, wxString hwId);
+bool vJoyRemove(wxString infPath, wxString hwId);
+bool vJoyPurge(wxString infPath, wxString hwId);
+bool vJoyRepair(wxString infPath, wxString hwId);
 
 bool vJoyIsInstalled();
 
