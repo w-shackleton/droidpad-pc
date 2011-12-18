@@ -19,6 +19,8 @@
  */
 #include "wOutputMgr.hpp"
 
+#include <sstream>
+
 #include "types.hpp"
 
 #include "net/connection.hpp"
@@ -29,23 +31,51 @@
 
 using namespace std;
 using namespace droidpad;
+using namespace droidpad::win32;
 
 OutputManager::OutputManager(const int type, const int numAxes, const int numButtons) :
 	IOutputManager(type, numAxes, numButtons)
 {
+	switch(type) {
+		case MODE_JS:
+			joystick = new VJoyOutputs;
+			break;
+		default:
+			joystick = NULL;
+			break;
+	}
 
+	if(joystick) {
+		int result = joystick->OpenJoystick();
+		if(result) { // If fails
+			stringstream err;
+			err << "Couldn't open vJoy handle, error is " << result << ".";
+			throw runtime_error(err.str());
+		}
+	}
 }
 
 OutputManager::~OutputManager() {
+	if(joystick) delete joystick;
 }
 
 void OutputManager::SendJSData(const DPJSData& data, bool firstIteration) {
-	//TODO: Implement.
+	JOYSTICK_POSITION pos;
+	if(data.axes.size() >= 1) pos.wAxisX = data.axes[0];
+	if(data.axes.size() >= 2) pos.wAxisY = data.axes[1];
+	if(data.axes.size() >= 3) pos.wAxisXRot = data.axes[2];
+	if(data.axes.size() >= 4) pos.wAxisXRot = data.axes[3];
+	if(data.axes.size() >= 5) pos.wSlider = data.axes[4];
+	if(data.axes.size() >= 6) pos.wDial = data.axes[5];
+	for(int i = 0; i < data.buttons.size(); i++) {
+		pos.lButtons += data.buttons[i] ? 0x1 << i : 0;
+	}
+	joystick->SendPositions(pos);
 }
 
 void OutputManager::SendMouseData(const DPMouseData& data, bool firstIteration)
 {
-	if(!droidpad::win32::WinOutputs::SendMouseEvent(data.x / 400, data.y / 400, data.bLeft, data.bMiddle, data.bRight, firstIteration ? data.incrementalScrollDelta : 0)) // TODO: Customise scale factors?
+	if(!WinOutputs::SendMouseEvent(data.x / 400, data.y / 400, data.bLeft, data.bMiddle, data.bRight, firstIteration ? data.incrementalScrollDelta : 0)) // TODO: Customise scale factors?
 	{
 		LOGWwx(wxT("SendInput failed") + GetLastError());
 	}
@@ -53,13 +83,13 @@ void OutputManager::SendMouseData(const DPMouseData& data, bool firstIteration)
 
 void OutputManager::SendSlideData(const DPSlideData& data, bool firstIteration)
 {
-	droidpad::win32::WinOutputs::SendKeystroke(VK_UP,	data.prev);
-	droidpad::win32::WinOutputs::SendKeystroke(VK_DOWN,	data.next);
-	droidpad::win32::WinOutputs::SendKeystroke(VK_F5,	data.start);
-	droidpad::win32::WinOutputs::SendKeystroke(VK_ESCAPE,	data.finish);
-	droidpad::win32::WinOutputs::SendKeystroke('W',		data.white);
-	droidpad::win32::WinOutputs::SendKeystroke('B',		data.black);
-	droidpad::win32::WinOutputs::SendKeystroke(VK_HOME,	data.beginning);
-	droidpad::win32::WinOutputs::SendKeystroke(VK_END,	data.end);
+	WinOutputs::SendKeystroke(VK_UP,	data.prev);
+	WinOutputs::SendKeystroke(VK_DOWN,	data.next);
+	WinOutputs::SendKeystroke(VK_F5,	data.start);
+	WinOutputs::SendKeystroke(VK_ESCAPE,	data.finish);
+	WinOutputs::SendKeystroke('W',		data.white);
+	WinOutputs::SendKeystroke('B',		data.black);
+	WinOutputs::SendKeystroke(VK_HOME,	data.beginning);
+	WinOutputs::SendKeystroke(VK_END,	data.end);
 }
 

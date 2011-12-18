@@ -17,30 +17,30 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef DP_WIN_OUTPUT_MGR_H
-#define DP_WIN_OUTPUT_MGR_H
-
-#include <stdexcept>
-#include "wPlatformSettings.hpp"
-#include "output/IOutputMgr.hpp"
-
 #include "vJoyOutputs.hpp"
 
-namespace droidpad {
-	class DPJSData;
-	class DPMouseData;
-	class DPSlideData;
-	class OutputManager : public IOutputManager {
-		public:
-			OutputManager(const int type, const int numAxes, const int numButtons);
-			~OutputManager();
+using namespace droidpad::win32;
 
-			void SendJSData(const DPJSData& data, bool firstIteration = true);
-			void SendMouseData(const DPMouseData& data, bool firstIteration = true);
-			void SendSlideData(const DPSlideData& data, bool firstIteration = true);
-		private:
-			droidpad::win32::VJoyOutputs *joystick;
-	};
+int VJoyOutputs::OpenJoystick() {
+	vJoyHandle = CreateFile(TEXT(DOS_FILE_NAME), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, NULL);
+	if(vJoyHandle == INVALID_HANDLE_VALUE) {
+		return GetLastError();
+	}
+	return 0;
 }
 
-#endif
+VJoyOutputs::~VJoyOutputs() {
+	CloseHandle(vJoyHandle);
+}
+
+int VJoyOutputs::SendPositions(JOYSTICK_POSITION &data) {
+	unsigned int ioCode = LOAD_POSITIONS;
+	unsigned int ioSize = sizeof(JOYSTICK_POSITION);
+
+	DWORD bytesReturned;
+
+	if(!DeviceIoControl(vJoyHandle, ioCode, &data, ioSize, NULL, 0, &bytesReturned, NULL)) {
+		return GetLastError();
+	}
+	return 0;
+}

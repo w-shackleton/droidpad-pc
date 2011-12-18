@@ -17,30 +17,40 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef DP_WIN_OUTPUT_MGR_H
-#define DP_WIN_OUTPUT_MGR_H
+
+/*
+   This code contains the functions used to output code on the windows input API,
+   as opposed to the PPJoy API
+   */
+#ifndef DP_VJOY_OUTPUTS_H
+#define DP_VJOY_OUTPUTS_H
 
 #include <stdexcept>
-#include "wPlatformSettings.hpp"
-#include "output/IOutputMgr.hpp"
+#include <map>
 
-#include "vJoyOutputs.hpp"
+#define UNICODE
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0600
+#endif
+#include <windows.h>
+
+#include "ext/win32/vjoy/public.h"
 
 namespace droidpad {
-	class DPJSData;
-	class DPMouseData;
-	class DPSlideData;
-	class OutputManager : public IOutputManager {
-		public:
-			OutputManager(const int type, const int numAxes, const int numButtons);
-			~OutputManager();
+	namespace win32 {
+		class VJoyOutputs {
+			public:
+				// Opens the joystick.
+				// returns true on success.
+				int OpenJoystick();
+				virtual ~VJoyOutputs();
 
-			void SendJSData(const DPJSData& data, bool firstIteration = true);
-			void SendMouseData(const DPMouseData& data, bool firstIteration = true);
-			void SendSlideData(const DPSlideData& data, bool firstIteration = true);
-		private:
-			droidpad::win32::VJoyOutputs *joystick;
+				int SendPositions(JOYSTICK_POSITION &data);
+
+			private:
+				HANDLE vJoyHandle;
+		};
 	};
-}
+};
 
 #endif
