@@ -90,6 +90,15 @@ AC_SUBST(WXBASECXXFLAGS, "$WX_CXXFLAGS_ONLY")
 AC_SUBST(WXBASECFLAGS, "$WX_CFLAGS_ONLY")
 AC_SUBST(WXBASELIBS, "$WX_LIBS")
 
+case "$host" in
+	*x86_64*)
+		bits="64bit"
+		;;
+	*)
+		bits=""
+		;;
+esac
+
 # Check for Windows (for res)
 case "$host" in
 	*mingw*)
@@ -105,6 +114,8 @@ esac
 AM_CONDITIONAL([OS_WIN32], [test $os = "win32"])
 AM_CONDITIONAL([OS_LINUX], [test $os = "linux"])
 AM_CONDITIONAL([OS_UNIX], [test $os = "linux"])
+
+AM_CONDITIONAL([OS_64BIT], [test $bits = "64bit"])
 
 # TODO: Change this to a variable, to change the interface
 iface="gui"

@@ -39,6 +39,8 @@ bin_PROGRAMS = droidpad$(EXEEXT)
 @OS_WIN32_TRUE@am__append_2 = -lws2_32 lib/ext/win32/libvjoy.la
 @IF_GUI_TRUE@@OS_WIN32_TRUE@am__append_3 = if-gui/droidpad.res -lws2_32 ${prefix}/lib/libsetupapi.a
 
+# droidpad_LDFLAGS += -static-libgcc
+
 # For all unices
 @OS_UNIX_TRUE@am__append_4 = -DOS_UNIX
 @OS_LINUX_TRUE@am__append_5 = -DOS_LINUX
@@ -851,7 +853,7 @@ uninstall-am: uninstall-binPROGRAMS
 
 
 @IF_GUI_TRUE@@OS_WIN32_TRUE@if-gui/droidpad.res: if-gui/droidpad.rc
-@IF_GUI_TRUE@@OS_WIN32_TRUE@	$(pkg_verbose)${host}-windres $(droidpad_res_CFLAGS) if-gui/droidpad.rc -O coff -o if-gui/droidpad.res
+@IF_GUI_TRUE@@OS_WIN32_TRUE@	$(pkg_verbose)${host_alias}-windres $(droidpad_res_CFLAGS) if-gui/droidpad.rc -O coff -o if-gui/droidpad.res
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

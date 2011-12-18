@@ -393,6 +393,8 @@ libdroidpad_la_LIBADD = @WXBASELIBS@ $(am__append_3)
 libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@ -I. -Iext
 libdroidpad_la_CFLAGS = @WXCPPFLAGS@ -I. -Iext
 @OS_WIN32_TRUE@libdroidpad_la_LDFLAGS = -Wl,--enable-auto-import
+
+# libdroidpad_la_LDFLAGS += -static-libgcc
 AM_CPPFLAGS = -DPREFIX='"$(prefix)"' $(am__append_4) $(am__append_5) \
 	$(am__append_6)
 all: all-recursive

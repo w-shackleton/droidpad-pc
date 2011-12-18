@@ -54,13 +54,18 @@ pkg_verbose_0 = @echo "  RES    $@";
 droidpad_res_CFLAGS = @WXCPPFLAGS@
 
 if-gui/droidpad.res: if-gui/droidpad.rc
-	$(pkg_verbose)${host}-windres $(droidpad_res_CFLAGS) if-gui/droidpad.rc -O coff -o if-gui/droidpad.res
+	$(pkg_verbose)${host_alias}-windres $(droidpad_res_CFLAGS) if-gui/droidpad.rc -O coff -o if-gui/droidpad.res
 
 droidpad_LDADD += if-gui/droidpad.res -lws2_32 ${prefix}/lib/libsetupapi.a
 
 EXTRA_DIST = if-gui/droidpad.rc
 CLEANFILES = if-gui/droidpad.res
 endif
+
+if OS_64BIT
+# droidpad_LDFLAGS += -static-libgcc
+endif
+
 endif
 
 # For all unices

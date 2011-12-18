@@ -618,6 +618,8 @@ LTLIBOBJS
 LIBOBJS
 IF_GUI_FALSE
 IF_GUI_TRUE
+OS_64BIT_FALSE
+OS_64BIT_TRUE
 OS_UNIX_FALSE
 OS_UNIX_TRUE
 OS_LINUX_FALSE
@@ -15475,6 +15477,15 @@ WXBASECFLAGS="$WX_CFLAGS_ONLY"
 WXBASELIBS="$WX_LIBS"
 
 
+case "$host" in
+	*x86_64*)
+		bits="64bit"
+		;;
+	*)
+		bits=""
+		;;
+esac
+
 # Check for Windows (for res)
 case "$host" in
 	*mingw*)
@@ -15509,6 +15520,15 @@ fi
 else
   OS_UNIX_TRUE='#'
   OS_UNIX_FALSE=
+fi
+
+
+ if test $bits = "64bit"; then
+  OS_64BIT_TRUE=
+  OS_64BIT_FALSE='#'
+else
+  OS_64BIT_TRUE='#'
+  OS_64BIT_FALSE=
 fi
 
 
@@ -15665,6 +15685,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${OS_UNIX_TRUE}" && test -z "${OS_UNIX_FALSE}"; then
   as_fn_error $? "conditional \"OS_UNIX\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${OS_64BIT_TRUE}" && test -z "${OS_64BIT_FALSE}"; then
+  as_fn_error $? "conditional \"OS_64BIT\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${IF_GUI_TRUE}" && test -z "${IF_GUI_FALSE}"; then

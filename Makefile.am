@@ -56,9 +56,16 @@ MINGW_FILES =	\
 		$(MINGW_FOLDER)/lib/wxmsw28u_adv_gcc_custom.dll		\
 		$(MINGW_FOLDER)/lib/wxmsw28u_core_gcc_custom.dll	\
 		$(MINGW_FOLDER)/lib/wxmsw28u_html_gcc_custom.dll	\
-		$(MINGW_FOLDER)/lib/wxmsw28u_xrc_gcc_custom.dll		\
-		$(MINGW_FOLDER)/bin/mingwm10.dll			\
-		$(MINGW_FOLDER)/bin/zlib1.dll
+		$(MINGW_FOLDER)/lib/wxmsw28u_xrc_gcc_custom.dll
+
+if OS_64BIT
+MINGW_FILES +=	\
+		$(MINGW_FOLDER)/lib/libstdc++-6.dll			\
+		$(MINGW_FOLDER)/lib/libgcc_s_sjlj-1.dll
+else
+MINGW_FILES +=	\
+		$(MINGW_FOLDER)/bin/mingwm10.dll
+endif
 
 DRVDIR_x86 = data/drv/objfre_wxp_x86/i386
 DRVDIR_amd64 = data/drv/objfre_wlh_amd64/amd64

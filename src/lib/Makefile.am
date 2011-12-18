@@ -69,6 +69,11 @@ libdroidpad_la_CFLAGS = @WXCPPFLAGS@ -I. -Iext
 if OS_WIN32
 libdroidpad_la_LIBADD += -lws2_32 ext/win32/libvjoy.la
 libdroidpad_la_LDFLAGS = -Wl,--enable-auto-import
+
+if OS_64BIT
+# libdroidpad_la_LDFLAGS += -static-libgcc
+endif
+
 endif
 
 AM_CPPFLAGS = -DPREFIX='"$(prefix)"'
