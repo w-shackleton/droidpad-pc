@@ -47,7 +47,8 @@ if OS_LINUX
 ADB = data/adb/adb
 endif
 
-MINGW_FOLDER = /usr/i586-mingw32msvc
+# MINGW_FOLDER = /usr/i586-mingw32msvc - old. Now using prefix to get DLLs. Prefix must be set; use ./configure-mingw[64]
+MINGW_FOLDER = ${prefix}
 MINGW_FILES =	\
 		$(MINGW_FOLDER)/lib/wxbase28u_gcc_custom.dll		\
 		$(MINGW_FOLDER)/lib/wxbase28u_xml_gcc_custom.dll	\

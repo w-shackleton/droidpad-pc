@@ -29,7 +29,7 @@ libvjoy_la_SOURCES =	\
 	winUtil.cpp		winUtil.hpp		\
 	vjoy.cpp		vjoy.hpp
 
-libvjoy_la_CXXFLAGS = -Ivjoy -I/usr/i586-mingw32msvc/include/ddk -w @WXCPPFLAGS@
+libvjoy_la_CXXFLAGS = -Ivjoy -I${prefix}/include/ddk -w @WXCPPFLAGS@ -fpermissive
 libvjoy_la_LIBADD = @WXBASELIBS@
 
 endif

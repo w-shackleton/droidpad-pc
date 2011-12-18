@@ -57,7 +57,10 @@ host_triplet = @host@
 subdir = src/lib/ext/win32
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -294,7 +297,7 @@ top_srcdir = @top_srcdir@
 @OS_WIN32_TRUE@	winUtil.cpp		winUtil.hpp		\
 @OS_WIN32_TRUE@	vjoy.cpp		vjoy.hpp
 
-@OS_WIN32_TRUE@libvjoy_la_CXXFLAGS = -Ivjoy -I/usr/i586-mingw32msvc/include/ddk -w @WXCPPFLAGS@
+@OS_WIN32_TRUE@libvjoy_la_CXXFLAGS = -Ivjoy -I${prefix}/include/ddk -w @WXCPPFLAGS@ -fpermissive
 @OS_WIN32_TRUE@libvjoy_la_LIBADD = @WXBASELIBS@
 all: all-am
 

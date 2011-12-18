@@ -37,7 +37,7 @@ host_triplet = @host@
 bin_PROGRAMS = droidpad$(EXEEXT)
 @IF_GUI_TRUE@am__append_1 = $(SRC_IF_GUI)
 @OS_WIN32_TRUE@am__append_2 = -lws2_32 lib/ext/win32/libvjoy.la
-@IF_GUI_TRUE@@OS_WIN32_TRUE@am__append_3 = if-gui/droidpad.res -lws2_32 /usr/i586-mingw32msvc/lib/libsetupapi.a
+@IF_GUI_TRUE@@OS_WIN32_TRUE@am__append_3 = if-gui/droidpad.res -lws2_32 ${prefix}/lib/libsetupapi.a
 
 # For all unices
 @OS_UNIX_TRUE@am__append_4 = -DOS_UNIX
@@ -46,7 +46,10 @@ bin_PROGRAMS = droidpad$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -67,7 +70,7 @@ am_droidpad_OBJECTS = $(am__objects_2)
 droidpad_OBJECTS = $(am_droidpad_OBJECTS)
 @OS_WIN32_TRUE@am__DEPENDENCIES_1 = lib/ext/win32/libvjoy.la
 @IF_GUI_TRUE@@OS_WIN32_TRUE@am__DEPENDENCIES_2 = if-gui/droidpad.res \
-@IF_GUI_TRUE@@OS_WIN32_TRUE@	/usr/i586-mingw32msvc/lib/libsetupapi.a
+@IF_GUI_TRUE@@OS_WIN32_TRUE@	${prefix}/lib/libsetupapi.a
 @IF_GUI_FALSE@droidpad_DEPENDENCIES = lib/libdroidpad.la \
 @IF_GUI_FALSE@	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_2)
 @IF_GUI_TRUE@droidpad_DEPENDENCIES = lib/libdroidpad.la \
@@ -848,7 +851,7 @@ uninstall-am: uninstall-binPROGRAMS
 
 
 @IF_GUI_TRUE@@OS_WIN32_TRUE@if-gui/droidpad.res: if-gui/droidpad.rc
-@IF_GUI_TRUE@@OS_WIN32_TRUE@	$(pkg_verbose)i586-mingw32msvc-windres $(droidpad_res_CFLAGS) if-gui/droidpad.rc -O coff -o if-gui/droidpad.res
+@IF_GUI_TRUE@@OS_WIN32_TRUE@	$(pkg_verbose)${host}-windres $(droidpad_res_CFLAGS) if-gui/droidpad.rc -O coff -o if-gui/droidpad.res
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

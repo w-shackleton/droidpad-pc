@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Set this variable beforehand if your mingw-w64 is somewhere else (which it almost certainly will be).
+if [ "$MINGW64_LOCATION" = "" ]
+then
+MINGW64_LOCATION=/home/william/Dev/toolchains/mingw-w64/x86_64-w64-mingw32
+fi
+
+./configure --host=x86_64-w64-mingw32 --disable-shared --with-wx-prefix=$MINGW64_LOCATION --prefix=$MINGW64_LOCATION "$@"

@@ -54,9 +54,9 @@ pkg_verbose_0 = @echo "  RES    $@";
 droidpad_res_CFLAGS = @WXCPPFLAGS@
 
 if-gui/droidpad.res: if-gui/droidpad.rc
-	$(pkg_verbose)i586-mingw32msvc-windres $(droidpad_res_CFLAGS) if-gui/droidpad.rc -O coff -o if-gui/droidpad.res
+	$(pkg_verbose)${host}-windres $(droidpad_res_CFLAGS) if-gui/droidpad.rc -O coff -o if-gui/droidpad.res
 
-droidpad_LDADD += if-gui/droidpad.res -lws2_32 /usr/i586-mingw32msvc/lib/libsetupapi.a
+droidpad_LDADD += if-gui/droidpad.res -lws2_32 ${prefix}/lib/libsetupapi.a
 
 EXTRA_DIST = if-gui/droidpad.rc
 CLEANFILES = if-gui/droidpad.res
