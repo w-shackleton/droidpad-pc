@@ -85,12 +85,20 @@ void* MainThread::Entry()
 					break;
 			}
 #endif
-		} catch(invalid_argument e) {
-			DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_SETUP_FAIL);
+		} catch(invalid_argument &e) {
+			LOGEwx(wxString::FromAscii(e.what()));
+			DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_NO_JS_DEVICE);
 			parent.AddPendingEvent(evt);
-		} catch(runtime_error e) {
-			DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_SETUP_FAIL);
+
+			finish();
+			return NULL;
+		} catch(OutputException &e) {
+			LOGEwx(wxString::FromAscii(e.what()));
+			DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_NO_JS_DEVICE);
 			parent.AddPendingEvent(evt);
+
+			finish();
+			return NULL;
 		}
 
 		DMEvent evt(dpTHREAD_STARTED, 0);

@@ -49,8 +49,17 @@ OutputManager::OutputManager(const int type, const int numAxes, const int numBut
 		int result = joystick->OpenJoystick();
 		if(result) { // If fails
 			stringstream err;
-			err << "Couldn't open vJoy handle, error is " << result << ".";
-			throw runtime_error(err.str());
+			int ret = -1;
+			switch(result) {
+				case ERROR_FILE_NOT_FOUND:
+					err << "vJoy device not found / not installed.";
+					ret = ERROR_NO_VJOY;
+					break;
+				default:
+					err << "Couldn't open vJoy handle, error is " << result << ".";
+					break;
+			}
+			throw OutputException(ret, err.str());
 		}
 	}
 }

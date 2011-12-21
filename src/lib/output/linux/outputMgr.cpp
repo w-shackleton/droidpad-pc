@@ -54,7 +54,7 @@ OutputManager::OutputManager(const int type, const int numAxes, const int numBut
 	}
 	if(ret < 0) {
 		delete dpinput;
-		throw runtime_error("Couldn't setup uinput");
+		throw OutputException(ERROR_NO_UINPUT, "Couldn't setup uinput");
 	}
 
 	axesBuffer = new int[numAxes];

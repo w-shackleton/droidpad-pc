@@ -20,6 +20,8 @@
 #ifndef DP_I_OUTPUT_MGR_H
 #define DP_I_OUTPUT_MGR_H
 
+#include <stdexcept>
+
 namespace droidpad {
 	class DPJSData;
 	class DPMouseData;
@@ -39,6 +41,21 @@ namespace droidpad {
 			virtual void SendSlideData(const DPSlideData& data, bool firstIteration = true) = 0;
 		protected:
 			int type;
+	};
+
+	enum {
+		ERROR_NO_UINPUT,
+		ERROR_NO_VJOY,
+	};
+
+	class OutputException : public std::runtime_error {
+		public:
+			OutputException(int error, std::string msg = "");
+
+			inline int getError() { return error; }
+
+		private:
+			int error;
 	};
 }
 

@@ -21,6 +21,7 @@
 
 // #include "net/connection.hpp"
 
+using namespace std;
 using namespace droidpad;
 
 IOutputManager::IOutputManager(const int type, const int numAxes, const int numButtons) :
@@ -29,3 +30,9 @@ IOutputManager::IOutputManager(const int type, const int numAxes, const int numB
 IOutputManager::~IOutputManager() {}
 
 void IOutputManager::BeginToStop() { }
+
+OutputException::OutputException(int error, string msg) :
+	runtime_error(msg),
+	error(error)
+{
+}

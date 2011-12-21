@@ -134,6 +134,10 @@ void DeviceManager::OnMainThreadError(DMEvent &event)
 			LOGE("Connection to phone lost.");
 			callbacks.threadError(_("Connection to phone lost."));
 			break;
+		case THREAD_ERROR_NO_JS_DEVICE:
+			LOGE("Joystick device couldn't be found.");
+			callbacks.threadError(_("Couldn't find joystick device. Is it installed properly?"));
+			break;
 		default:
 			LOGE("Other error from thread");
 			callbacks.threadError(wxString::Format(_("Unknown Error - %d."), event.getStatus()));
