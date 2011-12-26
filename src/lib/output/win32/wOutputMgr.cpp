@@ -68,14 +68,18 @@ OutputManager::~OutputManager() {
 	if(joystick) delete joystick;
 }
 
+// Sort of hack.
+#define JS_OFFSET 16384
+
 void OutputManager::SendJSData(const DPJSData& data, bool firstIteration) {
 	JOYSTICK_POSITION pos;
-	if(data.axes.size() >= 1) pos.wAxisX = data.axes[0];
-	if(data.axes.size() >= 2) pos.wAxisY = data.axes[1];
-	if(data.axes.size() >= 3) pos.wAxisXRot = data.axes[2];
-	if(data.axes.size() >= 4) pos.wAxisXRot = data.axes[3];
-	if(data.axes.size() >= 5) pos.wSlider = data.axes[4];
-	if(data.axes.size() >= 6) pos.wDial = data.axes[5];
+	if(data.axes.size() >= 1) pos.wAxisX = data.axes[0] + JS_OFFSET;
+	if(data.axes.size() >= 2) pos.wAxisY = data.axes[1] + JS_OFFSET;
+	if(data.axes.size() >= 3) pos.wAxisXRot = data.axes[2] + JS_OFFSET;
+	if(data.axes.size() >= 4) pos.wAxisYRot = data.axes[3] + JS_OFFSET;
+	if(data.axes.size() >= 5) pos.wSlider = data.axes[4] + JS_OFFSET;
+	if(data.axes.size() >= 6) pos.wDial = data.axes[5] + JS_OFFSET;
+	pos.lButtons = 0;
 	for(int i = 0; i < data.buttons.size(); i++) {
 		pos.lButtons += data.buttons[i] ? 0x1 << i : 0;
 	}
