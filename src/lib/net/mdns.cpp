@@ -46,6 +46,9 @@
 using namespace std;
 using namespace droidpad::mdns;
 
+// Converts a wxWidgets string of either wchar* or char*
+#define CSTR_TO_WSTR(_cstr) ((const wxChar*) wxString(_cstr, wxConvUTF8).c_str())
+
 MDNS::MDNS(const wxString& what, int type) :
 	callbacks(NULL)
 {
@@ -68,12 +71,14 @@ void MDNS::start()
 
 	if((s = msock()) == 0) 
 	{ 
-		wxLogError(_("mDNS: Can't create socket: %s\n"), strerror(errno));
+		wxLogError(_("mDNS: Can't create socket: %s\n"), CSTR_TO_WSTR(strerror(errno)));
 		exit = true;
 	}
 
 	// register query(w,t) at mdnsd d, submit our address for callback ans()
 	mdnsd_query(d, w.char_str(), t, ans, this);
+
+	bool unexpectedExit = false;
 
 	while(!exit)
 	{
@@ -95,11 +100,19 @@ void MDNS::start()
 			if(!sendm(&m, s, ip, port))
 			{
 				exit = true;
+				unexpectedExit = true;
 				break;
 			}
 	}
 
 	mdnsd_shutdown(d);
+
+	if(unexpectedExit) {
+		exit = false;
+		while(!exit)
+			usleep(100*1000);
+	}
+
 	mdnsd_free(d);
 
 #ifdef DEBUG
@@ -128,7 +141,7 @@ bool MDNS::sendm(struct message* m, SOCKET s, unsigned long int ip, unsigned sho
 
 	if(sendto(s, (char*)message_packet(m), message_packet_len(m), 0,(struct sockaddr *)&to,sizeof(struct sockaddr_in)) != message_packet_len(m))  
 	{ 
-		wxLogError(_("mDNS: Can't write to socket: %s\n"), strerror(errno));
+		wxLogError(_("mDNS: Can't write to socket: %s\n"), CSTR_TO_WSTR(strerror(errno)));
 		return false;
 	}
 
@@ -166,7 +179,7 @@ int MDNS::recvm(struct message* m, SOCKET s, unsigned long int *ip, unsigned sho
 		if(bsize < 0 && errno != EAGAIN)
 #endif
 		{
-			wxLogMessage(_("mDNS: Can't read from socket: %s\n"), strerror(errno));
+			wxLogMessage(_("mDNS: Can't read from socket: %s\n"), CSTR_TO_WSTR(strerror(errno)));
 			return bsize;
 		}
 
@@ -276,6 +289,7 @@ DeviceFinder::DeviceFinder(Callbacks *callbacks) :
 
 int DeviceFinder::processResult(mdnsda a)
 {
+	if(a->rdname == NULL) return 0; // Error?
 	wxString fullName = wxString((char*)a->rdname, wxConvUTF8); 
 	string charFullName = string((char*)a->rdname);
 
