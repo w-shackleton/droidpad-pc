@@ -45,6 +45,8 @@ AndroidDevice::operator wxString() const {
 			return wxT("USB ") + usbId;
 		case DEVICE_NET:
 			return wxString(wxT("Wifi ") + name + wxT(" (") + ip + wxT(":") + wxString::Format(wxT("%d"), port) + wxT(")"));
+		case DEVICE_CUSTOMHOST:
+			return wxT("(Custom device)");
 	}
 }
 

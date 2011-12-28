@@ -87,6 +87,14 @@ void* DeviceFinder::Entry()
 	LOGV("Device finder started");
 	do {
 		AndroidDeviceList devs;
+
+		// Custom device
+		AndroidDevice custom;
+		custom.type = DEVICE_CUSTOMHOST;
+		custom.usbId = wxT("Custom device");
+		custom.name = wxT("");
+		devs.push_back(custom);
+
 		vector<wxString> usbDevices = adb.getDeviceIds();
 		for(int i = 0; i < usbDevices.size(); i++) {
 			AndroidDevice dev;
