@@ -20,16 +20,36 @@
 
 #include "customHost.hpp"
 
-#include <wx/button.h>
+#include "data.hpp"
 
-CustomHost::CustomHost(droidpad::AndroidDevice &device) :
+#include <wx/button.h>
+#include <wx/icon.h>
+#include <wx/msgdlg.h>
+#include <wx/stattext.h>
+
+using namespace droidpad;
+
+#ifdef __WXMSW__
+#define _FRAME_ICON wxT("icon.xpm")
+#else
+#define _FRAME_ICON wxT("iconlarge.xpm")
+#endif
+
+#define FRAME_TITLE "Custom device"
+
+#define DEFAULT_PORT 3141
+
+CustomHost::CustomHost(wxWindow *parent, droidpad::AndroidDevice &device) :
+	wxDialog(parent, -1, _(FRAME_TITLE)),
 	device(device)
 {
+	SetIcon(wxIcon(wxString(Data::getFilePath(_FRAME_ICON).c_str(), wxConvUTF8), wxBITMAP_TYPE_XPM));
+
 	parent = new wxPanel(this);
 	wxBoxSizer *parentSizer = new wxBoxSizer(wxVERTICAL);
 	parent->SetSizer(parentSizer);
 
-	wxPanel *buttons = new wxPanel;
+	wxPanel *buttons = new wxPanel(parent);
 	wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
 	buttons->SetSizer(buttonSizer);
 
@@ -40,4 +60,10 @@ CustomHost::CustomHost(droidpad::AndroidDevice &device) :
 	buttonSizer->Add(ok, 1, wxEXPAND | wxALL, 5);
 
 	parentSizer->Add(buttons, 0, wxALL, 5);
+
+	wxPanel *entryPanel = new wxPanel(parent);
+	wxGridSizer *entrySizer = new wxGridSizer(2);
+	entryPanel->SetSizer(entrySizer);
+
+	entrySizer->Add(new wxStaticText(entryPanel, -1, _("IP Address / hostname")));
 }

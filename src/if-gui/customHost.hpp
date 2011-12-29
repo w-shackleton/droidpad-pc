@@ -27,7 +27,7 @@
 
 class CustomHost : public wxDialog {
 	public:
-		CustomHost(droidpad::AndroidDevice &device);
+		CustomHost(wxWindow *parent, droidpad::AndroidDevice &device);
 
 	protected:
 		droidpad::AndroidDevice &device;

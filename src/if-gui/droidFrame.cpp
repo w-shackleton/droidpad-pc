@@ -117,6 +117,7 @@ void DroidFrame::OnMenuClose(wxCommandEvent& event)
 void DroidFrame::OnDevicesRefresh(wxCommandEvent& event)
 {
 	wxLogInfo(wxT("Refreshing devices"));
+	wxLogInfo(wxT("TODO: Implement / remove?"));
 }
 
 void DroidFrame::OnStart(wxCommandEvent& event)
@@ -199,15 +200,16 @@ void DroidFrame::threadStopped()
 }
 
 
-void DroidFrame::customiseDevice(AndroidDevice &device) {
-	CustomHost dlg(device);
+bool DroidFrame::customiseDevice(AndroidDevice &device) {
+	CustomHost dlg(this, device);
 	switch(device.type) {
 		case DEVICE_CUSTOMHOST:
-			if(dlg.ShowModal() == wxID_OK) {
-				// device ref should already be set?
+			if(dlg.ShowModal() != wxID_OK) {
+				return false;
 			}
 			break;
 		default:
-			return;
+			break;
 	}
+	return true;
 }

@@ -65,7 +65,7 @@ namespace droidpad {
 			 * Asks the user for any necessary customisatons for a device.
 			 * Currently, only type == DEVICE_CUSTOMHOST should be used.
 			 */
-			virtual void customiseDevice(AndroidDevice &device) = 0;
+			virtual bool customiseDevice(AndroidDevice &device) = 0;
 	};
 };
 

@@ -100,7 +100,11 @@ void DeviceManager::Start(int device)
 {
 	LOGV("Starting");
 	AndroidDevice newDevice = devices[device]; // Copy
-	callbacks.customiseDevice(newDevice);
+	if(!callbacks.customiseDevice(newDevice)) { // If fails
+		DMEvent evt(dpTHREAD_FINISH, 0);
+		AddPendingEvent(evt);
+		return;
+	}
 	mainThread = new MainThread(*this, newDevice);
 	mainThread->Create();
 	mainThread->Run();

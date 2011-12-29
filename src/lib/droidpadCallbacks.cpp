@@ -42,11 +42,11 @@ bool AndroidDevice::operator ==(const AndroidDevice& b)
 AndroidDevice::operator wxString() const {
 	switch(type) {
 		case DEVICE_USB:
-			return wxT("USB ") + usbId;
+			return wxString(wxT("USB ")) + usbId;
 		case DEVICE_NET:
 			return wxString(wxT("Wifi ") + name + wxT(" (") + ip + wxT(":") + wxString::Format(wxT("%d"), port) + wxT(")"));
 		case DEVICE_CUSTOMHOST:
-			return wxT("(Custom device)");
+			return wxString(wxT("(Custom device)"));
 	}
 }
 
