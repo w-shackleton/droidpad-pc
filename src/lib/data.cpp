@@ -33,11 +33,8 @@ using namespace droidpad;
 
 wxString Data::datadir = wxT("");
 wxString Data::confLocation = wxT("");
-wxString Data::serial = wxT("__ip");
-int Data::ip1 = 0;
-int Data::ip2 = 0;
-int Data::ip3 = 0;
-int Data::ip4 = 0;
+wxString Data::host = wxT("");
+
 int Data::port = 3141;
 
 #define CONF_FILE "dp.conf"
@@ -86,26 +83,11 @@ bool Data::initialise()
 			if(!tkz.HasMoreTokens()) continue; // Malformed line
 			wxString value = tkz.GetNextToken();
 
-			if(key.Cmp(wxT("ip1")) == 0) {
-				ip1 = atoi(value.mb_str());
-			}
-			if(key.Cmp(wxT("ip2")) == 0) {
-				ip2 = atoi(value.mb_str());
-			}
-			if(key.Cmp(wxT("ip3")) == 0) {
-				ip3 = atoi(value.mb_str());
-			}
-			if(key.Cmp(wxT("ip4")) == 0) {
-				ip4 = atoi(value.mb_str());
+			if(key.Cmp(wxT("host")) == 0) {
+				host = value;
 			}
 			if(key.Cmp(wxT("port")) == 0) {
 				port = atoi(value.mb_str());
-			}
-			if(key.Cmp(wxT("port")) == 0) {
-				port = atoi(value.mb_str());
-			}
-			if(key.Cmp(wxT("serial")) == 0) {
-				serial = value;
 			}
 		}
 		config.Close();
@@ -131,10 +113,7 @@ void Data::savePreferences()
 	if(config.Open())
 	{
 		config.Clear();
-		config.AddLine(wxString::Format(wxT("%s;%d"), wxT("ip1"), ip1));
-		config.AddLine(wxString::Format(wxT("%s;%d"), wxT("ip2"), ip2));
-		config.AddLine(wxString::Format(wxT("%s;%d"), wxT("ip3"), ip3));
-		config.AddLine(wxString::Format(wxT("%s;%d"), wxT("ip4"), ip4));
+		config.AddLine(wxString::Format(wxT("%s;%s"), wxT("host"), (const char *)host.c_str()));
 		config.AddLine(wxString::Format(wxT("%s;%d"), wxT("port"), port));
 
 		config.Write();

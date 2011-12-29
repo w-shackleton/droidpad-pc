@@ -36,8 +36,11 @@ namespace droidpad
 			static wxString datadir;
 			static wxString getFilePath(wxString file);
 
-			static int ip1, ip2, ip3, ip4, port;
-			static wxString serial;
+			// Custom host and custom port
+			static wxString host;
+			static int port;
+
+			// static wxString serial;
 			static void savePreferences();
 		protected:
 			static wxString confLocation;

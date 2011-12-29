@@ -27,6 +27,10 @@
 #include <wx/msgdlg.h>
 #include <wx/stattext.h>
 
+BEGIN_EVENT_TABLE(CustomHost, wxDialog)
+	EVT_BUTTON(wxID_OK, CustomHost::onDone)
+END_EVENT_TABLE()
+
 using namespace droidpad;
 
 #ifdef __WXMSW__
@@ -40,7 +44,7 @@ using namespace droidpad;
 #define DEFAULT_PORT 3141
 
 CustomHost::CustomHost(wxWindow *parent, droidpad::AndroidDevice &device) :
-	wxDialog(parent, -1, _(FRAME_TITLE)),
+	wxDialog(parent, -1, _(FRAME_TITLE), wxDefaultPosition, wxSize(250, 150)),
 	device(device)
 {
 	SetIcon(wxIcon(wxString(Data::getFilePath(_FRAME_ICON).c_str(), wxConvUTF8), wxBITMAP_TYPE_XPM));
@@ -49,6 +53,24 @@ CustomHost::CustomHost(wxWindow *parent, droidpad::AndroidDevice &device) :
 	wxBoxSizer *parentSizer = new wxBoxSizer(wxVERTICAL);
 	parent->SetSizer(parentSizer);
 
+
+	wxPanel *entryPanel = new wxPanel(parent);
+	wxGridSizer *entrySizer = new wxGridSizer(2);
+	entryPanel->SetSizer(entrySizer);
+
+	entrySizer->Add(new wxStaticText(entryPanel, -1, _("IP Address / hostname")));
+
+	host = new wxTextCtrl(entryPanel, _ID_HOST, Data::host);
+	entrySizer->Add(host, 1);
+
+	entrySizer->Add(new wxStaticText(entryPanel, -1, _("Port (default 3141)")));
+
+	port = new wxTextCtrl(entryPanel, _ID_PORT, wxString::Format(wxT("%d"), Data::port));
+	entrySizer->Add(port, 1);
+
+	parentSizer->Add(entryPanel, 1, wxALL | wxEXPAND, 5);
+
+	
 	wxPanel *buttons = new wxPanel(parent);
 	wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
 	buttons->SetSizer(buttonSizer);
@@ -60,10 +82,20 @@ CustomHost::CustomHost(wxWindow *parent, droidpad::AndroidDevice &device) :
 	buttonSizer->Add(ok, 1, wxEXPAND | wxALL, 5);
 
 	parentSizer->Add(buttons, 0, wxALL, 5);
+}
 
-	wxPanel *entryPanel = new wxPanel(parent);
-	wxGridSizer *entrySizer = new wxGridSizer(2);
-	entryPanel->SetSizer(entrySizer);
+void CustomHost::onDone(wxCommandEvent &evt) {
+	// Save to prefs
+	Data::host = host->GetValue();
+	long portVal;
+	if(!port->GetValue().ToLong(&portVal)) {
+		portVal = DEFAULT_PORT;
+	}
+	Data::port = portVal;
 
-	entrySizer->Add(new wxStaticText(entryPanel, -1, _("IP Address / hostname")));
+	device.port = Data::port;
+	device.ip = Data::host;
+
+	Data::savePreferences();
+	EndModal(wxID_OK);
 }

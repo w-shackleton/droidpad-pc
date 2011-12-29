@@ -23,16 +23,26 @@
 #include <wx/dialog.h>
 #include <wx/panel.h>
 #include <wx/sizer.h>
+#include <wx/textctrl.h>
 #include "droidpadCallbacks.hpp"
 
 class CustomHost : public wxDialog {
 	public:
 		CustomHost(wxWindow *parent, droidpad::AndroidDevice &device);
 
+		DECLARE_EVENT_TABLE()
 	protected:
 		droidpad::AndroidDevice &device;
+
+		void onDone(wxCommandEvent &evt);
 	private:
+		enum {
+			_ID_HOST = wxID_HIGHEST,
+			_ID_PORT,
+		};
 		wxPanel *parent;
+
+		wxTextCtrl *host, *port;
 };
 
 #endif
