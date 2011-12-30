@@ -108,7 +108,7 @@ Section "DroidPad" DESC_DPInstall
 	File "build\winexport32\data\adb\adb.exe"
 	File "build\winexport32\data\adb\AdbWinApi.dll"
 	File "build\winexport32\data\adb\AdbWinUsbApi.dll"
-	SetOutPath "$INSTDIR\data\adb\driver"
+	SetOutPath "$INSTDIR\data\driver"
 	${If} ${RunningX64}
 	SetOutPath "$INSTDIR\data\driver\amd64"
 	File "build\winexport32\data\driver\amd64\hidkmdf.sys"
@@ -164,9 +164,8 @@ Section "Uninstall"
 
 	SetOutPath "$INSTDIR"
   
-  nsExec::Exec "$\"$INSTDIR\droidpad.exe$\" -s"
+  nsExec::Exec "$\"$INSTDIR\droidpad.exe$\" -u"
   
-    ${If} ${RunningX64}
 	Delete "$INSTDIR\droidpad.exe"
 	Delete "$INSTDIR\libgcc_s_sjlj-1.dll"
 	Delete "$INSTDIR\libstdc++-6.dll"
