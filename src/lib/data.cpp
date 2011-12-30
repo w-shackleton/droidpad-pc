@@ -47,6 +47,7 @@ bool Data::initialise()
 	// TODO: make this code better, to use app directory rather than cwd
 
 	datadirs.push_back(wxString(wxT("") PREFIX "/share/" PACKAGE_NAME));
+	datadirs.push_back(wxStandardPaths::Get().GetPluginsDir() + wxT("\\data"));
 	datadirs.push_back(wxT("data"));
 	datadirs.push_back(wxT("../data"));
 	datadirs.push_back(wxT("."));
@@ -55,11 +56,13 @@ bool Data::initialise()
 
 	for(int i = 0; i < datadirs.size(); i++)
 	{
+		LOGMwx(wxString(wxT("Trying folder ")) + datadirs[i]);
 		ifstream tstream((datadirs[i] + wxT("/") + testFile).mb_str());
 		if(tstream)
 		{
 			LOGVwx(wxString::Format(wxT("Found data folder @ \"%s\"."), datadirs[i].c_str()));
 			datadir = datadirs[i];
+			break;
 		}
 	}
 	if(datadir == wxT(""))
