@@ -62,11 +62,12 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__droidpad_SOURCES_DIST = if-gui/droidFrame.cpp \
 	if-gui/droidFrame.hpp if-gui/droidApp.cpp if-gui/droidApp.hpp \
+	if-gui/customHost.cpp if-gui/customHost.hpp \
 	if-gui/pageSizer.cpp if-gui/pageSizer.hpp if-gui/setup.cpp \
 	if-gui/setup.h
 am__objects_1 = droidpad-droidFrame.$(OBJEXT) \
-	droidpad-droidApp.$(OBJEXT) droidpad-pageSizer.$(OBJEXT) \
-	droidpad-setup.$(OBJEXT)
+	droidpad-droidApp.$(OBJEXT) droidpad-customHost.$(OBJEXT) \
+	droidpad-pageSizer.$(OBJEXT) droidpad-setup.$(OBJEXT)
 @IF_GUI_TRUE@am__objects_2 = $(am__objects_1)
 am_droidpad_OBJECTS = $(am__objects_2)
 droidpad_OBJECTS = $(am_droidpad_OBJECTS)
@@ -329,6 +330,7 @@ SUBDIRS = lib
 SRC_IF_GUI = \
 		   if-gui/droidFrame.cpp	if-gui/droidFrame.hpp	\
 		   if-gui/droidApp.cpp		if-gui/droidApp.hpp	\
+		   if-gui/customHost.cpp	if-gui/customHost.hpp	\
 		   if-gui/pageSizer.cpp		if-gui/pageSizer.hpp	\
 		   if-gui/setup.cpp		if-gui/setup.h
 
@@ -436,6 +438,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-customHost.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-droidApp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-droidFrame.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-pageSizer.Po@am__quote@
@@ -496,6 +499,22 @@ droidpad-droidApp.obj: if-gui/droidApp.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='if-gui/droidApp.cpp' object='droidpad-droidApp.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-droidApp.obj `if test -f 'if-gui/droidApp.cpp'; then $(CYGPATH_W) 'if-gui/droidApp.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/droidApp.cpp'; fi`
+
+droidpad-customHost.o: if-gui/customHost.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -MT droidpad-customHost.o -MD -MP -MF $(DEPDIR)/droidpad-customHost.Tpo -c -o droidpad-customHost.o `test -f 'if-gui/customHost.cpp' || echo '$(srcdir)/'`if-gui/customHost.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/droidpad-customHost.Tpo $(DEPDIR)/droidpad-customHost.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='if-gui/customHost.cpp' object='droidpad-customHost.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-customHost.o `test -f 'if-gui/customHost.cpp' || echo '$(srcdir)/'`if-gui/customHost.cpp
+
+droidpad-customHost.obj: if-gui/customHost.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -MT droidpad-customHost.obj -MD -MP -MF $(DEPDIR)/droidpad-customHost.Tpo -c -o droidpad-customHost.obj `if test -f 'if-gui/customHost.cpp'; then $(CYGPATH_W) 'if-gui/customHost.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/customHost.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/droidpad-customHost.Tpo $(DEPDIR)/droidpad-customHost.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='if-gui/customHost.cpp' object='droidpad-customHost.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-customHost.obj `if test -f 'if-gui/customHost.cpp'; then $(CYGPATH_W) 'if-gui/customHost.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/customHost.cpp'; fi`
 
 droidpad-pageSizer.o: if-gui/pageSizer.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -MT droidpad-pageSizer.o -MD -MP -MF $(DEPDIR)/droidpad-pageSizer.Tpo -c -o droidpad-pageSizer.o `test -f 'if-gui/pageSizer.cpp' || echo '$(srcdir)/'`if-gui/pageSizer.cpp

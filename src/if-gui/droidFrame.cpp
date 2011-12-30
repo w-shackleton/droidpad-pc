@@ -25,6 +25,8 @@
 #include <wx/icon.h>
 #include <wx/msgdlg.h>
 
+#include "customHost.hpp"
+
 BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
 	EVT_BUTTON(XRCID("devicesRefresh"), DroidFrame::OnDevicesRefresh)
 	EVT_BUTTON(XRCID("buttonStart"), DroidFrame::OnStart)
@@ -115,6 +117,7 @@ void DroidFrame::OnMenuClose(wxCommandEvent& event)
 void DroidFrame::OnDevicesRefresh(wxCommandEvent& event)
 {
 	wxLogInfo(wxT("Refreshing devices"));
+	wxLogInfo(wxT("TODO: Implement / remove?"));
 }
 
 void DroidFrame::OnStart(wxCommandEvent& event)
@@ -196,3 +199,17 @@ void DroidFrame::threadStopped()
 	buttonStop->Disable();
 }
 
+
+bool DroidFrame::customiseDevice(AndroidDevice &device) {
+	CustomHost dlg(this, device);
+	switch(device.type) {
+		case DEVICE_CUSTOMHOST:
+			if(dlg.ShowModal() != wxID_OK) {
+				return false;
+			}
+			break;
+		default:
+			break;
+	}
+	return true;
+}

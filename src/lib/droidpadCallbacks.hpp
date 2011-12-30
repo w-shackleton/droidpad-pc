@@ -27,6 +27,7 @@
 
 #define DEVICE_USB 1
 #define DEVICE_NET 2
+#define DEVICE_CUSTOMHOST 3
 
 namespace droidpad {
 	class AndroidDevice : public wxClientData {
@@ -59,6 +60,12 @@ namespace droidpad {
 			virtual void threadStarted() = 0;
 			virtual void threadError(wxString failReason) = 0;
 			virtual void threadStopped() = 0;
+
+			/**
+			 * Asks the user for any necessary customisatons for a device.
+			 * Currently, only type == DEVICE_CUSTOMHOST should be used.
+			 */
+			virtual bool customiseDevice(AndroidDevice &device) = 0;
 	};
 };
 

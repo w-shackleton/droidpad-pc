@@ -17,40 +17,32 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _DATA_H
-#define _DATA_H
+#ifndef _CUSTOMHOST_H
+#define _CUSTOMHOST_H
 
-#include <iostream>
-#include "config.h"
+#include <wx/dialog.h>
+#include <wx/panel.h>
+#include <wx/sizer.h>
+#include <wx/textctrl.h>
+#include "droidpadCallbacks.hpp"
 
-#include <wx/string.h>
+class CustomHost : public wxDialog {
+	public:
+		CustomHost(wxWindow *parent, droidpad::AndroidDevice &device);
 
-#define STD_TO_WX_STRING(_str) wxString(_str.c_str(), wxConvUTF8)
+		DECLARE_EVENT_TABLE()
+	protected:
+		droidpad::AndroidDevice &device;
 
-namespace droidpad
-{
-	class Data
-	{
-		public:
-			static bool initialise();
-			static wxString datadir;
-			static wxString getFilePath(wxString file);
+		void onDone(wxCommandEvent &evt);
+	private:
+		enum {
+			_ID_HOST = wxID_HIGHEST,
+			_ID_PORT,
+		};
+		wxPanel *parent;
 
-			// Custom host and custom port
-			static wxString host;
-			static int port;
-
-			// static wxString serial;
-			static void savePreferences();
-		protected:
-			static wxString confLocation;
-		private:
-			Data(); // To stop initialising static class
-
-	};
-
-	wxString stringToUpper(wxString strToConvert);
-	wxString stringToLower(wxString strToConvert);
-}
+		wxTextCtrl *host, *port;
+};
 
 #endif

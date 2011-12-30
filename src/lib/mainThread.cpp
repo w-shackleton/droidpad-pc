@@ -49,7 +49,7 @@ MainThread::~MainThread() {
 void* MainThread::Entry()
 {
 	LOGV("Starting DroidPad");
-	LOGVwx(wxT("Using device ") + device);
+	// LOGVwx(wxT("Using device ") + device);
 	bool setupDone = true;
 	if(!setup()) {
 		setupDone = false;
