@@ -1,0 +1,74 @@
+#!/bin/sh
+
+echo "This script will build and export DroidPad for Windows, creating an installer package"
+echo "Please set env MINGW32_PATH and MINGW64_PATH if necessary."
+
+if [ "$MINGW32_PATH" = "" ]
+then
+MINGW32_PATH=/usr
+fi
+
+MINGW32_LOCATION=$MINGW32_PATH/i586-mingw32msvc
+
+
+if [ "$MINGW64_PATH" = "" ]
+then
+MINGW64_PATH=/home/william/Dev/toolchains/mingw-w64
+fi
+
+MINGW64_LOCATION=$MINGW64_PATH/x86_64-w64-mingw32
+
+export PATH="$MINGW64_PATH/bin:$MINGW32_PATH/bin:$PATH"
+
+BASEDIR=`pwd`
+BUILD=build
+MAKEOPTS="-j8"
+
+builddirs()
+{
+	mkdir -p "$BUILD"
+
+	echo "Building 32..."
+	./configure-mingw
+	make $MAKEOPTS
+	make winexport
+	mv winexport32 "$BUILD/"
+
+	make distclean
+
+	echo "Building 64..."
+	./configure-mingw64
+	make $MAKEOPTS
+	make winexport
+	mv winexport64 "$BUILD/"
+
+	make distclean
+}
+
+cleandirs()
+{
+	rm -r "$BUILD"
+}
+
+buildnsis()
+{
+	makensis droidpad.nsi
+}
+
+# Choose what to do
+case "$1" in
+	"B")
+		builddirs
+		;;
+	"M")
+		buildnsis
+		;;
+	"C")
+		cleandirs
+		;;
+	*)
+		builddirs
+		buildnsis
+		cleandirs
+		;;
+esac
