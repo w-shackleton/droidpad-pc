@@ -50,6 +50,11 @@ cleandirs()
 	rm -r "$BUILD"
 }
 
+buildnsis()
+{
+	makensis droidpad.nsi
+}
+
 # Choose what to do
 case "$1" in
 	"B")
