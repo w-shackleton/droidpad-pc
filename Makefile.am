@@ -25,7 +25,8 @@ ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = configure-mingw
 
 clean-local:
-	rm -rf winexport/
+	rm -rf winexport32/
+	rm -rf winexport64/
 
 DPDATA =
 PIXMAPS =
@@ -84,18 +85,23 @@ DRVS_amd64 =	\
 	$(DRVDIR_amd64)/WdfCoInstaller01009.dll	\
 	$(DRVDIR_amd64)/WUDFUpdate_01009.dll
 
+if OS_64BIT
+OUTDIR = winexport64
+else
+OUTDIR = winexport32
+endif
 
 winexport: all
-	@echo "--- EXPORTING to 'winexport' for windows install ---"
-	test -d "winexport" || mkdir winexport
-	test -d "winexport/data" || mkdir winexport/data
-	test -d "winexport/data/adb" || mkdir winexport/data/adb
-	test -d "winexport/data/driver" || mkdir winexport/data/driver
-	test -d "winexport/data/driver/x86" || mkdir winexport/data/driver/x86
-	test -d "winexport/data/driver/amd64" || mkdir winexport/data/driver/amd64
-	cp src/droidpad.exe winexport/
-	cp $(DPDATA) winexport/data
-	cp $(ADB) winexport/data/adb
-	cp $(MINGW_FILES) winexport/
-	cp $(DRVS_x86) winexport/data/driver/x86
-	cp $(DRVS_amd64) winexport/data/driver/amd64
+	@echo "--- EXPORTING to '$(OUTDIR)' for windows install ---"
+	test -d "$(OUTDIR)" || mkdir $(OUTDIR)
+	test -d "$(OUTDIR)/data" || mkdir $(OUTDIR)/data
+	test -d "$(OUTDIR)/data/adb" || mkdir $(OUTDIR)/data/adb
+	test -d "$(OUTDIR)/data/driver" || mkdir $(OUTDIR)/data/driver
+	test -d "$(OUTDIR)/data/driver/x86" || mkdir $(OUTDIR)/data/driver/x86
+	test -d "$(OUTDIR)/data/driver/amd64" || mkdir $(OUTDIR)/data/driver/amd64
+	cp src/droidpad.exe $(OUTDIR)/
+	cp $(DPDATA) $(OUTDIR)/data
+	cp $(ADB) $(OUTDIR)/data/adb
+	cp $(MINGW_FILES) $(OUTDIR)/
+	cp $(DRVS_x86) $(OUTDIR)/data/driver/x86
+	cp $(DRVS_amd64) $(OUTDIR)/data/driver/amd64
