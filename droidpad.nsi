@@ -32,6 +32,14 @@
 
   !define MUI_ABORTWARNING
 
+Function .onInit
+    ${If} ${RunningX64}
+        ${DisableX64FSRedirection}
+        SetRegView 64
+    ${EndIf}
+FunctionEnd
+
+
 ;--------------------------------
 ;Pages
 
@@ -66,10 +74,6 @@
 Section "DroidPad" DESC_DPInstall
 
 ;64-bit stuff
-    ${If} ${RunningX64}
-        ${DisableX64FSRedirection}
-        SetRegView 64
-    ${EndIf}
 	SetOutPath "$INSTDIR"
   
   
@@ -122,6 +126,8 @@ Section "DroidPad" DESC_DPInstall
 	File "build\winexport32\data\driver\x86\WdfCoInstaller01009.dll"
 	File "build\winexport32\data\driver\x86\WUDFUpdate_01009.dll"
 	${EndIf}
+
+	nsExec::Exec "$\"$INSTDIR\droidpad.exe$\" -s"
   
   ;Store installation folder
   WriteRegStr HKLM "Software\DroidPad" "" $INSTDIR
@@ -156,7 +162,45 @@ SectionEnd
 
 Section "Uninstall"
 
-  ;ADD YOUR OWN FILES HERE...
+	SetOutPath "$INSTDIR"
+  
+  nsExec::Exec "$\"$INSTDIR\droidpad.exe$\" -s"
+  
+    ${If} ${RunningX64}
+	Delete "$INSTDIR\droidpad.exe"
+	Delete "$INSTDIR\libgcc_s_sjlj-1.dll"
+	Delete "$INSTDIR\libstdc++-6.dll"
+	Delete "$INSTDIR\mingwm10.dll"
+	Delete "$INSTDIR\wxbase28u_gcc_custom.dll"
+	Delete "$INSTDIR\wxbase28u_net_gcc_custom.dll"
+	Delete "$INSTDIR\wxbase28u_xml_gcc_custom.dll"
+	Delete "$INSTDIR\wxmsw28u_adv_gcc_custom.dll"
+	Delete "$INSTDIR\wxmsw28u_core_gcc_custom.dll"
+	Delete "$INSTDIR\wxmsw28u_html_gcc_custom.dll"
+	Delete "$INSTDIR\wxmsw28u_xrc_gcc_custom.dll"
+	Delete "$INSTDIR\data\icon.xpm"
+	Delete "$INSTDIR\data\layout.xrc"
+	Delete "$INSTDIR\data\adb\adb.exe"
+	Delete "$INSTDIR\data\adb\AdbWinApi.dll"
+	Delete "$INSTDIR\data\adb\AdbWinUsbApi.dll"
+	Delete "$INSTDIR\data\driver\amd64\hidkmdf.sys"
+	Delete "$INSTDIR\data\driver\amd64\vjoy.cat"
+	Delete "$INSTDIR\data\driver\amd64\vJoy.inf"
+	Delete "$INSTDIR\data\driver\amd64\vJoy.sys"
+	Delete "$INSTDIR\data\driver\amd64\WdfCoInstaller01009.dll"
+	Delete "$INSTDIR\data\driver\amd64\WUDFUpdate_01009.dll"
+	Delete "$INSTDIR\data\driver\x86\hidkmdf.sys"
+	Delete "$INSTDIR\data\driver\x86\vjoy.cat"
+	Delete "$INSTDIR\data\driver\x86\vJoy.inf"
+	Delete "$INSTDIR\data\driver\x86\vJoy.sys"
+	Delete "$INSTDIR\data\driver\x86\WdfCoInstaller01009.dll"
+	Delete "$INSTDIR\data\driver\x86\WUDFUpdate_01009.dll"
+	RMDir "$INSTDIR\data\driver\amd64"
+	RMDir "$INSTDIR\data\driver\x86"
+	RMDir "$INSTDIR\data\driver"
+	RMDir "$INSTDIR\data\adb"
+	RMDir "$INSTDIR\data"
+  
 
   Delete "$INSTDIR\Uninstall.exe"
 
