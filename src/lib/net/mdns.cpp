@@ -29,6 +29,7 @@
 #include <iostream>
 
 #ifdef OS_WIN32
+#include <windows.h>
 #include <ws2tcpip.h>
 #else
 // unix socket includes
@@ -110,7 +111,11 @@ void MDNS::start()
 	if(unexpectedExit) {
 		exit = false;
 		while(!exit)
+#ifdef OS_WIN32
+			Sleep(100);
+#else // Unix / any other sensible OS?
 			usleep(100*1000);
+#endif
 	}
 
 	mdnsd_free(d);
