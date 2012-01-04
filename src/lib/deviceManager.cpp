@@ -99,8 +99,9 @@ void DeviceManager::OnNewDevicesList(DevicesList &event)
 void DeviceManager::Start(int device)
 {
 	LOGV("Starting");
-	AndroidDevice newDevice = devices[device]; // Copy
-	if(!callbacks.customiseDevice(newDevice)) { // If fails
+
+	AndroidDevice newDevice(devices[device]); // Copy
+	if(!callbacks.customiseDevice(&newDevice)) { // If fails
 		DMEvent evt(dpTHREAD_FINISH, 0);
 		AddPendingEvent(evt);
 		return;

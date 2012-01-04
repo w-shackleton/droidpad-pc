@@ -42,7 +42,7 @@ namespace droidpad {
 			void stop();
 		private:
 			DeviceManager &parent;
-			AndroidDevice &device;
+			AndroidDevice device; // If this is a reference then stack gets smashed sometimes
 
 			// The implementation changes per platform here
 			IOutputManager *mgr;

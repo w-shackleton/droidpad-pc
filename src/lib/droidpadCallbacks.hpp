@@ -39,7 +39,6 @@ namespace droidpad {
 			uint16_t port;
 			wxString name;
 
-			AndroidDevice& operator =(const AndroidDevice& b);
 			operator wxString() const;
 			bool operator ==(const AndroidDevice& b);
 			AndroidDevice(const AndroidDevice& dev);
@@ -65,7 +64,7 @@ namespace droidpad {
 			 * Asks the user for any necessary customisatons for a device.
 			 * Currently, only type == DEVICE_CUSTOMHOST should be used.
 			 */
-			virtual bool customiseDevice(AndroidDevice &device) = 0;
+			virtual bool customiseDevice(AndroidDevice *device) = 0;
 	};
 };
 

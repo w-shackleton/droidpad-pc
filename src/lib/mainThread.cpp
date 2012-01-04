@@ -111,7 +111,7 @@ void* MainThread::Entry()
 		if(setupDone) {
 			if(!loop()) {
 				setupDone = false; // Enter waiting loop.
-				DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_CONNECTION_LOST);
+				DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_CONNECTION_LOST); // FIXME: Perhaps no error here, just finish?
 				parent.AddPendingEvent(evt);
 			}
 		} else {
@@ -141,7 +141,6 @@ bool MainThread::loop()
 {
 	try {
 		const DPJSData data = conn->GetData();
-		// TODO: Call corresponding method.
 		switch(conn->GetMode().type) {
 			case MODE_JS:
 				mgr->SendJSData(data);
