@@ -28,11 +28,11 @@
 
 class CustomHost : public wxDialog {
 	public:
-		CustomHost(wxWindow *parent, droidpad::AndroidDevice &device);
+		CustomHost(wxWindow *parent, droidpad::AndroidDevice *device);
 
 		DECLARE_EVENT_TABLE()
 	protected:
-		droidpad::AndroidDevice &device;
+		droidpad::AndroidDevice *device;
 
 		void onDone(wxCommandEvent &evt);
 	private:

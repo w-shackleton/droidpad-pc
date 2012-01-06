@@ -90,9 +90,15 @@ DPMouseData::DPMouseData(const DPJSData& rawData, const DPJSData& prevData) {
 		scrollDelta = 0;
 		incrementalScrollDelta = 0;
 	}
-	bLeft = rawData.buttons[0];
-	bMiddle = rawData.buttons[1];
-	bRight = rawData.buttons[2];
+	if(rawData.buttons.size() > 0) {
+		bLeft = rawData.buttons[0];
+		bMiddle = rawData.buttons[1];
+		bRight = rawData.buttons[2];
+	} else {
+		bLeft = false;
+		bMiddle = false;
+		bRight = false;
+	}
 }
 
 DPSlideData::DPSlideData() :

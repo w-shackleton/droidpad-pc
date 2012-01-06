@@ -43,7 +43,7 @@ using namespace droidpad;
 
 #define DEFAULT_PORT 3141
 
-CustomHost::CustomHost(wxWindow *parent, droidpad::AndroidDevice &device) :
+CustomHost::CustomHost(wxWindow *parent, droidpad::AndroidDevice *device) :
 	wxDialog(parent, -1, _(FRAME_TITLE), wxDefaultPosition, wxSize(250, 150)),
 	device(device)
 {
@@ -93,8 +93,8 @@ void CustomHost::onDone(wxCommandEvent &evt) {
 	}
 	Data::port = portVal;
 
-	device.port = Data::port;
-	device.ip = Data::host;
+	device->port = Data::port;
+	device->ip = Data::host;
 
 	Data::savePreferences();
 	EndModal(wxID_OK);

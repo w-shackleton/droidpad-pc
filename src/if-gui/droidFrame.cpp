@@ -201,9 +201,8 @@ void DroidFrame::threadStopped()
 
 
 bool DroidFrame::customiseDevice(AndroidDevice *device) {
-	/*
 	CustomHost dlg(this, device);
-	switch(device.type) {
+	switch(device->type) {
 		case DEVICE_CUSTOMHOST:
 			if(dlg.ShowModal() != wxID_OK) {
 				return false;
@@ -212,6 +211,5 @@ bool DroidFrame::customiseDevice(AndroidDevice *device) {
 		default:
 			break;
 	}
-	*/
 	return true;
 }
