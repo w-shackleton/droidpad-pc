@@ -86,6 +86,8 @@ void DroidFrame::init()
 	LOADXRC(statusText,	statusText,	wxStaticText);
 	LOADXRC(devicesList,	devListBox,	wxListBox);
 
+	buttonStop->Disable();
+
 	devices = new DeviceManager(*this);
 	PushEventHandler(devices);
 }

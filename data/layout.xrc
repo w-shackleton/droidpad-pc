@@ -84,7 +84,7 @@
                     <object class="sizeritem">
                         <flag>wxALL</flag>
                         <border>3</border>
-                        <object class="wxButton" name="buttonStop">
+                        <object class="wxButton" name="buttonStop" enabled="0">
                             <label>Stop</label>
                         </object>
                     </object>

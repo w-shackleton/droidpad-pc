@@ -22,7 +22,7 @@ SUBDIRS = data src
 
 ACLOCAL_AMFLAGS = -I m4
 
-EXTRA_DIST = configure-mingw
+EXTRA_DIST = configure-mingw configure-mingw64 configure-debug updateIcons.sh
 
 clean-local:
 	rm -rf winexport32/
