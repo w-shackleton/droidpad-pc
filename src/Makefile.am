@@ -24,7 +24,9 @@ SRC_IF_GUI = \
 		   if-gui/droidFrame.cpp	if-gui/droidFrame.hpp	\
 		   if-gui/droidApp.cpp		if-gui/droidApp.hpp	\
 		   if-gui/customHost.cpp	if-gui/customHost.hpp	\
+		   if-gui/about.cpp		if-gui/about.hpp	\
 		   if-gui/pageSizer.cpp		if-gui/pageSizer.hpp	\
+		   if-gui/wxImagePanel.cpp	if-gui/wxImagePanel.hpp	\
 		   if-gui/setup.cpp		if-gui/setup.h
 droidpad_SOURCES =
 

@@ -42,16 +42,11 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 		wxPanel *panel;
 		wxMenuBar *menuBar;
 
-		wxButton *buttonStart, *buttonStop, *buttonDevicesRefresh;
+		wxButton *buttonStart, *buttonStop;
 		
 		wxListBox *devListBox;
 
 		wxStaticText *statusText;
-
-		enum
-		{
-
-		};
 
 	private:
 		void init();
@@ -66,6 +61,8 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 		void OnMenuClose(wxCommandEvent& event);
 
 		void OnListBox(wxCommandEvent& event);
+
+		void OnAbout(wxCommandEvent& event);
 
 		droidpad::DeviceManager *devices;
 

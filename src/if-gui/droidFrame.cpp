@@ -26,9 +26,9 @@
 #include <wx/msgdlg.h>
 
 #include "customHost.hpp"
+#include "about.hpp"
 
 BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
-	EVT_BUTTON(XRCID("devicesRefresh"), DroidFrame::OnDevicesRefresh)
 	EVT_BUTTON(XRCID("buttonStart"), DroidFrame::OnStart)
 	EVT_BUTTON(XRCID("buttonStop"), DroidFrame::OnStop)
 
@@ -36,6 +36,8 @@ BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
 	EVT_MENU(XRCID("menuFileStop"), DroidFrame::OnStop)
 
 	EVT_MENU(XRCID("menuFileQuit"), DroidFrame::OnMenuClose)
+
+	EVT_MENU(XRCID("menuHelpAbout"), DroidFrame::OnAbout)
 
 	EVT_LISTBOX(XRCID("devicesList"), DroidFrame::OnListBox)
 	EVT_LISTBOX_DCLICK(XRCID("devicesList"), DroidFrame::OnStart)
@@ -82,7 +84,6 @@ void DroidFrame::init()
 
 	LOADXRC(buttonStart,	buttonStart,		wxButton);
 	LOADXRC(buttonStop,	buttonStop,		wxButton);
-	LOADXRC(devicesRefresh,	buttonDevicesRefresh,	wxButton);
 	LOADXRC(statusText,	statusText,	wxStaticText);
 	LOADXRC(devicesList,	devListBox,	wxListBox);
 
@@ -113,13 +114,6 @@ void DroidFrame::OnMenuClose(wxCommandEvent& event)
 {
 	wxCloseEvent e;
 	OnClose(e);
-}
-
-
-void DroidFrame::OnDevicesRefresh(wxCommandEvent& event)
-{
-	wxLogInfo(wxT("Refreshing devices"));
-	wxLogInfo(wxT("TODO: Implement / remove?"));
 }
 
 void DroidFrame::OnStart(wxCommandEvent& event)
@@ -158,7 +152,15 @@ void DroidFrame::dpCloseComplete()
 void DroidFrame::dpNewDeviceList(AndroidDeviceList &list)
 {
 	for(int i = 0; i < list.size(); i++) {
-		wxString label = list[i].usbId + wxT(": ") + list[i].name;
+		wxString label;
+		switch(list[i].type) {
+			case DEVICE_CUSTOMHOST:
+				label = list[i].usbId;
+				break;
+			default:
+				label = list[i].usbId + wxT(": ") + list[i].name;
+				break;
+		}
 		if(devListBox->FindString(label) == wxNOT_FOUND) {
 			AndroidDevice *clientData = new AndroidDevice(list[i]);
 			int listPos = devListBox->Append(label, clientData); // Does wx take ownership here? Hope so.
@@ -213,4 +215,9 @@ bool DroidFrame::customiseDevice(AndroidDevice *device) {
 			break;
 	}
 	return true;
+}
+
+void DroidFrame::OnAbout(wxCommandEvent& event) {
+	About dlg(this);
+	dlg.ShowModal();
 }

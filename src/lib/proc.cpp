@@ -24,6 +24,7 @@
 
 #ifdef OS_UNIX
 #include <stdio.h>
+#include <unistd.h>
 #elif OS_WIN32
 #include <windows.h>
 #endif
@@ -34,7 +35,7 @@ using namespace std;
 #define BUFFER_SIZE 128
 
 #ifdef OS_UNIX
-// I still can't believe how infinitely much easier this is Unix.
+// I still can't believe how infinitely much easier this is in Unix.
 string droidpad::runProcess(string cmd, string args) {
 	FILE* pipe = popen((cmd + " " + args).c_str(), "r");
 	if (!pipe) throw "Couldn't run adb";
@@ -158,4 +159,22 @@ bad2:
 	return output;
 }
 
+#endif
+
+#ifdef OS_LINUX
+
+#define BROWSER "x-www-browser"
+
+void droidpad::openWebpage(string url) {
+	// Good ol' fork and exec
+	if(fork() == 0) {
+		// TODO: Get this running as original user, not root!
+		execlp(BROWSER, BROWSER, url.c_str(), (char *)0);
+	}
+}
+#elif OS_WIN32
+void droidpad::openWebpage(string url) {
+	// TODO: Test
+	ShellExecute(NULL, "open", url.c_str(), NULL, NULL, SW_SHOWNORMAL);
+}
 #endif

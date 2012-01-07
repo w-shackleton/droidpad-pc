@@ -18,7 +18,7 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #
 AC_PREREQ([2.64])
-AC_INIT([droidpad], [2.0-trunk], [w.shackleton+droidpad@gmail.com])
+AC_INIT([droidpad], [1.9-beta], [w.shackleton+droidpad@gmail.com])
 AC_CONFIG_SRCDIR([src/if-gui/droidApp.cpp])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE

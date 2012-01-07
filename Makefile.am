@@ -29,7 +29,6 @@ clean-local:
 	rm -rf winexport64/
 
 DPDATA =
-PIXMAPS =
 if IF_GUI
 DPDATA += data/layout.xrc
 

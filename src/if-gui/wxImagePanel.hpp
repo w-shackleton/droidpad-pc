@@ -17,15 +17,27 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef DP_PROC_H
-#define DP_PROC_H
 
-#include <string>
+// Based on http://wiki.wxwidgets.org/An_image_panel
 
-namespace droidpad {
-	std::string runProcess(std::string cmd, std::string args);
+#ifndef WX_IMAGE_PANEL_H
+#define WX_IMAGE_PANEL_H
 
-	void openWebpage(std::string url);
-}
+#include <wx/panel.h>
+#include <wx/bitmap.h>
 
+class wxImagePanel : public wxPanel
+{
+	wxBitmap image;
+
+	public:
+	wxImagePanel(wxPanel *parent, wxString file, wxBitmapType format);
+
+	void paintEvent(wxPaintEvent & evt);
+	void paintNow();
+
+	void render(wxDC& dc);
+
+	DECLARE_EVENT_TABLE()
+};
 #endif

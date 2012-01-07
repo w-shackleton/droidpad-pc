@@ -35,6 +35,8 @@ wxString Data::datadir = wxT("");
 wxString Data::confLocation = wxT("");
 wxString Data::host = wxT("");
 
+wxString Data::version = wxT(VERSION);
+
 int Data::port = 3141;
 
 #define CONF_FILE "dp.conf"

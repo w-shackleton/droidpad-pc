@@ -54,19 +54,6 @@
                                     </content>
                                 </object>
                             </object>
-                            <object class="sizeritem">
-                                <flag>wxEXPAND</flag>
-                                <object class="wxBoxSizer">
-                                    <orient>wxHORIZONTAL</orient>
-                                    <object class="sizeritem">
-                                        <flag>wxALL</flag>
-                                        <border>3</border>
-                                        <object class="wxButton" name="devicesRefresh">
-                                            <label>Refresh</label>
-                                        </object>
-                                    </object>
-                                </object>
-                            </object>
                         </object>
                     </object>
                 </object>

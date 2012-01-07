@@ -17,15 +17,28 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef DP_PROC_H
-#define DP_PROC_H
+#ifndef _ABOUT_H
+#define _ABOUT_H
 
-#include <string>
+#include <wx/dialog.h>
+#include <wx/panel.h>
+#include <wx/sizer.h>
 
-namespace droidpad {
-	std::string runProcess(std::string cmd, std::string args);
+class About : public wxDialog {
+	public:
+		About(wxWindow *parent);
+		DECLARE_EVENT_TABLE()
+	public:
+	protected:
+		wxPanel *panel;
 
-	void openWebpage(std::string url);
-}
+		enum {
+			ID_GO_WEB = wxID_HIGHEST,
+			ID_GO_BUG,
+		};
+
+		void goWeb(wxCommandEvent &evt);
+		void goBugreport(wxCommandEvent &evt);
+};
 
 #endif

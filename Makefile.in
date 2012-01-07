@@ -282,7 +282,6 @@ SUBDIRS = data src
 ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = configure-mingw configure-mingw64 configure-debug updateIcons.sh
 DPDATA = $(am__append_1) $(am__append_2) $(am__append_3)
-PIXMAPS = 
 @OS_LINUX_TRUE@ADB = data/adb/adb
 @OS_WIN32_TRUE@ADB = data/adb/adb.exe data/adb/AdbWinApi.dll data/adb/AdbWinUsbApi.dll
 
