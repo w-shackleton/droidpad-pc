@@ -39,6 +39,8 @@ class DroidApp : public wxApp
 		bool runSetup;
 		bool runRemove;
 
+		void requestNecessaryPermissions();
+
 	public:
 		virtual void OnInitCmdLine(wxCmdLineParser& parser);
 		virtual bool OnCmdLineParsed(wxCmdLineParser& parser);
@@ -55,6 +57,8 @@ static const wxCmdLineEntryDesc dp_cmdLineDesc [] =
 	{ wxCMD_LINE_SWITCH, wxT("s"), wxT("setup"), wxT("sets up DroidPad components"),
 		wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL  },
 	{ wxCMD_LINE_SWITCH, wxT("u"), wxT("remove"), wxT("removes DroidPad components"),
+		wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL  },
+	{ wxCMD_LINE_SWITCH, wxT("n"), wxT("no-root"), wxT("don't ask for root privileges"),
 		wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL  },
 
 	{ wxCMD_LINE_NONE }

@@ -155,7 +155,6 @@ void DroidFrame::dpCloseComplete()
 
 void DroidFrame::dpNewDeviceList(AndroidDeviceList &list)
 {
-	wxLogInfo(wxT("Devices found: %d"), list.size());
 	for(int i = 0; i < list.size(); i++) {
 		wxString label = list[i].usbId + wxT(": ") + list[i].name;
 		if(devListBox->FindString(label) == wxNOT_FOUND) {

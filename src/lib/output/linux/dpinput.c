@@ -25,6 +25,7 @@
 #include <fcntl.h>
 #include <linux/input.h>
 #include <linux/uinput.h>
+#include <errno.h>
 
 
 /* Non-Globals */
@@ -98,6 +99,26 @@ ABS_TOOL_WIDTH,
 ABS_VOLUME,
 ABS_MISC,
 };
+
+int dpinput_checkUInput() {
+	system("modprobe uinput"); // Some systems don't have this, try it anyway.
+	
+	int file, i;
+	for (i = 0; i < ARRAY_COUNT(uinput_filename, char *); i++)
+	{
+		if ((file = open(uinput_filename[i], O_RDWR)) >= 0)
+		{
+			close(file);
+			return CHECKRESULT_SUCCESS; // Worked.
+		} else {
+			switch(errno) {
+				case EACCES:
+					return CHECKRESULT_PERMS;
+			}
+		}
+	}
+	return CHECKRESULT_NOTFOUND;
+}
 
 int dpinput_setup(dpInfo *info, int type)
 {

@@ -56,7 +56,7 @@ bool Data::initialise()
 
 	for(int i = 0; i < datadirs.size(); i++)
 	{
-		LOGMwx(wxString(wxT("Trying folder ")) + datadirs[i]);
+		LOGVwx(wxString(wxT("Trying folder ")) + datadirs[i]);
 		ifstream tstream((datadirs[i] + wxT("/") + testFile).mb_str());
 		if(tstream)
 		{

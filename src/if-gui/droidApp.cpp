@@ -29,7 +29,12 @@ using namespace std;
 
 #include "droidFrame.hpp"
 #include "data.hpp"
+#include "log.hpp"
 #include "setup.hpp"
+
+#ifdef OS_LINUX
+#include "output/linux/dpinput.h"
+#endif
 
 using namespace droidpad;
 
@@ -113,5 +118,44 @@ void DroidApp::OnInitCmdLine(wxCmdLineParser& parser) {
 bool DroidApp::OnCmdLineParsed(wxCmdLineParser& parser) {
 	runSetup = parser.Found(wxT("s"));
 	runRemove = parser.Found(wxT("u"));
+
+	if(!parser.Found(wxT("n"))) { // If user didn't request no root, check.
+		requestNecessaryPermissions();
+	}
+
 	return true;
+}
+
+void DroidApp::requestNecessaryPermissions() {
+#ifdef OS_LINUX
+	LOGV("Checking if permissions needed...");
+	if(geteuid() == 0) return; // We should be fine if sudo / su.
+	if(dpinput_checkUInput() == CHECKRESULT_PERMS) { // Checking permissions
+		LOGV("Getting elevated permissions...");
+		// Execute correct SU process - guessing it
+		wxChar* session = wxGetenv(wxT("DESKTOP_SESSION"));
+		wxString suCmd;
+		if(session == NULL) suCmd = wxT("gksu");
+		else {
+			wxString sSession = session;
+			if(sSession == wxT("ubuntu") || sSession.find(wxT("gnome"))) {
+				suCmd = wxT("gksu");
+			} else if(sSession.find(wxT("kde")) || sSession.find(wxT("kwin"))) {
+				suCmd = wxT("kdesu");
+			}
+		}
+
+		wxString thisProcess = argv[0];
+
+		if(suCmd == wxT("gksu")) {
+			execlp(
+					suCmd.mb_str(),
+					(const char *)suCmd.mb_str(),
+					"-m",
+					"DroidPad must be run with elevated privileges.",
+					(const char *)thisProcess.mb_str(),
+					(char *)0);
+		}
+	}
+#endif // No windows probably.
 }

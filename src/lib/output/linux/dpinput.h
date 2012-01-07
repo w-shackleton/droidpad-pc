@@ -47,6 +47,18 @@ extern __u16 joystickKeys[];
 
 #define ARRAY_COUNT(_array, _vartype)	(sizeof(_array) / sizeof(_vartype))
 
+#define CHECKRESULT_SUCCESS 0
+#define CHECKRESULT_NOTFOUND 1
+#define CHECKRESULT_PERMS 2
+
+/**
+ * Checks if uinput is available. Returns:
+ * CHECKRESULT_SUCCESS on success
+ * CHECKRESULT_NOTFOUND on not found
+ * CHECKRESULT_PERMS on permission error.
+ */
+int dpinput_checkUInput();
+
 int dpinput_setup(dpInfo *info, int type);
 int dpinput_close(dpInfo *info);
 
