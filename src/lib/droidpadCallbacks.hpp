@@ -58,6 +58,7 @@ namespace droidpad {
 
 			virtual void threadStarted() = 0;
 			virtual void threadError(wxString failReason) = 0;
+			virtual void setStatusText(wxString text) = 0;
 			virtual void threadStopped() = 0;
 
 			/**

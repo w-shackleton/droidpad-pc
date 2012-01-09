@@ -55,10 +55,18 @@ namespace droidpad {
 			bool running;
 
 			bool setup();
+
+#define LOOP_OK 1
+/**
+ * Normal closing of connection
+ */
+#define LOOP_FINISHED 2
+#define LOOP_CONNLOST 3
+
 			/**
-			 * Returns true on success
+			 * Returns LOOP_*
 			 */
-			bool loop();
+			int loop();
 			void finish();
 	};
 }

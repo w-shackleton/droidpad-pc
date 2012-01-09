@@ -196,6 +196,10 @@ void DroidFrame::threadError(wxString failReason)
 	wxMessageBox(_("DroidPad couldn't start - ") + failReason);
 }
 
+void DroidFrame::setStatusText(wxString text) {
+	statusText->SetLabel(text);
+}
+
 void DroidFrame::threadStopped()
 {
 	buttonStart->Enable();

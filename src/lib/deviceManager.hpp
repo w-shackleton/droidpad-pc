@@ -72,6 +72,7 @@ namespace droidpad {
 
 			void OnMainThreadStarted(DMEvent &event);
 			void OnMainThreadError(DMEvent &event);
+			void OnMainThreadNotification(DMEvent &event);
 			void OnMainThreadFinish(DMEvent &event);
 	};
 };

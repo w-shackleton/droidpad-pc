@@ -34,6 +34,7 @@ BEGIN_EVENT_TABLE(DeviceManager, wxEvtHandler)
 
 	EVT_DMEVENT(dpTHREAD_STARTED, DeviceManager::OnMainThreadStarted)
 	EVT_DMEVENT(dpTHREAD_ERROR, DeviceManager::OnMainThreadError)
+	EVT_DMEVENT(dpTHREAD_NOTIFICATION, DeviceManager::OnMainThreadNotification)
 	EVT_DMEVENT(dpTHREAD_FINISH, DeviceManager::OnMainThreadFinish)
 
 	EVT_DEVICES_LIST(dpDEVICES_LIST, DeviceManager::OnNewDevicesList)
@@ -137,10 +138,6 @@ void DeviceManager::OnMainThreadError(DMEvent &event)
 			LOGE("Recieved error when setting up interfaces");
 			callbacks.threadError(_("Couldn't setup DroidPad"));
 			break;
-		case THREAD_ERROR_CONNECTION_LOST:
-			LOGE("Connection to phone lost.");
-			callbacks.threadError(_("Connection to phone lost."));
-			break;
 		case THREAD_ERROR_NO_JS_DEVICE:
 			LOGE("Joystick device couldn't be found.");
 			callbacks.threadError(_("Couldn't find joystick device. Is it installed properly?"));
@@ -150,6 +147,24 @@ void DeviceManager::OnMainThreadError(DMEvent &event)
 			callbacks.threadError(wxString::Format(_("Unknown Error - %d."), event.getStatus()));
 	}
 	Stop(false);
+}
+
+void DeviceManager::OnMainThreadNotification(DMEvent &event)
+{
+	switch(event.getStatus()) {
+		case THREAD_WARNING_CONNECTION_LOST:
+			LOGE("Connection to phone lost.");
+			callbacks.setStatusText(_("Connection to phone lost. Retrying..."));
+			break;
+		case THREAD_INFO_FINISHED:
+			LOGV("Finished.");
+			callbacks.setStatusText(_("Done."));
+			Stop(false);
+			break;
+		default:
+			LOGE("Other error from thread");
+			callbacks.threadError(wxString::Format(_("Unknown warning - %d."), event.getStatus()));
+	}
 }
 
 void DeviceManager::OnMainThreadFinish(DMEvent &event)

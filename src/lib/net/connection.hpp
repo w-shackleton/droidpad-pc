@@ -53,6 +53,11 @@ namespace droidpad {
 			std::vector<int> axes;
 			std::vector<int> touchpadAxes;
 			std::vector<bool> buttons;
+
+			/**
+			 * If true, the connection was closed normally.
+			 */
+			bool connectionClosed;
 	};
 
 	class DPMouseData {

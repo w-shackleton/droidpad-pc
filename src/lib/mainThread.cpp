@@ -49,85 +49,107 @@ MainThread::~MainThread() {
 void* MainThread::Entry()
 {
 	LOGV("Starting DroidPad");
-	// LOGVwx(wxT("Using device ") + device);
+	bool connectAgain = false;
 	bool setupDone = true;
-	if(!setup()) {
-		setupDone = false;
-		DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_CONNECT_FAIL);
-		parent.AddPendingEvent(evt);
-	}
-
-	if(setupDone) { // Skip this if fail
-		try { // Setup outputmanager
-			const ModeSetting &mode = conn->GetMode();
-#ifdef OS_LINUX
-			switch(mode.type) {
-				case MODE_JS:
-				case MODE_SLIDE:
-					mgr = new OutputManager(mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
-					break;
-				case MODE_MOUSE:
-					deleteOutputManager = false;
-					OutputManager *innerMgr = new OutputManager(mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
-					mgr = new OutputSmoothBuffer(innerMgr, mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
-					break;
-			}
-#elif defined OS_WIN32
-			switch(mode.type) {
-				case MODE_JS:
-				case MODE_SLIDE:
-					mgr = new OutputManager(mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
-					break;
-				case MODE_MOUSE:
-					deleteOutputManager = false;
-					OutputManager *innerMgr = new OutputManager(mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
-					mgr = new OutputSmoothBuffer(innerMgr, mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
-					break;
-			}
-#endif
-		} catch(invalid_argument &e) {
-			LOGEwx(wxString::FromAscii(e.what()));
-			DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_NO_JS_DEVICE);
-			parent.AddPendingEvent(evt);
-
-			finish();
-			return NULL;
-		} catch(OutputException &e) {
-			LOGEwx(wxString::FromAscii(e.what()));
-			DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_NO_JS_DEVICE);
-			parent.AddPendingEvent(evt);
-
-			finish();
-			return NULL;
-		}
-
-		DMEvent evt(dpTHREAD_STARTED, 0);
-		parent.AddPendingEvent(evt);
-	}
-
-	LOGV("Setup done");
-
-	while(running) {
-		if(setupDone) {
-			if(!loop()) {
-				setupDone = false; // Enter waiting loop.
-				DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_CONNECTION_LOST); // FIXME: Perhaps no error here, just finish?
+	do { // connectAgain
+		if(!setup()) {
+			if(connectAgain) {
+				LOGW("Failed to reconnect, retrying...");
+				delete conn; // Reset
+				conn = new DPConnection(device.ip, device.port);
+				continue;
+			} else {
+				setupDone = false;
+				DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_CONNECT_FAIL);
 				parent.AddPendingEvent(evt);
 			}
-		} else {
-			wxThread::Sleep(30); // Wait to be killed by parent.
 		}
-	}
+
+		if(setupDone && !connectAgain) { // Skip this if fail - only run on first time.
+			try { // Setup outputmanager
+				const ModeSetting &mode = conn->GetMode();
+#ifdef OS_LINUX
+				switch(mode.type) {
+					case MODE_JS:
+					case MODE_SLIDE:
+						mgr = new OutputManager(mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
+						break;
+					case MODE_MOUSE:
+						deleteOutputManager = false;
+						OutputManager *innerMgr = new OutputManager(mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
+						mgr = new OutputSmoothBuffer(innerMgr, mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
+						break;
+				}
+#elif defined OS_WIN32
+				switch(mode.type) {
+					case MODE_JS:
+					case MODE_SLIDE:
+						mgr = new OutputManager(mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
+						break;
+					case MODE_MOUSE:
+						deleteOutputManager = false;
+						OutputManager *innerMgr = new OutputManager(mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
+						mgr = new OutputSmoothBuffer(innerMgr, mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
+						break;
+				}
+#endif
+			} catch(invalid_argument &e) {
+				LOGEwx(wxString::FromAscii(e.what()));
+				DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_NO_JS_DEVICE);
+				parent.AddPendingEvent(evt);
+
+				finish();
+				return NULL;
+			} catch(OutputException &e) {
+				LOGEwx(wxString::FromAscii(e.what()));
+				DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_NO_JS_DEVICE);
+				parent.AddPendingEvent(evt);
+
+				finish();
+				return NULL;
+			}
+
+			DMEvent evt(dpTHREAD_STARTED, 0);
+			parent.AddPendingEvent(evt);
+		}
+
+		LOGV("Setup done");
+
+		while(running) {
+			if(setupDone) {
+				switch(loop()) {
+					case LOOP_CONNLOST: {
+					        LOGV("Loop sent connlost");
+						connectAgain = true; // Try to reconnect.
+						DMEvent evt(dpTHREAD_NOTIFICATION, THREAD_WARNING_CONNECTION_LOST); // This is now just a warning, not an error.
+						parent.AddPendingEvent(evt);
+							    }
+						break;
+					case LOOP_FINISHED: {
+					        LOGV("Loop sent finished");
+						setupDone = false; // Enter waiting loop.
+						DMEvent evt(dpTHREAD_NOTIFICATION, THREAD_INFO_FINISHED);
+						parent.AddPendingEvent(evt);
+							    }
+						break;
+				}
+			} else {
+				wxThread::Sleep(30); // Wait to be killed by parent.
+			}
+		}
+	} while(connectAgain);
 	finish();
 }
 
 void MainThread::stop()
 {
+	LOGV("Thread received stop");
 	running = false;
 }
 
 bool MainThread::setup()
 {
+	// TODO: Only this on first time round?
 	if(device.type == DEVICE_USB) parent.adb->forwardDevice(string(device.usbId.mb_str()), device.port);
 	if(!conn->Start()) {
 		LOGE("Couldn't connect to phone");
@@ -137,10 +159,11 @@ bool MainThread::setup()
 	return true;
 }
 
-bool MainThread::loop()
+int MainThread::loop()
 {
 	try {
 		const DPJSData data = conn->GetData();
+		if(data.connectionClosed) return LOOP_FINISHED;
 		switch(conn->GetMode().type) {
 			case MODE_JS:
 				mgr->SendJSData(data);
@@ -154,9 +177,9 @@ bool MainThread::loop()
 		}
 		prevData = data;
 	} catch(runtime_error e) {
-		return false;
+		return LOOP_CONNLOST;
 	}
-	return true;
+	return LOOP_OK;
 }
 
 void MainThread::finish()

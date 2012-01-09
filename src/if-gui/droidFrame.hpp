@@ -79,6 +79,7 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 
 		virtual void threadStarted();
 		virtual void threadError(wxString failReason);
+		virtual void setStatusText(wxString text);
 		virtual void threadStopped();
 
 };

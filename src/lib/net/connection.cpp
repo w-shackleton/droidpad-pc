@@ -47,13 +47,15 @@ DPMouseData::DPMouseData() :
 	bRight(false)
 { }
 
-DPJSData::DPJSData()
+DPJSData::DPJSData() :
+	connectionClosed(false)
 { }
 
 DPJSData::DPJSData(const DPJSData& old) :
 	axes(old.axes),
 	touchpadAxes(old.touchpadAxes),
-	buttons(old.buttons)
+	buttons(old.buttons),
+	connectionClosed(connectionClosed)
 { }
 
 DPMouseData::DPMouseData(const DPMouseData& old) :
@@ -252,6 +254,12 @@ const DPJSData DPConnection::GetData() throw (runtime_error)
 	DPJSData data;
 
 	wxString line = GetLine();
+
+	if(line.find(wxT("<STOP>")) != wxNOT_FOUND) {
+		data.connectionClosed = true;
+		return data;
+	} else data.connectionClosed = false;
+
 	int start = line.Find(wxT("[")) + 1;
 	int end = line.Find(wxT("]"));
 
