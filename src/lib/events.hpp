@@ -50,6 +50,9 @@ namespace droidpad {
 		THREAD_ERROR_SETUP_FAIL,
 		THREAD_ERROR_NO_JS_DEVICE,
 		THREAD_WARNING_CONNECTION_LOST,
+
+		THREAD_INFO_CONNECTED,
+
 		/**
 		 * The phone disconnected successfully.
 		 */

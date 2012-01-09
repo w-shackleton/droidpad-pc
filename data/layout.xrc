@@ -76,6 +76,9 @@
                         </object>
                     </object>
                     <object class="sizeritem">
+                        <option>1</option>
+                        <flag>wxALL|wxALIGN_CENTER_VERTICAL</flag>
+                        <border>3</border>
                         <object class="wxStaticText" name="statusText">
                         </object>
                     </object>

@@ -161,6 +161,10 @@ void DeviceManager::OnMainThreadNotification(DMEvent &event)
 			callbacks.setStatusText(_("Done."));
 			Stop(false);
 			break;
+		case THREAD_INFO_CONNECTED:
+			LOGV("Connected.");
+			callbacks.setStatusText(_("Connected."));
+			break;
 		default:
 			LOGE("Other error from thread");
 			callbacks.threadError(wxString::Format(_("Unknown warning - %d."), event.getStatus()));

@@ -55,6 +55,7 @@ void* MainThread::Entry()
 		if(!setup()) {
 			if(connectAgain) {
 				LOGW("Failed to reconnect, retrying...");
+				wxMilliSleep(300);
 				delete conn; // Reset
 				conn = new DPConnection(device.ip, device.port);
 				continue;
@@ -67,6 +68,7 @@ void* MainThread::Entry()
 
 		if(setupDone && !connectAgain) { // Skip this if fail - only run on first time.
 			try { // Setup outputmanager
+				LOGV("Setting up OutputManager");
 				const ModeSetting &mode = conn->GetMode();
 #ifdef OS_LINUX
 				switch(mode.type) {
@@ -115,12 +117,17 @@ void* MainThread::Entry()
 
 		LOGV("Setup done");
 
+		running = true; // Set in case was used to stop loop.
+		DMEvent evt(dpTHREAD_NOTIFICATION, THREAD_INFO_CONNECTED);
+		parent.AddPendingEvent(evt);
+
 		while(running) {
 			if(setupDone) {
 				switch(loop()) {
 					case LOOP_CONNLOST: {
 					        LOGV("Loop sent connlost");
 						connectAgain = true; // Try to reconnect.
+						running = false; // Exit loop
 						DMEvent evt(dpTHREAD_NOTIFICATION, THREAD_WARNING_CONNECTION_LOST); // This is now just a warning, not an error.
 						parent.AddPendingEvent(evt);
 							    }
