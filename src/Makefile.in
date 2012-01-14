@@ -37,14 +37,18 @@ host_triplet = @host@
 bin_PROGRAMS = droidpad$(EXEEXT)
 @IF_GUI_TRUE@am__append_1 = $(SRC_IF_GUI)
 @OS_WIN32_TRUE@am__append_2 = -lws2_32 lib/ext/win32/libvjoy.la
-@IF_GUI_TRUE@@OS_WIN32_TRUE@am__append_3 = if-gui/droidpad.res -lws2_32 ${prefix}/lib/libsetupapi.a
+
+# win64
+@OS_64BIT_TRUE@@OS_WIN32_TRUE@am__append_3 = if-gui/driverChoice.cpp	if-gui/driverChoice.hpp
+@IF_GUI_TRUE@@OS_WIN32_TRUE@am__append_4 = if-gui/droidpad.res -lws2_32 ${prefix}/lib/libsetupapi.a
 
 # droidpad_LDFLAGS += -static-libgcc
+@OS_64BIT_TRUE@@OS_WIN32_TRUE@am__append_5 = -DOS_64IT
 
 # For all unices
-@OS_UNIX_TRUE@am__append_4 = -DOS_UNIX
-@OS_LINUX_TRUE@am__append_5 = -DOS_LINUX
-@OS_WIN32_TRUE@am__append_6 = -DOS_WIN32
+@OS_UNIX_TRUE@am__append_6 = -DOS_UNIX
+@OS_LINUX_TRUE@am__append_7 = -DOS_LINUX
+@OS_WIN32_TRUE@am__append_8 = -DOS_WIN32
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -65,13 +69,16 @@ am__droidpad_SOURCES_DIST = if-gui/droidFrame.cpp \
 	if-gui/customHost.cpp if-gui/customHost.hpp if-gui/about.cpp \
 	if-gui/about.hpp if-gui/pageSizer.cpp if-gui/pageSizer.hpp \
 	if-gui/wxImagePanel.cpp if-gui/wxImagePanel.hpp \
-	if-gui/setup.cpp if-gui/setup.h
+	if-gui/setup.cpp if-gui/setup.h if-gui/driverChoice.cpp \
+	if-gui/driverChoice.hpp
 am__objects_1 = droidpad-droidFrame.$(OBJEXT) \
 	droidpad-droidApp.$(OBJEXT) droidpad-customHost.$(OBJEXT) \
 	droidpad-about.$(OBJEXT) droidpad-pageSizer.$(OBJEXT) \
 	droidpad-wxImagePanel.$(OBJEXT) droidpad-setup.$(OBJEXT)
 @IF_GUI_TRUE@am__objects_2 = $(am__objects_1)
-am_droidpad_OBJECTS = $(am__objects_2)
+@OS_64BIT_TRUE@@OS_WIN32_TRUE@am__objects_3 =  \
+@OS_64BIT_TRUE@@OS_WIN32_TRUE@	droidpad-driverChoice.$(OBJEXT)
+am_droidpad_OBJECTS = $(am__objects_2) $(am__objects_3)
 droidpad_OBJECTS = $(am_droidpad_OBJECTS)
 @OS_WIN32_TRUE@am__DEPENDENCIES_1 = lib/ext/win32/libvjoy.la
 @IF_GUI_TRUE@@OS_WIN32_TRUE@am__DEPENDENCIES_2 = if-gui/droidpad.res \
@@ -338,16 +345,17 @@ SRC_IF_GUI = \
 		   if-gui/wxImagePanel.cpp	if-gui/wxImagePanel.hpp	\
 		   if-gui/setup.cpp		if-gui/setup.h
 
-droidpad_SOURCES = $(am__append_1)
+droidpad_SOURCES = $(am__append_1) $(am__append_3)
 @IF_GUI_FALSE@droidpad_LDADD = @WXBASELIBS@ lib/libdroidpad.la \
-@IF_GUI_FALSE@	$(am__append_2) $(am__append_3)
+@IF_GUI_FALSE@	$(am__append_2) $(am__append_4)
 @IF_GUI_TRUE@droidpad_LDADD = @WXLIBS@ lib/libdroidpad.la \
-@IF_GUI_TRUE@	$(am__append_2) $(am__append_3)
+@IF_GUI_TRUE@	$(am__append_2) $(am__append_4)
 @IF_GUI_FALSE@droidpad_CXXFLAGS = @WXBASECPPFLAGS@ -Ilib
 @IF_GUI_TRUE@droidpad_CXXFLAGS = @WXCPPFLAGS@ -Ilib
-AM_CPPFLAGS = -DPREFIX='"$(prefix)"' $(am__append_4) $(am__append_5) \
-	$(am__append_6)
+AM_CPPFLAGS = -DPREFIX='"$(prefix)"' $(am__append_5) $(am__append_6) \
+	$(am__append_7) $(am__append_8)
 @OS_WIN32_TRUE@droidpad_LDFLAGS = -Wl,--enable-auto-import --enable-stdcall-fixup
+
 # http://www.gnu.org/software/hello/manual/automake/Options.html
 @IF_GUI_TRUE@@OS_WIN32_TRUE@pkg_verbose = $(pkg_verbose_$(V))
 @IF_GUI_TRUE@@OS_WIN32_TRUE@pkg_verbose_ = $(pkg_verbose_$(AM_DEFAULT_VERBOSITY))
@@ -444,6 +452,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-about.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-customHost.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-driverChoice.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-droidApp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-droidFrame.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-pageSizer.Po@am__quote@
@@ -585,6 +594,22 @@ droidpad-setup.obj: if-gui/setup.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='if-gui/setup.cpp' object='droidpad-setup.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-setup.obj `if test -f 'if-gui/setup.cpp'; then $(CYGPATH_W) 'if-gui/setup.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/setup.cpp'; fi`
+
+droidpad-driverChoice.o: if-gui/driverChoice.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -MT droidpad-driverChoice.o -MD -MP -MF $(DEPDIR)/droidpad-driverChoice.Tpo -c -o droidpad-driverChoice.o `test -f 'if-gui/driverChoice.cpp' || echo '$(srcdir)/'`if-gui/driverChoice.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/droidpad-driverChoice.Tpo $(DEPDIR)/droidpad-driverChoice.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='if-gui/driverChoice.cpp' object='droidpad-driverChoice.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-driverChoice.o `test -f 'if-gui/driverChoice.cpp' || echo '$(srcdir)/'`if-gui/driverChoice.cpp
+
+droidpad-driverChoice.obj: if-gui/driverChoice.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -MT droidpad-driverChoice.obj -MD -MP -MF $(DEPDIR)/droidpad-driverChoice.Tpo -c -o droidpad-driverChoice.obj `if test -f 'if-gui/driverChoice.cpp'; then $(CYGPATH_W) 'if-gui/driverChoice.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/driverChoice.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/droidpad-driverChoice.Tpo $(DEPDIR)/droidpad-driverChoice.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='if-gui/driverChoice.cpp' object='droidpad-driverChoice.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-driverChoice.obj `if test -f 'if-gui/driverChoice.cpp'; then $(CYGPATH_W) 'if-gui/driverChoice.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/driverChoice.cpp'; fi`
 
 mostlyclean-libtool:
 	-rm -f *.lo
