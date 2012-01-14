@@ -49,39 +49,34 @@ CustomHost::CustomHost(wxWindow *parent, droidpad::AndroidDevice *device) :
 {
 	SetIcon(wxIcon(wxString(Data::getFilePath(_FRAME_ICON).c_str(), wxConvUTF8), wxBITMAP_TYPE_XPM));
 
-	parent = new wxPanel(this);
 	wxBoxSizer *parentSizer = new wxBoxSizer(wxVERTICAL);
-	parent->SetSizer(parentSizer);
+	SetSizer(parentSizer);
 
 
-	wxPanel *entryPanel = new wxPanel(parent);
 	wxGridSizer *entrySizer = new wxGridSizer(2);
-	entryPanel->SetSizer(entrySizer);
 
-	entrySizer->Add(new wxStaticText(entryPanel, -1, _("IP Address / hostname")));
+	entrySizer->Add(new wxStaticText(this, -1, _("IP Address / hostname")), 0, wxALL, 3);
 
-	host = new wxTextCtrl(entryPanel, _ID_HOST, Data::host);
-	entrySizer->Add(host, 1);
+	host = new wxTextCtrl(this, _ID_HOST, Data::host);
+	entrySizer->Add(host, 1, wxALL, 3);
 
-	entrySizer->Add(new wxStaticText(entryPanel, -1, _("Port (default 3141)")));
+	entrySizer->Add(new wxStaticText(this, -1, _("Port (default 3141)")), 0, wxALL, 3);
 
-	port = new wxTextCtrl(entryPanel, _ID_PORT, wxString::Format(wxT("%d"), Data::port));
-	entrySizer->Add(port, 1);
-
-	parentSizer->Add(entryPanel, 1, wxALL | wxEXPAND, 5);
+	port = new wxTextCtrl(this, _ID_PORT, wxString::Format(wxT("%d"), Data::port));
+	entrySizer->Add(port, 1, wxALL, 3);
 
 	
-	wxPanel *buttons = new wxPanel(parent);
 	wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
-	buttons->SetSizer(buttonSizer);
 
-	wxButton *cancel = new wxButton(buttons, wxID_CANCEL);
-	wxButton *ok = new wxButton(buttons, wxID_OK);
+	wxButton *cancel = new wxButton(this, wxID_CANCEL);
+	wxButton *ok = new wxButton(this, wxID_OK);
 
 	buttonSizer->Add(cancel, 1, wxEXPAND | wxALL, 5);
 	buttonSizer->Add(ok, 1, wxEXPAND | wxALL, 5);
 
-	parentSizer->Add(buttons, 0, wxALL, 5);
+	parentSizer->Add(entrySizer, 0, wxALL, 5);
+	parentSizer->Add(buttonSizer, 0, wxALL, 5);
+	parentSizer->SetSizeHints(this);
 }
 
 void CustomHost::onDone(wxCommandEvent &evt) {

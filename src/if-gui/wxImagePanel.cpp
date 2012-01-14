@@ -6,7 +6,7 @@ BEGIN_EVENT_TABLE(wxImagePanel, wxPanel)
 	EVT_PAINT(wxImagePanel::paintEvent)
 END_EVENT_TABLE()
 
-wxImagePanel::wxImagePanel(wxPanel *parent, wxString file, wxBitmapType format) :
+wxImagePanel::wxImagePanel(wxWindow *parent, wxString file, wxBitmapType format) :
 	wxPanel(parent)
 {
 	image.LoadFile(file, format);

@@ -48,35 +48,33 @@ About::About(wxWindow *parent) :
 {
 	SetIcon(wxIcon(Data::getFilePath(_FRAME_ICON), wxBITMAP_TYPE_XPM));
 
-	panel = new wxPanel(this);
 	wxBoxSizer *panelSizer = new wxBoxSizer(wxVERTICAL);
-	panel->SetSizer(panelSizer);
+	SetSizer(panelSizer);
 
-	wxImagePanel *image = new wxImagePanel(panel, Data::getFilePath(LARGE_ICON), wxBITMAP_TYPE_XPM);
+	wxImagePanel *image = new wxImagePanel(this, Data::getFilePath(LARGE_ICON), wxBITMAP_TYPE_XPM);
 	panelSizer->Add(image, 0, wxALIGN_CENTRE);
 
-	wxStaticText *title = new wxStaticText(panel, -1, wxT("DroidPad"));
+	wxStaticText *title = new wxStaticText(this, -1, wxT("DroidPad"));
 	wxFont largeFont = title->GetFont();
 	largeFont.SetPointSize(18);
 	title->SetFont(largeFont);
 	panelSizer->Add(title, 0, wxALIGN_CENTRE);
 
-	wxStaticText *desc = new wxStaticText(panel, -1, _("Use your Android phone as a computer joystick"));
+	wxStaticText *desc = new wxStaticText(this, -1, _("Use an Android phone as a computer joystick"));
 	panelSizer->Add(desc, 0, wxALIGN_CENTRE);
 
-	wxPanel *buttons = new wxPanel(panel);
 	wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
-	buttons->SetSizer(buttonSizer);
 
-	wxButton *web = new wxButton(buttons, ID_GO_WEB, _("Visit website"));
+	wxButton *web = new wxButton(this, ID_GO_WEB, _("Visit website"));
 	buttonSizer->Add(web);
 
-	wxButton *bug = new wxButton(buttons, ID_GO_BUG, _("Report a bug"));
+	wxButton *bug = new wxButton(this, ID_GO_BUG, _("Report a bug"));
 	buttonSizer->Add(bug);
 
-	panelSizer->Add(buttons, 0, wxALIGN_CENTRE);
+	panelSizer->Add(buttonSizer, 0, wxALIGN_CENTRE);
 
-	panel->Fit();
+	panelSizer->SetSizeHints(this);
+	Fit();
 }
 
 void About::goWeb(wxCommandEvent &evt) {
