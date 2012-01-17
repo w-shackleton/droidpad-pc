@@ -23,6 +23,10 @@
 
 #include <wx/intl.h>
 
+#ifdef OS_WIN32
+#include "updater.hpp"
+#endif
+
 using namespace droidpad;
 using namespace droidpad::threads;
 using namespace std;
@@ -119,6 +123,12 @@ void DeviceManager::Stop(bool wait)
 		mainThread->stop();
 		mainThread->Delete();
 	}
+}
+
+void DeviceManager::RequestUpdates(bool userRequest) {
+	Updater *updater = new Updater(*this, userRequest);
+	updater->Create();
+	updater->Run();
 }
 
 void DeviceManager::OnMainThreadStarted(DMEvent &event)

@@ -23,6 +23,7 @@
 #include <wx/image.h>
 #include <wx/msgdlg.h>
 #include <wx/stdpaths.h>
+#include <wx/socket.h>
 
 #include <iostream>
 using namespace std;
@@ -37,6 +38,7 @@ using namespace std;
 #endif
 
 using namespace droidpad;
+using namespace droidpad::threads;
 
 IMPLEMENT_APP(DroidApp)
 
@@ -74,6 +76,7 @@ bool DroidApp::OnInit()
 	SetAppName(_T("droidpad"));
 
 	wxInitAllImageHandlers();
+	wxSocketBase::Initialize();
 
 	if(!Data::initialise())
 	{

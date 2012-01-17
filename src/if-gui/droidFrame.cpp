@@ -91,6 +91,7 @@ void DroidFrame::init()
 
 	devices = new DeviceManager(*this);
 	PushEventHandler(devices);
+	devices->RequestUpdates();
 }
 
 void DroidFrame::handleXMLError(wxString name)

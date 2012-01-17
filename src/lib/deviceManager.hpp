@@ -44,6 +44,8 @@ namespace droidpad {
 
 			void Start(int device);
 			void Stop(bool wait = false);
+
+			void RequestUpdates(bool userRequest = false);
 			
 			inline int getState() {
 				return state;

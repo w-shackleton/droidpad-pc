@@ -60,3 +60,6 @@
 
 /* Version number of package */
 #undef VERSION
+
+/* "Version code" */
+#undef VERSION_CODE
