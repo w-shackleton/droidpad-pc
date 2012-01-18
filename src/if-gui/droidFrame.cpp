@@ -252,4 +252,12 @@ void DroidFrame::updateCompleted() {
 	wxCloseEvent e;
 	OnClose(e);
 }
+#else
+// Dummy implementations for OSes which don't need this updater.
+void DroidFrame::updatesAvailable(std::vector<UpdateInfo> updates, std::vector<UpdateInfo> latest, bool userRequest) { }
+
+void DroidFrame::updateStarted() { }
+void DroidFrame::updateProgress(int bytesDone, int bytesTotal) { }
+void DroidFrame::updateFailed() { }
+void DroidFrame::updateCompleted() { }
 #endif

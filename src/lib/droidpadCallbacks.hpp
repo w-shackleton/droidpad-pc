@@ -49,7 +49,15 @@ namespace droidpad {
 
 	typedef std::vector<AndroidDevice> AndroidDeviceList;
 
-	class UpdateInfo;
+	class UpdateInfo {
+		public:
+			int versionCode;
+			wxString versionName;
+			wxString url;
+			wxString name;
+			wxString comment;
+			wxString md5;
+	};
 
 	// Callback system between the UI and the backend code. This is implemented by whichever UI is being used.
 	class DroidPadCallbacks

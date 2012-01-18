@@ -23,17 +23,10 @@
 #include <wx/thread.h>
 #include <wx/string.h>
 
+#include "droidpadCallbacks.hpp"
+
 namespace droidpad {
 	class DeviceManager;
-	class UpdateInfo {
-		public:
-			int versionCode;
-			wxString versionName;
-			wxString url;
-			wxString name;
-			wxString comment;
-			wxString md5;
-	};
 
 	namespace threads
 	{
