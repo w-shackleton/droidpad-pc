@@ -10,6 +10,7 @@
 #include "deviceManager.hpp"
 #include "log.hpp"
 #include "data.hpp"
+#include "proc.hpp"
 #include "events.hpp"
 
 #include <wx/wfstream.h>
@@ -160,4 +161,21 @@ void *UpdateDl::Entry() {
 	}
 
 	if(out) delete out;
+
+	if(fileOk) {
+		LOGV("Testing MD5");
+		if(!md5check(string(fileName.GetFullPath().mb_str()), string(info.md5.mb_str()))) {
+			LOGW("MD5 Check not passed");
+			DlStatus status(dpDL_FAILED);
+			parent.AddPendingEvent(status);
+			fileOk = false;
+			return NULL;
+		}
+
+		// Run dl'd file
+		forkProcess(string(fileName.GetFullPath().mb_str()));
+		DlStatus status(dpDL_SUCCESS);
+		parent.AddPendingEvent(status);
+	}
+	return NULL;
 }

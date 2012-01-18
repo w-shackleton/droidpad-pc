@@ -29,6 +29,8 @@
 #include <windows.h>
 #endif
 
+#include "md5/md5.h"
+
 using namespace droidpad;
 using namespace std;
 
@@ -172,9 +174,52 @@ void droidpad::openWebpage(string url) {
 		execlp(BROWSER, BROWSER, url.c_str(), (char *)0);
 	}
 }
+
+void droidpad::forkProcess(string cmd) {
+	if(fork() == 0) {
+		execlp(cmd.c_str(), cmd.c_str(), (char *)0);
+	}
+}
+
 #elif OS_WIN32
 void droidpad::openWebpage(string url) {
-	// TODO: Test
 	ShellExecute(NULL, "open", url.c_str(), NULL, NULL, SW_SHOWNORMAL);
 }
+
+void droidpad::forkProcess(string cmd) {
+	ShellExecute(NULL, "open", cmd.c_str(), NULL, NULL, SW_SHOWNORMAL);
+}
 #endif
+
+
+bool droidpad::md5check(std::string filePath, std::string checksum) {
+	FILE *file;
+	MD5_CTX context;
+	int len;
+	unsigned char buffer[1024], digest[16];
+
+	if ((file = fopen(filePath.c_str(), "rb")) == NULL)
+		return false;
+	else {
+		MD5Init (&context);
+		while (len = fread (buffer, 1, 1024, file))
+			MD5Update (&context, buffer, len);
+		MD5Final (digest, &context);
+
+		// Print out computed hash, compare to given hash.
+		char md5String[33];
+		sprintf(md5String, "%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
+				digest[0], digest[1],
+				digest[2], digest[3],
+				digest[4], digest[5],
+				digest[6], digest[7],
+				digest[8], digest[9],
+				digest[10], digest[11],
+				digest[12], digest[13],
+				digest[14], digest[15]); // Can't be bothered to do this properly
+		return checksum == md5String;
+
+		fclose (file);
+	}
+	return false;
+}

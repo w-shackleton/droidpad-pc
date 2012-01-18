@@ -25,7 +25,14 @@
 namespace droidpad {
 	std::string runProcess(std::string cmd, std::string args);
 
+	void forkProcess(std::string cmd);
+
 	void openWebpage(std::string url);
+
+	/**
+	 * verifies an md5. Returns true on success.
+	 */
+	bool md5check(std::string filePath, std::string checksum);
 }
 
 #endif

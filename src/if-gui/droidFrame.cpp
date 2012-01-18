@@ -249,5 +249,7 @@ void DroidFrame::updateProgress(int bytesDone, int bytesTotal) {
 void DroidFrame::updateFailed() {
 }
 void DroidFrame::updateCompleted() {
+	wxCloseEvent e;
+	OnClose(e);
 }
 #endif

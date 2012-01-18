@@ -50,6 +50,7 @@ libdroidpad_la_SOURCES = \
 		   usb/all/adb.cpp		usb/all/adb.hpp			\
 		   ext/1035.c			ext/1035.h			\
 		   ext/mdnsd.c			ext/mdnsd.h			\
+		   ext/md5/md5c.c		ext/md5/md5.h	ext/md5/global.h\
 		   ext/b64/base64.cpp		ext/b64/base64.hpp		\
 		   net/mdns.cpp			net/mdns.hpp			\
 		   net/deviceDiscover.cpp	net/deviceDiscover.hpp		\
