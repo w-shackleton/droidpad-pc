@@ -22,7 +22,6 @@
 
 #include <wx/event.h>
 
-#include "droidpadCallbacks.hpp"
 #include <vector>
 
 BEGIN_DECLARE_EVENT_TYPES()
@@ -38,6 +37,13 @@ BEGIN_DECLARE_EVENT_TYPES()
 	DECLARE_LOCAL_EVENT_TYPE(dpTHREAD_NOTIFICATION, 7)
 
 	DECLARE_LOCAL_EVENT_TYPE(dpTHREAD_FINISH, 8)
+
+	DECLARE_LOCAL_EVENT_TYPE(dpUPDATE_NOTIFICATION, 9)
+
+	DECLARE_LOCAL_EVENT_TYPE(dpDL_STARTED, 10)
+	DECLARE_LOCAL_EVENT_TYPE(dpDL_PROGRESS, 11)
+	DECLARE_LOCAL_EVENT_TYPE(dpDL_FAILED, 12)
+	DECLARE_LOCAL_EVENT_TYPE(dpDL_SUCCESS, 13)
 END_DECLARE_EVENT_TYPES()
 
 namespace droidpad {
@@ -57,6 +63,13 @@ namespace droidpad {
 		 * The phone disconnected successfully.
 		 */
 		THREAD_INFO_FINISHED,
+	};
+	
+	enum {
+		DL_STARTED,
+		DL_PROGRESS,
+		DL_FAILED,
+		DL_SUCCESS
 	};
 
 	/**
@@ -78,6 +91,8 @@ namespace droidpad {
 
 	typedef void (wxEvtHandler::*dmEventFunction)(DMEvent&);
 
+	class AndroidDevice;
+
 	/**
 	 * Represents a list of potential devices
 	 */
@@ -87,13 +102,44 @@ namespace droidpad {
 			DevicesList(std::vector<AndroidDevice> list = std::vector<AndroidDevice>());
 			wxEvent* Clone() const;
 
-			DECLARE_DYNAMIC_CLASS(DMEvent)
+			DECLARE_DYNAMIC_CLASS(DevicesList)
 
 			std::vector<AndroidDevice> list;
 	};
 
 	typedef void (wxEvtHandler::*devicesListFunction)(DevicesList&);
 
+	class UpdateInfo;
+
+	// No need to remove definition on non-win32
+	class UpdatesNotification : public wxEvent {
+		public:
+			UpdatesNotification(std::vector<UpdateInfo> versions, std::vector<UpdateInfo> latest, bool userRequest = false);
+			UpdatesNotification();
+			wxEvent *Clone() const;
+
+			DECLARE_DYNAMIC_CLASS(UpdatesNotification)
+
+			std::vector<UpdateInfo> versions;
+			// This holds any new update that should be installed now.
+			std::vector<UpdateInfo> latest;
+
+			bool userRequest;
+	};
+
+	typedef void (wxEvtHandler::*updatesNotificationFunction)(UpdatesNotification&);
+
+	class DlStatus : public wxEvent {
+		public:
+			DlStatus(wxEventType type = dpDL_PROGRESS, int bytesDone = 0, int totalBytes = 1);
+			wxEvent *Clone() const;
+
+			int bytesDone, totalBytes;
+
+			DECLARE_DYNAMIC_CLASS(DlStatus)
+	};
+
+	typedef void (wxEvtHandler::*dlStatusFunction)(DlStatus&);
 };
 
 #define EVT_DMEVENT(evt, func)					\
@@ -111,6 +157,22 @@ namespace droidpad {
 			-1,					\
 			(wxObjectEventFunction)			\
 			(devicesListFunction) & func,		\
+			(wxObject *) NULL),
+
+#define EVT_NEW_UPDATES(evt, func)				\
+	DECLARE_EVENT_TABLE_ENTRY(evt,				\
+			-1,					\
+			-1,					\
+			(wxObjectEventFunction)			\
+			(updatesNotificationFunction) & func,	\
+			(wxObject *) NULL),
+
+#define EVT_DL_PROGRESS(evt, func)				\
+	DECLARE_EVENT_TABLE_ENTRY(evt,				\
+			-1,					\
+			-1,					\
+			(wxObjectEventFunction)			\
+			(dlStatusFunction) & func,	\
 			(wxObject *) NULL),
 
 #endif

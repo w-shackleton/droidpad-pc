@@ -25,6 +25,8 @@
 #include <vector>
 #include <stdint.h>
 
+#include "events.hpp"
+
 #define DEVICE_USB 1
 #define DEVICE_NET 2
 #define DEVICE_CUSTOMHOST 3
@@ -47,6 +49,9 @@ namespace droidpad {
 
 	typedef std::vector<AndroidDevice> AndroidDeviceList;
 
+	class UpdateInfo;
+
+	// Callback system between the UI and the backend code. This is implemented by whichever UI is being used.
 	class DroidPadCallbacks
 	{
 		public:
@@ -61,8 +66,15 @@ namespace droidpad {
 			virtual void setStatusText(wxString text) = 0;
 			virtual void threadStopped() = 0;
 
+			virtual void updatesAvailable(std::vector<UpdateInfo> updates, std::vector<UpdateInfo> latest, bool userRequest) = 0;
+
+			virtual void updateStarted() = 0;
+			virtual void updateProgress(int bytesDone, int bytesTotal) = 0;
+			virtual void updateFailed() = 0;
+			virtual void updateCompleted() = 0;
+
 			/**
-			 * Asks the user for any necessary customisatons for a device.
+			 * Asks the user for any necessary customisations for a device.
 			 * Currently, only type == DEVICE_CUSTOMHOST should be used.
 			 */
 			virtual bool customiseDevice(AndroidDevice *device) = 0;

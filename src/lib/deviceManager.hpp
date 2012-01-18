@@ -34,6 +34,11 @@
 #define DP_STATE_STARTED 2
 
 namespace droidpad {
+	class UpdateInfo;
+	namespace threads {
+		class UpdateDl;
+	}
+
 	class DeviceManager : public wxEvtHandler {
 		friend class MainThread;
 		public:
@@ -46,6 +51,8 @@ namespace droidpad {
 			void Stop(bool wait = false);
 
 			void RequestUpdates(bool userRequest = false);
+			void StartUpdate(UpdateInfo update);
+			void CancelUpdate();
 			
 			inline int getState() {
 				return state;
@@ -62,6 +69,13 @@ namespace droidpad {
 			void OnDeviceFinderFinish(DMEvent &event);
 			void OnNewDevicesList(DevicesList &event);
 
+			void OnNewUpdates(UpdatesNotification &event);
+
+			void OnDlStarted(DlStatus &event);
+			void OnDlProgress(DlStatus &event);
+			void OnDlFailed(DlStatus &event);
+			void OnDlSuccess(DlStatus &event);
+
 			bool finishing;
 
 			threads::DMInitialise *initThread;
@@ -71,6 +85,8 @@ namespace droidpad {
 			DroidPadCallbacks &callbacks;
 
 			AndroidDeviceList devices; // Reference?
+
+			threads::UpdateDl *updateDl;
 
 			void OnMainThreadStarted(DMEvent &event);
 			void OnMainThreadError(DMEvent &event);

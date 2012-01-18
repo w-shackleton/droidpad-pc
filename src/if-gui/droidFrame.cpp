@@ -27,6 +27,10 @@
 
 #include "customHost.hpp"
 #include "about.hpp"
+#include "log.hpp"
+#ifdef OS_WIN32
+#include "updater.hpp"
+#endif
 
 BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
 	EVT_BUTTON(XRCID("buttonStart"), DroidFrame::OnStart)
@@ -46,6 +50,7 @@ BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
 END_EVENT_TABLE()
 
 using namespace droidpad;
+using namespace droidpad::threads;
 
 #include <wx/log.h>
 
@@ -226,3 +231,23 @@ void DroidFrame::OnAbout(wxCommandEvent& event) {
 	About dlg(this);
 	dlg.ShowModal();
 }
+
+// Update code
+#ifdef OS_WIN32
+void DroidFrame::updatesAvailable(std::vector<UpdateInfo> updates, std::vector<UpdateInfo> latest, bool userRequest) {
+	LOGV("Checking for new DP version..");
+	if(latest.size() == 1 && // New update available
+		wxMessageBox(_("There is a new version of DroidPad available.\nWould you like to download it?"), _("New version available"), wxYES_NO, this) == wxYES) {
+		devices->StartUpdate(latest[0]);
+	}
+}
+
+void DroidFrame::updateStarted() {
+}
+void DroidFrame::updateProgress(int bytesDone, int bytesTotal) {
+}
+void DroidFrame::updateFailed() {
+}
+void DroidFrame::updateCompleted() {
+}
+#endif

@@ -82,6 +82,13 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 		virtual void setStatusText(wxString text);
 		virtual void threadStopped();
 
+		void updatesAvailable(std::vector<droidpad::UpdateInfo> updates, std::vector<droidpad::UpdateInfo> latest, bool userRequest);
+
+		virtual void updateStarted();
+		virtual void updateProgress(int bytesDone, int bytesTotal);
+		virtual void updateFailed();
+		virtual void updateCompleted();
+
 };
 
 #endif

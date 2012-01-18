@@ -42,6 +42,13 @@ BEGIN_EVENT_TABLE(DeviceManager, wxEvtHandler)
 	EVT_DMEVENT(dpTHREAD_FINISH, DeviceManager::OnMainThreadFinish)
 
 	EVT_DEVICES_LIST(dpDEVICES_LIST, DeviceManager::OnNewDevicesList)
+
+	EVT_NEW_UPDATES(dpUPDATE_NOTIFICATION, DeviceManager::OnNewUpdates)
+
+	EVT_DL_PROGRESS(dpDL_STARTED, DeviceManager::OnDlStarted)
+	EVT_DL_PROGRESS(dpDL_PROGRESS, DeviceManager::OnDlProgress)
+	EVT_DL_PROGRESS(dpDL_FAILED, DeviceManager::OnDlFailed)
+	EVT_DL_PROGRESS(dpDL_SUCCESS, DeviceManager::OnDlSuccess)
 END_EVENT_TABLE()
 
 DeviceManager::DeviceManager(DroidPadCallbacks &callbacks) :
@@ -126,9 +133,45 @@ void DeviceManager::Stop(bool wait)
 }
 
 void DeviceManager::RequestUpdates(bool userRequest) {
+#ifdef OS_WIN32
 	Updater *updater = new Updater(*this, userRequest);
 	updater->Create();
 	updater->Run();
+#endif
+	// else do nothing
+}
+
+#ifdef OS_WIN32
+void DeviceManager::StartUpdate(UpdateInfo update) {
+	updateDl = new UpdateDl(*this, update);
+	updateDl->Create();
+	updateDl->Run();
+}
+
+void DeviceManager::CancelUpdate() {
+	if(updateDl != NULL)
+		updateDl->running = false;
+}
+#endif
+
+void DeviceManager::OnNewUpdates(UpdatesNotification &event) {
+	callbacks.updatesAvailable(event.versions, event.latest, event.userRequest);
+}
+
+
+void DeviceManager::OnDlStarted(DlStatus &event) {
+	callbacks.updateStarted();
+}
+void DeviceManager::OnDlProgress(DlStatus &event) {
+	callbacks.updateProgress(event.bytesDone, event.totalBytes);
+}
+void DeviceManager::OnDlFailed(DlStatus &event) {
+	callbacks.updateFailed();
+	updateDl = NULL; // So functions in it don't get called.
+}
+void DeviceManager::OnDlSuccess(DlStatus &event) {
+	callbacks.updateCompleted();
+	updateDl = NULL;
 }
 
 void DeviceManager::OnMainThreadStarted(DMEvent &event)

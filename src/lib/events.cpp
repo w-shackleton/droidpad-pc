@@ -19,7 +19,13 @@
  */
 #include "events.hpp"
 
+#include "droidpadCallbacks.hpp"
+
 using namespace droidpad;
+#ifdef OS_WIN32
+#include "updater.hpp"
+using namespace droidpad::threads;
+#endif
 using namespace std;
 
 IMPLEMENT_DYNAMIC_CLASS(DMEvent, wxEvent)
@@ -33,6 +39,13 @@ DEFINE_LOCAL_EVENT_TYPE(dpTHREAD_STARTED)
 DEFINE_LOCAL_EVENT_TYPE(dpTHREAD_ERROR)
 DEFINE_LOCAL_EVENT_TYPE(dpTHREAD_NOTIFICATION)
 DEFINE_LOCAL_EVENT_TYPE(dpTHREAD_FINISH)
+
+DEFINE_LOCAL_EVENT_TYPE(dpUPDATE_NOTIFICATION)
+
+DEFINE_LOCAL_EVENT_TYPE(dpDL_STARTED)
+DEFINE_LOCAL_EVENT_TYPE(dpDL_PROGRESS)
+DEFINE_LOCAL_EVENT_TYPE(dpDL_FAILED)
+DEFINE_LOCAL_EVENT_TYPE(dpDL_SUCCESS)
 
 DMEvent::DMEvent(wxEventType type, int status) :
 	status(status)
@@ -59,3 +72,42 @@ wxEvent* DevicesList::Clone() const
 	DevicesList* n = new DevicesList(list);
 	return n;
 }
+
+#ifdef OS_WIN32
+
+IMPLEMENT_DYNAMIC_CLASS(UpdatesNotification, wxEvent)
+
+UpdatesNotification::UpdatesNotification(vector<UpdateInfo> versions, vector<UpdateInfo> latest, bool userRequest) :
+	versions(versions),
+	latest(latest),
+	userRequest(userRequest)
+{
+	SetEventType(dpUPDATE_NOTIFICATION);
+}
+
+UpdatesNotification::UpdatesNotification() {
+	SetEventType(dpUPDATE_NOTIFICATION);
+}
+
+wxEvent* UpdatesNotification::Clone() const
+{
+	UpdatesNotification* n = new UpdatesNotification(versions, latest);
+	return n;
+}
+
+IMPLEMENT_DYNAMIC_CLASS(DlStatus, wxEvent)
+
+DlStatus::DlStatus(wxEventType type, int bytesDone, int totalBytes) :
+	bytesDone(bytesDone),
+	totalBytes(totalBytes)
+{
+	SetEventType(type);
+}
+
+wxEvent* DlStatus::Clone() const
+{
+	DlStatus *d = new DlStatus(GetEventType(), bytesDone, totalBytes);
+	return d;
+}
+
+#endif

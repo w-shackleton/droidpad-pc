@@ -25,18 +25,18 @@
 
 namespace droidpad {
 	class DeviceManager;
+	class UpdateInfo {
+		public:
+			int versionCode;
+			wxString versionName;
+			wxString url;
+			wxString name;
+			wxString comment;
+			wxString md5;
+	};
+
 	namespace threads
 	{
-		class UpdateInfo {
-			public:
-				int versionCode;
-				wxString versionName;
-				wxString url;
-				wxString name;
-				wxString comment;
-				wxString md5;
-		};
-
 		class Updater : public wxThread {
 			public:
 				Updater(DeviceManager &parent, bool userRequest = false);
@@ -46,6 +46,17 @@ namespace droidpad {
 
 				DeviceManager &parent;
 				bool userRequest;
+		};
+
+		class UpdateDl : public wxThread {
+			public:
+				UpdateDl(DeviceManager &parent, UpdateInfo &info);
+				virtual void* Entry();
+
+				bool running;
+			private:
+				DeviceManager &parent;
+				UpdateInfo info;
 		};
 	}
 }
