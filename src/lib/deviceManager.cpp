@@ -149,8 +149,10 @@ void DeviceManager::StartUpdate(UpdateInfo update) {
 }
 
 void DeviceManager::CancelUpdate() {
-	if(updateDl != NULL)
-		updateDl->running = false;
+	if(updateDl)
+		updateDl->running = false; // Let it finish
+	updateDl = NULL;
+	callbacks.updateCompleted(true);
 }
 #endif
 

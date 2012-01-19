@@ -60,7 +60,7 @@ void Updater::parseUpdates(wxString updates) {
 	while(lines.HasMoreTokens()) {
 		wxStringTokenizer sections(lines.GetNextToken(), wxT(";"));
 		UpdateInfo version;
-		if(sections.CountTokens() < 6) {
+		if(sections.CountTokens() < 7) {
 			LOGW("Incorrectly formatted update line.");
 			LOGWwx(wxString::Format(wxT("%d"), sections.CountTokens()));
 			continue;
@@ -68,8 +68,14 @@ void Updater::parseUpdates(wxString updates) {
 		long code;
 		sections.GetNextToken().ToLong(&code);
 		version.versionCode = code;
+
 		version.versionName = sections.GetNextToken();
 		version.url = sections.GetNextToken();
+
+		long bytesTotal;
+		sections.GetNextToken().ToLong(&bytesTotal);
+		version.bytesTotal = bytesTotal;
+
 		version.name = sections.GetNextToken();
 		version.comment = sections.GetNextToken();
 		version.md5 = sections.GetNextToken();
@@ -126,8 +132,8 @@ void *UpdateDl::Entry() {
 		if(in && in->IsOk()) {
 #define BUFFER_SIZE 65536
 			char *buffer = new char[BUFFER_SIZE];
-			size_t byteCount;
-			const size_t totalBytes = in->GetSize();
+			int byteCount = 0;
+			const size_t totalBytes = info.bytesTotal;
 			while(running && !in->Eof()) { // Main DL loop
 				if(!(in->IsOk() && out->IsOk())) {
 					LOGW("I/O Not reporting OK in DL loop");
@@ -162,7 +168,7 @@ void *UpdateDl::Entry() {
 
 	if(out) delete out;
 
-	if(fileOk) {
+	if(running && fileOk) {
 		LOGV("Testing MD5");
 		if(!md5check(string(fileName.GetFullPath().mb_str()), string(info.md5.mb_str()))) {
 			LOGW("MD5 Check not passed");

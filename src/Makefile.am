@@ -49,6 +49,10 @@ if OS_WIN32
 droidpad_LDFLAGS = -Wl,--enable-auto-import --enable-stdcall-fixup
 droidpad_LDADD += -lws2_32 lib/ext/win32/libvjoy.la
 
+# Currently just update UI
+droidpad_SOURCES +=	\
+		if-gui/updateDisplay.cpp	if-gui/updateDisplay.hpp
+
 # win64
 if OS_64BIT
 droidpad_SOURCES +=	if-gui/driverChoice.cpp	if-gui/driverChoice.hpp

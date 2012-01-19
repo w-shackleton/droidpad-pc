@@ -243,14 +243,24 @@ void DroidFrame::updatesAvailable(std::vector<UpdateInfo> updates, std::vector<U
 }
 
 void DroidFrame::updateStarted() {
+	if(!updater) updater = new UpdateDisplay(this, *devices);
+	updater->Show();
 }
 void DroidFrame::updateProgress(int bytesDone, int bytesTotal) {
+	if(updater) updater->SetProgress(bytesDone, bytesTotal);
 }
 void DroidFrame::updateFailed() {
+	if(updater) updater->Close();
+	wxMessageDialog dlg(this, _("Failed to download DroidPad update.\nSee log files for more information."), _("Download failed"), wxOK);
+	dlg.ShowModal();
 }
-void DroidFrame::updateCompleted() {
-	wxCloseEvent e;
-	OnClose(e);
+void DroidFrame::updateCompleted(bool wasCancel) {
+	if(updater) updater->Close();
+	updater = NULL;
+	if(!wasCancel) {
+		wxCloseEvent e;
+		OnClose(e);
+	}
 }
 #else
 // Dummy implementations for OSes which don't need this updater.

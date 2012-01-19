@@ -28,6 +28,8 @@
 
 #include <map>
 
+#include "updateDisplay.hpp"
+
 #include "lib/deviceManager.hpp"
 #include "lib/droidpadCallbacks.hpp"
 
@@ -48,6 +50,7 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 
 		wxStaticText *statusText;
 
+		UpdateDisplay *updater;
 	private:
 		void init();
 
@@ -87,7 +90,7 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 		virtual void updateStarted();
 		virtual void updateProgress(int bytesDone, int bytesTotal);
 		virtual void updateFailed();
-		virtual void updateCompleted();
+		virtual void updateCompleted(bool wasCancel);
 
 };
 

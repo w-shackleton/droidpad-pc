@@ -54,6 +54,7 @@ namespace droidpad {
 			int versionCode;
 			wxString versionName;
 			wxString url;
+			int bytesTotal;
 			wxString name;
 			wxString comment;
 			wxString md5;
@@ -79,7 +80,7 @@ namespace droidpad {
 			virtual void updateStarted() = 0;
 			virtual void updateProgress(int bytesDone, int bytesTotal) = 0;
 			virtual void updateFailed() = 0;
-			virtual void updateCompleted() = 0;
+			virtual void updateCompleted(bool wasCancel = false) = 0;
 
 			/**
 			 * Asks the user for any necessary customisations for a device.
