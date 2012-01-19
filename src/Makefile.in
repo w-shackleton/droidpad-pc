@@ -37,23 +37,24 @@ host_triplet = @host@
 bin_PROGRAMS = droidpad$(EXEEXT)
 @IF_GUI_TRUE@am__append_1 = $(SRC_IF_GUI)
 @OS_WIN32_TRUE@am__append_2 = -lws2_32 lib/ext/win32/libvjoy.la
+@OS_WIN32_TRUE@am__append_3 = -Ilib/msw
 
 # Currently just update UI
-@OS_WIN32_TRUE@am__append_3 = \
+@OS_WIN32_TRUE@am__append_4 = \
 @OS_WIN32_TRUE@		if-gui/updateDisplay.cpp	if-gui/updateDisplay.hpp
 
 
 # win64
-@OS_64BIT_TRUE@@OS_WIN32_TRUE@am__append_4 = if-gui/driverChoice.cpp	if-gui/driverChoice.hpp
-@IF_GUI_TRUE@@OS_WIN32_TRUE@am__append_5 = if-gui/droidpad.res -lws2_32 ${prefix}/lib/libsetupapi.a
+@OS_64BIT_TRUE@@OS_WIN32_TRUE@am__append_5 = if-gui/driverChoice.cpp	if-gui/driverChoice.hpp
+@IF_GUI_TRUE@@OS_WIN32_TRUE@am__append_6 = if-gui/droidpad.res -lws2_32 ${prefix}/lib/libsetupapi.a
 
 # droidpad_LDFLAGS += -static-libgcc
-@OS_64BIT_TRUE@@OS_WIN32_TRUE@am__append_6 = -DOS_64IT
+@OS_64BIT_TRUE@@OS_WIN32_TRUE@am__append_7 = -DOS_64IT
 
 # For all unices
-@OS_UNIX_TRUE@am__append_7 = -DOS_UNIX
-@OS_LINUX_TRUE@am__append_8 = -DOS_LINUX
-@OS_WIN32_TRUE@am__append_9 = -DOS_WIN32
+@OS_UNIX_TRUE@am__append_8 = -DOS_UNIX
+@OS_LINUX_TRUE@am__append_9 = -DOS_LINUX
+@OS_WIN32_TRUE@am__append_10 = -DOS_WIN32
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -353,15 +354,16 @@ SRC_IF_GUI = \
 		   if-gui/wxImagePanel.cpp	if-gui/wxImagePanel.hpp	\
 		   if-gui/setup.cpp		if-gui/setup.h
 
-droidpad_SOURCES = $(am__append_1) $(am__append_3) $(am__append_4)
+droidpad_SOURCES = $(am__append_1) $(am__append_4) $(am__append_5)
 @IF_GUI_FALSE@droidpad_LDADD = @WXBASELIBS@ lib/libdroidpad.la \
-@IF_GUI_FALSE@	$(am__append_2) $(am__append_5)
+@IF_GUI_FALSE@	$(am__append_2) $(am__append_6)
 @IF_GUI_TRUE@droidpad_LDADD = @WXLIBS@ lib/libdroidpad.la \
-@IF_GUI_TRUE@	$(am__append_2) $(am__append_5)
-@IF_GUI_FALSE@droidpad_CXXFLAGS = @WXBASECPPFLAGS@ -Ilib
-@IF_GUI_TRUE@droidpad_CXXFLAGS = @WXCPPFLAGS@ -Ilib
-AM_CPPFLAGS = -DPREFIX='"$(prefix)"' $(am__append_6) $(am__append_7) \
-	$(am__append_8) $(am__append_9)
+@IF_GUI_TRUE@	$(am__append_2) $(am__append_6)
+@IF_GUI_FALSE@droidpad_CXXFLAGS = @WXBASECPPFLAGS@ -Ilib \
+@IF_GUI_FALSE@	$(am__append_3)
+@IF_GUI_TRUE@droidpad_CXXFLAGS = @WXCPPFLAGS@ -Ilib $(am__append_3)
+AM_CPPFLAGS = -DPREFIX='"$(prefix)"' $(am__append_7) $(am__append_8) \
+	$(am__append_9) $(am__append_10)
 @OS_WIN32_TRUE@droidpad_LDFLAGS = -Wl,--enable-auto-import --enable-stdcall-fixup
 
 # http://www.gnu.org/software/hello/manual/automake/Options.html

@@ -269,5 +269,5 @@ void DroidFrame::updatesAvailable(std::vector<UpdateInfo> updates, std::vector<U
 void DroidFrame::updateStarted() { }
 void DroidFrame::updateProgress(int bytesDone, int bytesTotal) { }
 void DroidFrame::updateFailed() { }
-void DroidFrame::updateCompleted() { }
+void DroidFrame::updateCompleted(bool wasCancel) { }
 #endif

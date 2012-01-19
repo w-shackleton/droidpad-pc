@@ -36,12 +36,15 @@ build_triplet = @build@
 host_triplet = @host@
 @OS_LINUX_TRUE@am__append_1 = $(SRC_LINUX)
 @OS_WIN32_TRUE@am__append_2 = $(SRC_WIN32)
-@OS_WIN32_TRUE@am__append_3 = -lws2_32 ext/win32/libvjoy.la
+@OS_64BIT_TRUE@@OS_WIN32_TRUE@am__append_3 = $(SRC_WIN64)
+@OS_WIN32_TRUE@am__append_4 = -lws2_32 ext/win32/libvjoy.la
+@OS_WIN32_TRUE@am__append_5 = -Imsw
+@OS_WIN32_TRUE@am__append_6 = -Imsw
 
 # For all unices
-@OS_UNIX_TRUE@am__append_4 = -DOS_UNIX
-@OS_LINUX_TRUE@am__append_5 = -DOS_LINUX
-@OS_WIN32_TRUE@am__append_6 = -DOS_WIN32
+@OS_UNIX_TRUE@am__append_7 = -DOS_UNIX
+@OS_LINUX_TRUE@am__append_8 = -DOS_LINUX
+@OS_WIN32_TRUE@am__append_9 = -DOS_WIN32
 subdir = src/lib
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -99,14 +102,17 @@ am__libdroidpad_la_SOURCES_DIST = include/adb.hpp \
 	output/win32/wOutputMgr.cpp output/win32/wOutputMgr.hpp \
 	output/win32/winOutputs.cpp output/win32/winOutputs.hpp \
 	output/win32/vJoyOutputs.cpp output/win32/vJoyOutputs.hpp \
-	output/win32/wPlatformSettings.hpp winSetup.cpp winSetup.hpp \
-	updater.cpp updater.hpp
+	output/win32/wPlatformSettings.hpp msw/winSetup.cpp \
+	msw/winSetup.hpp msw/updater.cpp msw/updater.hpp \
+	msw/bootConf.cpp msw/bootConf.hpp
 am__objects_1 = libdroidpad_la-outputMgr.lo libdroidpad_la-dpinput.lo
 @OS_LINUX_TRUE@am__objects_2 = $(am__objects_1)
 am__objects_3 = libdroidpad_la-wOutputMgr.lo \
 	libdroidpad_la-winOutputs.lo libdroidpad_la-vJoyOutputs.lo \
 	libdroidpad_la-winSetup.lo libdroidpad_la-updater.lo
 @OS_WIN32_TRUE@am__objects_4 = $(am__objects_3)
+am__objects_5 = libdroidpad_la-bootConf.lo
+@OS_64BIT_TRUE@@OS_WIN32_TRUE@am__objects_6 = $(am__objects_5)
 am_libdroidpad_la_OBJECTS = libdroidpad_la-proc.lo \
 	libdroidpad_la-data.lo libdroidpad_la-deviceManager.lo \
 	libdroidpad_la-mainThread.lo \
@@ -118,7 +124,7 @@ am_libdroidpad_la_OBJECTS = libdroidpad_la-proc.lo \
 	libdroidpad_la-deviceDiscover.lo libdroidpad_la-connection.lo \
 	libdroidpad_la-IOutputMgr.lo \
 	libdroidpad_la-outputSmoothBuffer.lo $(am__objects_2) \
-	$(am__objects_4)
+	$(am__objects_4) $(am__objects_6)
 libdroidpad_la_OBJECTS = $(am_libdroidpad_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
@@ -376,13 +382,18 @@ SRC_LINUX = \
 		output/linux/dpinput.c		output/linux/dpinput.h		\
 		output/linux/platformSettings.hpp
 
+# Sources for all forms of Windows. Name is misleading (should be SRC_MSW)
 SRC_WIN32 = \
 		output/win32/wOutputMgr.cpp	output/win32/wOutputMgr.hpp	\
 		output/win32/winOutputs.cpp	output/win32/winOutputs.hpp	\
 		output/win32/vJoyOutputs.cpp	output/win32/vJoyOutputs.hpp	\
 		output/win32/wPlatformSettings.hpp				\
-		winSetup.cpp			winSetup.hpp			\
-		updater.cpp			updater.hpp
+		msw/winSetup.cpp		msw/winSetup.hpp		\
+		msw/updater.cpp			msw/updater.hpp
+
+# *JUST* windows 64-bit.
+SRC_WIN64 = \
+		msw/bootConf.cpp		msw/bootConf.hpp
 
 libdroidpad_la_SOURCES = include/adb.hpp include/outputMgr.hpp \
 	include/platformSettings.hpp log.hpp types.hpp proc.cpp \
@@ -396,15 +407,16 @@ libdroidpad_la_SOURCES = include/adb.hpp include/outputMgr.hpp \
 	net/mdns.hpp net/deviceDiscover.cpp net/deviceDiscover.hpp \
 	net/connection.cpp net/connection.hpp output/IOutputMgr.cpp \
 	output/IOutputMgr.hpp output/outputSmoothBuffer.cpp \
-	output/outputSmoothBuffer.hpp $(am__append_1) $(am__append_2)
-libdroidpad_la_LIBADD = @WXBASELIBS@ $(am__append_3)
-libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@ -I. -Iext
-libdroidpad_la_CFLAGS = @WXCPPFLAGS@ -I. -Iext
+	output/outputSmoothBuffer.hpp $(am__append_1) $(am__append_2) \
+	$(am__append_3)
+libdroidpad_la_LIBADD = @WXBASELIBS@ $(am__append_4)
+libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@ -I. -Iext $(am__append_5)
+libdroidpad_la_CFLAGS = @WXCPPFLAGS@ -I. -Iext $(am__append_6)
 @OS_WIN32_TRUE@libdroidpad_la_LDFLAGS = -Wl,--enable-auto-import
 
 # libdroidpad_la_LDFLAGS += -static-libgcc
-AM_CPPFLAGS = -DPREFIX='"$(prefix)"' $(am__append_4) $(am__append_5) \
-	$(am__append_6)
+AM_CPPFLAGS = -DPREFIX='"$(prefix)"' $(am__append_7) $(am__append_8) \
+	$(am__append_9)
 all: all-recursive
 
 .SUFFIXES:
@@ -483,6 +495,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-IOutputMgr.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-adb.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-base64.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-bootConf.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-connection.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-data.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-deviceDiscover.Plo@am__quote@
@@ -728,21 +741,29 @@ libdroidpad_la-vJoyOutputs.lo: output/win32/vJoyOutputs.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-vJoyOutputs.lo `test -f 'output/win32/vJoyOutputs.cpp' || echo '$(srcdir)/'`output/win32/vJoyOutputs.cpp
 
-libdroidpad_la-winSetup.lo: winSetup.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -MT libdroidpad_la-winSetup.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-winSetup.Tpo -c -o libdroidpad_la-winSetup.lo `test -f 'winSetup.cpp' || echo '$(srcdir)/'`winSetup.cpp
+libdroidpad_la-winSetup.lo: msw/winSetup.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -MT libdroidpad_la-winSetup.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-winSetup.Tpo -c -o libdroidpad_la-winSetup.lo `test -f 'msw/winSetup.cpp' || echo '$(srcdir)/'`msw/winSetup.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libdroidpad_la-winSetup.Tpo $(DEPDIR)/libdroidpad_la-winSetup.Plo
 @am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='winSetup.cpp' object='libdroidpad_la-winSetup.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='msw/winSetup.cpp' object='libdroidpad_la-winSetup.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-winSetup.lo `test -f 'winSetup.cpp' || echo '$(srcdir)/'`winSetup.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-winSetup.lo `test -f 'msw/winSetup.cpp' || echo '$(srcdir)/'`msw/winSetup.cpp
 
-libdroidpad_la-updater.lo: updater.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -MT libdroidpad_la-updater.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-updater.Tpo -c -o libdroidpad_la-updater.lo `test -f 'updater.cpp' || echo '$(srcdir)/'`updater.cpp
+libdroidpad_la-updater.lo: msw/updater.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -MT libdroidpad_la-updater.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-updater.Tpo -c -o libdroidpad_la-updater.lo `test -f 'msw/updater.cpp' || echo '$(srcdir)/'`msw/updater.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libdroidpad_la-updater.Tpo $(DEPDIR)/libdroidpad_la-updater.Plo
 @am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='updater.cpp' object='libdroidpad_la-updater.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='msw/updater.cpp' object='libdroidpad_la-updater.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-updater.lo `test -f 'updater.cpp' || echo '$(srcdir)/'`updater.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-updater.lo `test -f 'msw/updater.cpp' || echo '$(srcdir)/'`msw/updater.cpp
+
+libdroidpad_la-bootConf.lo: msw/bootConf.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -MT libdroidpad_la-bootConf.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-bootConf.Tpo -c -o libdroidpad_la-bootConf.lo `test -f 'msw/bootConf.cpp' || echo '$(srcdir)/'`msw/bootConf.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libdroidpad_la-bootConf.Tpo $(DEPDIR)/libdroidpad_la-bootConf.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='msw/bootConf.cpp' object='libdroidpad_la-bootConf.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-bootConf.lo `test -f 'msw/bootConf.cpp' || echo '$(srcdir)/'`msw/bootConf.cpp
 
 mostlyclean-libtool:
 	-rm -f *.lo

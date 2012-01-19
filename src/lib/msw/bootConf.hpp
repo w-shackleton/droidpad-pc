@@ -18,33 +18,9 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-// This dialog lets the user choose how DP should do drivers on win64
+#ifndef BOOT_CONF_H
+#define BOOT_CONF_H
 
-#ifndef _DRIVERCHOICE_H
-#define _DRIVERCHOICE_H
-
-#include <wx/dialog.h>
-#include <wx/sizer.h>
-#include <wx/button.h>
-#include <wx/stattext.h>
-
-#define DRIVER_CHOICE_NOJS 0
-#define DRIVER_CHOICE_PERBOOT 1
-#define DRIVER_CHOICE_TESTMODE 2
-
-class DriverChoice : public wxDialog {
-	enum {
-		ID_ERROR_OK,
-	};
-
-	public:
-		DriverChoice(wxWindow *parent);
-		~DriverChoice();
-		DECLARE_EVENT_TABLE()
-
-	public:
-
-	private:
-};
+// This class manages and calls bcdedit.exe on 64-bit systems to check and enable necessary modes.
 
 #endif

@@ -24,14 +24,17 @@ SRC_LINUX =	\
 		output/linux/outputMgr.cpp	output/linux/outputMgr.hpp	\
 		output/linux/dpinput.c		output/linux/dpinput.h		\
 		output/linux/platformSettings.hpp
+# Sources for all forms of Windows. Name is misleading (should be SRC_MSW)
 SRC_WIN32 =	\
 		output/win32/wOutputMgr.cpp	output/win32/wOutputMgr.hpp	\
 		output/win32/winOutputs.cpp	output/win32/winOutputs.hpp	\
 		output/win32/vJoyOutputs.cpp	output/win32/vJoyOutputs.hpp	\
 		output/win32/wPlatformSettings.hpp				\
-		winSetup.cpp			winSetup.hpp			\
-		updater.cpp			updater.hpp
-
+		msw/winSetup.cpp		msw/winSetup.hpp		\
+		msw/updater.cpp			msw/updater.hpp
+# *JUST* windows 64-bit.
+SRC_WIN64 =	\
+		msw/bootConf.cpp		msw/bootConf.hpp
 
 libdroidpad_la_SOURCES = \
 		   include/adb.hpp	\
@@ -63,6 +66,9 @@ if OS_LINUX
 endif
 if OS_WIN32
   libdroidpad_la_SOURCES += $(SRC_WIN32)
+if OS_64BIT
+  libdroidpad_la_SOURCES += $(SRC_WIN64)
+endif
 endif
 
 libdroidpad_la_LIBADD = @WXBASELIBS@
@@ -72,6 +78,8 @@ libdroidpad_la_CFLAGS = @WXCPPFLAGS@ -I. -Iext
 if OS_WIN32
 libdroidpad_la_LIBADD += -lws2_32 ext/win32/libvjoy.la
 libdroidpad_la_LDFLAGS = -Wl,--enable-auto-import
+libdroidpad_la_CXXFLAGS += -Imsw
+libdroidpad_la_CFLAGS += -Imsw
 
 if OS_64BIT
 # libdroidpad_la_LDFLAGS += -static-libgcc

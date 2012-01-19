@@ -48,6 +48,8 @@ AM_CPPFLAGS = -DPREFIX='"$(prefix)"'
 if OS_WIN32
 droidpad_LDFLAGS = -Wl,--enable-auto-import --enable-stdcall-fixup
 droidpad_LDADD += -lws2_32 lib/ext/win32/libvjoy.la
+droidpad_CXXFLAGS += -Ilib/msw
+
 
 # Currently just update UI
 droidpad_SOURCES +=	\
