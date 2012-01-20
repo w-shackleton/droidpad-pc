@@ -60,6 +60,8 @@ class WinSetupFrame : public wxFrame {
 
 		void OnRemoveRemoving(droidpad::SetupEvent& event);
 
+		void ShowDriverChoice(droidpad::SetupEvent& event);
+
 		void OnSetupFinished(droidpad::SetupEvent& event);
 		void OnSetupExit(droidpad::SetupEvent& event);
 

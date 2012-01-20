@@ -41,10 +41,13 @@ host_triplet = @host@
 @OS_WIN32_TRUE@am__append_5 = -Imsw
 @OS_WIN32_TRUE@am__append_6 = -Imsw
 
+# libdroidpad_la_LDFLAGS += -static-libgcc
+@OS_64BIT_TRUE@am__append_7 = -DOS_64BIT
+
 # For all unices
-@OS_UNIX_TRUE@am__append_7 = -DOS_UNIX
-@OS_LINUX_TRUE@am__append_8 = -DOS_LINUX
-@OS_WIN32_TRUE@am__append_9 = -DOS_WIN32
+@OS_UNIX_TRUE@am__append_8 = -DOS_UNIX
+@OS_LINUX_TRUE@am__append_9 = -DOS_LINUX
+@OS_WIN32_TRUE@am__append_10 = -DOS_WIN32
 subdir = src/lib
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -413,10 +416,8 @@ libdroidpad_la_LIBADD = @WXBASELIBS@ $(am__append_4)
 libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@ -I. -Iext $(am__append_5)
 libdroidpad_la_CFLAGS = @WXCPPFLAGS@ -I. -Iext $(am__append_6)
 @OS_WIN32_TRUE@libdroidpad_la_LDFLAGS = -Wl,--enable-auto-import
-
-# libdroidpad_la_LDFLAGS += -static-libgcc
 AM_CPPFLAGS = -DPREFIX='"$(prefix)"' $(am__append_7) $(am__append_8) \
-	$(am__append_9)
+	$(am__append_9) $(am__append_10)
 all: all-recursive
 
 .SUFFIXES:

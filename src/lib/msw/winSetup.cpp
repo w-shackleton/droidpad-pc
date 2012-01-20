@@ -22,6 +22,8 @@ DEFINE_LOCAL_EVENT_TYPE(REMOVE_INITIALISED)
 DEFINE_LOCAL_EVENT_TYPE(SETUP_REMOVING_OLD)
 DEFINE_LOCAL_EVENT_TYPE(SETUP_INSTALLING_NEW)
 
+DEFINE_LOCAL_EVENT_TYPE(SETUP_SHOW_DRIVERCHOICE)
+
 DEFINE_LOCAL_EVENT_TYPE(REMOVE_REMOVING)
 
 DEFINE_LOCAL_EVENT_TYPE(SETUP_ERROR)
@@ -51,6 +53,14 @@ void* SetupThread::Entry() {
 		callback.AddPendingEvent(evt);
 		} break;
 	}
+
+#ifdef OS_64BIT
+	{
+		SetupEvent evt(SETUP_SHOW_DRIVERCHOICE);
+		callback.AddPendingEvent(evt);
+		return NULL; // TODO: Add waiting for user response.
+	}
+#endif
 
 	LOGM("Starting setup");
 

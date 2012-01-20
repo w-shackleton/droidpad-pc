@@ -4,6 +4,8 @@
 #include "data.hpp"
 #include "log.hpp"
 
+#include "driverChoice.hpp"
+
 #include <wx/xrc/xmlres.h>
 #include <wx/icon.h>
 #include <wx/msgdlg.h>
@@ -20,6 +22,10 @@ BEGIN_EVENT_TABLE(WinSetupFrame, wxFrame)
 	EVT_SETUP(SETUP_FINISHED, WinSetupFrame::OnSetupFinished)
 	EVT_SETUP(SETUP_EXIT, WinSetupFrame::OnSetupExit)
 	EVT_SETUP(SETUP_ERROR, WinSetupFrame::OnSetupError)
+
+	EVT_SETUP(REMOVE_REMOVING, WinSetupFrame::OnRemoveRemoving)
+
+	EVT_SETUP(SETUP_SHOW_DRIVERCHOICE, WinSetupFrame::ShowDriverChoice)
 
 	EVT_SETUP(SETUP_REMOVING_OLD, WinSetupFrame::OnSetupRemovingOld)
 	EVT_SETUP(SETUP_INSTALLING_NEW, WinSetupFrame::OnSetupInstallingNew)
@@ -118,6 +124,12 @@ void WinSetupFrame::OnSetupInstallingNew(SetupEvent& event) {
 void WinSetupFrame::OnRemoveRemoving(SetupEvent& event) {
 	textPanel_text->SetLabel(_("Removing DroidPad drivers..."));
 	activateView(VIEW_TEXT);
+}
+
+void WinSetupFrame::ShowDriverChoice(droidpad::SetupEvent& event) {
+	DriverChoice choice(this);
+	int result = choice.ShowModal();
+	Destroy();
 }
 
 void WinSetupFrame::OnSetupFinished(SetupEvent& event) {

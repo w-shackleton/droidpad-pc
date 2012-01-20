@@ -81,13 +81,14 @@ libdroidpad_la_LDFLAGS = -Wl,--enable-auto-import
 libdroidpad_la_CXXFLAGS += -Imsw
 libdroidpad_la_CFLAGS += -Imsw
 
-if OS_64BIT
-# libdroidpad_la_LDFLAGS += -static-libgcc
-endif
-
 endif
 
 AM_CPPFLAGS = -DPREFIX='"$(prefix)"'
+
+if OS_64BIT
+# libdroidpad_la_LDFLAGS += -static-libgcc
+AM_CPPFLAGS += -DOS_64BIT
+endif
 
 # For all unices
 if OS_UNIX

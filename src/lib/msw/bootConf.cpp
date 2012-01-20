@@ -19,3 +19,7 @@
  */
 
 #include "bootConf.hpp"
+
+#include "proc.hpp"
+
+#define CMD "bcdedit.exe"

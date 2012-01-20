@@ -71,6 +71,9 @@ droidpad_res_CFLAGS = @WXCPPFLAGS@
 if-gui/droidpad.res: if-gui/droidpad.rc
 	$(pkg_verbose)${host_alias}-windres $(droidpad_res_CFLAGS) if-gui/droidpad.rc -O coff -o if-gui/droidpad.res
 
+clean-local:
+	-rm -f if-gui/droidpad.res
+
 droidpad_LDADD += if-gui/droidpad.res -lws2_32 ${prefix}/lib/libsetupapi.a
 
 EXTRA_DIST = if-gui/droidpad.rc
@@ -79,7 +82,7 @@ endif
 
 if OS_64BIT
 # droidpad_LDFLAGS += -static-libgcc
-AM_CPPFLAGS += -DOS_64IT
+AM_CPPFLAGS += -DOS_64BIT
 endif
 
 endif

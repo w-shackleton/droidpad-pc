@@ -20,10 +20,13 @@
 
 #include "driverChoice.hpp"
 
+#include <wx/xrc/xmlres.h>
+
 BEGIN_EVENT_TABLE(DriverChoice, wxDialog)
 END_EVENT_TABLE()
 
 #include "data.hpp"
+#include "log.hpp"
 
 #include <wx/stattext.h>
 #include <wx/icon.h>
@@ -41,6 +44,12 @@ using namespace droidpad;
 DriverChoice::DriverChoice(wxWindow *parent) :
 	wxDialog(parent, -1, _(FRAME_TITLE), wxDefaultPosition)
 {
+	// wxPanel *panel = wxXmlResource::Get()->LoadPanel(this, wxT("mainPanel"));
+	// panel->SetSizerAndFit(panel->GetSizer());
+	if(!wxXmlResource::Get()->LoadDialog(this, parent, wxT("driverChoice"))) {
+		LOGE("Failed to load dialog XML.");
+	}
+
 	SetIcon(wxIcon(Data::getFilePath(_FRAME_ICON), wxBITMAP_TYPE_XPM));
 }
 
