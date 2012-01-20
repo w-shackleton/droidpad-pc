@@ -45,6 +45,9 @@ class DriverChoice : public wxDialog {
 	public:
 
 	private:
+		void SelectPermanent(wxCommandEvent &evt);
+		void SelectPerBoot(wxCommandEvent &evt);
+		void SelectNoInstall(wxCommandEvent &evt);
 };
 
 #endif

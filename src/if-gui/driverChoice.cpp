@@ -23,6 +23,9 @@
 #include <wx/xrc/xmlres.h>
 
 BEGIN_EVENT_TABLE(DriverChoice, wxDialog)
+	EVT_BUTTON(XRCID("installPermanently"), DriverChoice::SelectPermanent)
+	EVT_BUTTON(XRCID("installPerBoot"), DriverChoice::SelectPerBoot)
+	EVT_BUTTON(XRCID("dontInstall"), DriverChoice::SelectNoInstall)
 END_EVENT_TABLE()
 
 #include "data.hpp"
@@ -54,3 +57,13 @@ DriverChoice::DriverChoice(wxWindow *parent) :
 }
 
 DriverChoice::~DriverChoice() { }
+
+void DriverChoice::SelectPermanent(wxCommandEvent &evt) {
+	EndModal(DRIVER_CHOICE_TESTMODE);
+}
+void DriverChoice::SelectPerBoot(wxCommandEvent &evt) {
+	EndModal(DRIVER_CHOICE_PERBOOT);
+}
+void DriverChoice::SelectNoInstall(wxCommandEvent &evt) {
+	EndModal(DRIVER_CHOICE_NOJS);
+}
