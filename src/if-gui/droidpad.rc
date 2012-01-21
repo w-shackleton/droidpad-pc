@@ -17,22 +17,25 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
+
+#include "config.h"
+
 1 VERSIONINFO
-FILEVERSION     0,1,0,0
-PRODUCTVERSION  0,1,0,0
+FILEVERSION     V_MAJOR,V_MINOR,V_REVISION,0
+PRODUCTVERSION  V_MAJOR,V_MINOR,V_REVISION,0
 BEGIN
   BLOCK "StringFileInfo"
   BEGIN
     BLOCK "080904E4"
     BEGIN
       VALUE "CompanyName", "Digitalsquid"
-      VALUE "FileDescription", "DroidPad"
-      VALUE "FileVersion", "0.1"
+      VALUE "FileDescription", "DroidPad - phone joystick controller"
+      VALUE "FileVersion", VERSION
       VALUE "InternalName", "droidpad"
-      VALUE "LegalCopyright", "DroidPad"
+      VALUE "LegalCopyright", "This program is licensed under the GPL-3 license."
       VALUE "OriginalFilename", "droidpad.exe"
       VALUE "ProductName", "DroidPad"
-      VALUE "ProductVersion", "0.1 Devel"
+      VALUE "ProductVersion", VERSION
     END
   END
 
@@ -45,3 +48,16 @@ END
 id ICON "../data/icon.ico"
 
 #include "wx/msw/wx.rc"
+
+// see "about isolated applications" topic in MSDN
+#ifdef ISOLATION_AWARE_ENABLED
+#define wxMANIFEST_ID 2
+#else
+#define wxMANIFEST_ID 1
+#endif
+
+#if defined(WX_CPU_AMD64)
+wxMANIFEST_ID 24 "amd64.manifest"
+#elif defined(WX_CPU_X86)
+wxMANIFEST_ID 24 "x86.manifest"
+#endif

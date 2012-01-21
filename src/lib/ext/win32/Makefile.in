@@ -54,6 +54,9 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+
+# libvjoy_la_LDFLAGS = -static-libgcc
+@OS_64BIT_TRUE@@OS_WIN32_TRUE@am__append_1 = -DOS_64BIT
 subdir = src/lib/ext/win32
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -299,6 +302,7 @@ top_srcdir = @top_srcdir@
 
 @OS_WIN32_TRUE@libvjoy_la_CXXFLAGS = -Ivjoy -I${prefix}/include/ddk -w @WXCPPFLAGS@ -fpermissive
 @OS_WIN32_TRUE@libvjoy_la_LIBADD = @WXBASELIBS@
+@OS_WIN32_TRUE@AM_CPPFLAGS = -DOS_WIN32 $(am__append_1)
 all: all-am
 
 .SUFFIXES:
@@ -632,8 +636,6 @@ uninstall-am: uninstall-libLTLIBRARIES
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags uninstall uninstall-am uninstall-libLTLIBRARIES
 
-
-# libvjoy_la_LDFLAGS = -static-libgcc
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

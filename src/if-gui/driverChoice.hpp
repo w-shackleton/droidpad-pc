@@ -28,9 +28,7 @@
 #include <wx/button.h>
 #include <wx/stattext.h>
 
-#define DRIVER_CHOICE_NOJS 0
-#define DRIVER_CHOICE_PERBOOT 1
-#define DRIVER_CHOICE_TESTMODE 2
+#include "winSetup.hpp" // For option codes
 
 class DriverChoice : public wxDialog {
 	enum {
@@ -39,7 +37,7 @@ class DriverChoice : public wxDialog {
 
 	public:
 		DriverChoice(wxWindow *parent);
-		~DriverChoice();
+		virtual ~DriverChoice();
 		DECLARE_EVENT_TABLE()
 
 	public:

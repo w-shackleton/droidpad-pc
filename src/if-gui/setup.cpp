@@ -4,7 +4,9 @@
 #include "data.hpp"
 #include "log.hpp"
 
+#ifdef OS_64BIT
 #include "driverChoice.hpp"
+#endif
 
 #include <wx/xrc/xmlres.h>
 #include <wx/icon.h>
@@ -48,7 +50,7 @@ END_EVENT_TABLE()
 
 WinSetupFrame::WinSetupFrame(int mode) :
 	mode(mode),
-	wxFrame(NULL, -1, _(FRAME_TITLE), wxDefaultPosition, wxDefaultSize)
+	wxFrame(NULL, -1, _(FRAME_TITLE), wxDefaultPosition, wxSize(180, 100))
 {
 	SetIcon(wxIcon(wxString(Data::getFilePath(_FRAME_ICON).c_str(), wxConvUTF8), wxBITMAP_TYPE_XPM));
 
@@ -127,9 +129,12 @@ void WinSetupFrame::OnRemoveRemoving(SetupEvent& event) {
 }
 
 void WinSetupFrame::ShowDriverChoice(droidpad::SetupEvent& event) {
-	DriverChoice choice(this);
-	int result = choice.ShowModal();
-	Destroy();
+#ifdef OS_64BIT
+	DriverChoice *choice = new DriverChoice(this);
+	int result = choice->ShowModal();
+	delete choice;
+	setup->SetUserDriverResponse(result);
+#endif
 }
 
 void WinSetupFrame::OnSetupFinished(SetupEvent& event) {

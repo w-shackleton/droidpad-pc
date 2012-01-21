@@ -66,7 +66,7 @@ pkg_verbose = $(pkg_verbose_$(V))
 pkg_verbose_ = $(pkg_verbose_$(AM_DEFAULT_VERBOSITY))
 pkg_verbose_0 = @echo "  RES    $@";
 
-droidpad_res_CFLAGS = @WXCPPFLAGS@
+droidpad_res_CFLAGS = @WXCPPFLAGS@ -I..
 
 if-gui/droidpad.res: if-gui/droidpad.rc
 	$(pkg_verbose)${host_alias}-windres $(droidpad_res_CFLAGS) if-gui/droidpad.rc -O coff -o if-gui/droidpad.res

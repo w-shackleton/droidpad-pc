@@ -25,6 +25,11 @@
 #include <wx/event.h>
 #include <wx/string.h>
 
+#define DRIVER_CHOICE_NOJS 0
+#define DRIVER_CHOICE_PERBOOT 1
+#define DRIVER_CHOICE_TESTMODE 2
+
+
 BEGIN_DECLARE_EVENT_TYPES()
 	DECLARE_LOCAL_EVENT_TYPE(SETUP_BLANKSTATUS, 0)
 	DECLARE_LOCAL_EVENT_TYPE(SETUP_INITIALISED, 1)
@@ -56,8 +61,26 @@ namespace droidpad {
 			~SetupThread();
 			void* Entry();
 
+#ifdef OS_64BIT
+			/**
+			 * Sets the user's response when asked how they want drivers
+			 * to be installed. Code is one of the options from above.
+			 */
+			inline void SetUserDriverResponse(int response) {
+				userDriverResponse = response;
+				go = true;
+			}
+#endif
+
 		private:
 			void Cleanup();
+
+			// Used as a wait hook for user responses. Could probably be done better
+			bool go;
+
+#ifdef OS_64BIT
+			int userDriverResponse;
+#endif
 
 			int mode;
 			wxEvtHandler &callback;

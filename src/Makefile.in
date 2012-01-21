@@ -370,7 +370,7 @@ AM_CPPFLAGS = -DPREFIX='"$(prefix)"' $(am__append_7) $(am__append_8) \
 @IF_GUI_TRUE@@OS_WIN32_TRUE@pkg_verbose = $(pkg_verbose_$(V))
 @IF_GUI_TRUE@@OS_WIN32_TRUE@pkg_verbose_ = $(pkg_verbose_$(AM_DEFAULT_VERBOSITY))
 @IF_GUI_TRUE@@OS_WIN32_TRUE@pkg_verbose_0 = @echo "  RES    $@";
-@IF_GUI_TRUE@@OS_WIN32_TRUE@droidpad_res_CFLAGS = @WXCPPFLAGS@
+@IF_GUI_TRUE@@OS_WIN32_TRUE@droidpad_res_CFLAGS = @WXCPPFLAGS@ -I..
 @IF_GUI_TRUE@@OS_WIN32_TRUE@EXTRA_DIST = if-gui/droidpad.rc
 @IF_GUI_TRUE@@OS_WIN32_TRUE@CLEANFILES = if-gui/droidpad.res
 all: all-recursive

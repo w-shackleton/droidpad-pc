@@ -2780,6 +2780,24 @@ cat >>confdefs.h <<_ACEOF
 _ACEOF
 
 
+
+cat >>confdefs.h <<_ACEOF
+#define V_MAJOR 1
+_ACEOF
+
+
+
+cat >>confdefs.h <<_ACEOF
+#define V_MINOR 9
+_ACEOF
+
+
+
+cat >>confdefs.h <<_ACEOF
+#define V_REVISION 0
+_ACEOF
+
+
 # AC_CONFIG_MACRO_DIR([m4])
 # Make sure we can run config.sub.
 $SHELL "$ac_aux_dir/config.sub" sun4 >/dev/null 2>&1 ||

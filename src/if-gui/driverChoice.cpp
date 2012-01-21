@@ -44,8 +44,9 @@ using namespace droidpad;
 
 #define FRAME_TITLE "Choose Joystick mode"
 
-DriverChoice::DriverChoice(wxWindow *parent) :
-	wxDialog(parent, -1, _(FRAME_TITLE), wxDefaultPosition)
+DriverChoice::DriverChoice(wxWindow *parent)
+	// See http://wiki.wxwidgets.org/Using_XML_Resources_with_XRC - apparently don't call constructor
+	// wxDialog(parent, -1, _(FRAME_TITLE), wxDefaultPosition)
 {
 	// wxPanel *panel = wxXmlResource::Get()->LoadPanel(this, wxT("mainPanel"));
 	// panel->SetSizerAndFit(panel->GetSizer());

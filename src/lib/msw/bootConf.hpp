@@ -21,11 +21,17 @@
 #ifndef BOOT_CONF_H
 #define BOOT_CONF_H
 
+#include <string>
+
 // This class manages and calls bcdedit.exe on 64-bit systems to check and enable necessary modes.
 
 namespace droidpad {
 	namespace bootconf {
-		class BootConfig {
+		struct BootConfig {
+			/**
+			 * If true, data was read successfully.
+			 */
+			bool success;
 			bool testsigning;
 		};
 

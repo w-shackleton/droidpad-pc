@@ -39,21 +39,29 @@ using namespace std;
 #ifdef OS_UNIX
 // I still can't believe how infinitely much easier this is in Unix.
 string droidpad::runProcess(string cmd, string args) {
+	string result;
+	runProcess(result, cmd, args);
+	return result;
+}
+int droidpad::runProcess(std::string &result, std::string cmd, std::string args = "") {
 	FILE* pipe = popen((cmd + " " + args).c_str(), "r");
 	if (!pipe) throw "Couldn't run adb";
 	char buffer[BUFFER_SIZE];
-	string result = "";
 	while(!feof(pipe)) {
 		if(fgets(buffer, BUFFER_SIZE, pipe) != NULL)
 			result += buffer;
 	}
-	pclose(pipe);
-	return result;
+	return pclose(pipe);
 }
 
 #elif OS_WIN32
 // http://ubuntuforums.org/showthread.php?t=610271
 string droidpad::runProcess(string cmd, string args) {
+	string result;
+	runProcess(result, cmd, args);
+	return result;
+}
+int droidpad::runProcess(string &output, string cmd, string args) {
 	string errorToThrow = "Unknown Error";
 
 	STARTUPINFO si;
@@ -124,7 +132,6 @@ bad2:
 	si.dwFlags = 0;
 
 	
-	string output = "";
 	char buffer[BUFFER_SIZE];
 	while(readfh) {
 		DWORD numBytesRead = 0;
@@ -154,11 +161,16 @@ bad2:
 	// Wait until child process exits.
 	WaitForSingleObject(pi.hProcess, INFINITE);
 
+	int result = -1;
+	if(GetExitCodeProcess(pi.hProcess, (LPDWORD)&result)) {
+		printf("GetExitCodeProcess failed (%d)\n", GetLastError());
+	}
+
 	// Close process and thread handles. 
 	CloseHandle(pi.hProcess);
 	CloseHandle(pi.hThread);
 
-	return output;
+	return result;
 }
 
 #endif

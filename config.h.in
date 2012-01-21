@@ -63,3 +63,12 @@
 
 /* "Version code" */
 #undef VERSION_CODE
+
+/* "Major number" */
+#undef V_MAJOR
+
+/* "Minor number" */
+#undef V_MINOR
+
+/* "Revision" */
+#undef V_REVISION

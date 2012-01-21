@@ -19,13 +19,12 @@
  */
 #include "deviceManagerThreads.hpp"
 
+#include "net/deviceDiscover.hpp"
 #include "deviceManager.hpp"
 #include "log.hpp"
 
 #include <wx/thread.h>
 #include <wx/intl.h>
-
-#include "net/deviceDiscover.hpp"
 
 using namespace droidpad;
 using namespace droidpad::threads;

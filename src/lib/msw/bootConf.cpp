@@ -21,5 +21,20 @@
 #include "bootConf.hpp"
 
 #include "proc.hpp"
+#include "log.hpp"
 
 #define CMD "bcdedit.exe"
+
+using namespace std;
+using namespace droidpad;
+using namespace droidpad::bootconf;
+
+BootConfig bootconf::getCurrentConfig() {
+	string bcdOutput;
+	int exitCode = runProcess(bcdOutput, CMD, "");
+	if(exitCode != 0) { // Something went wrong
+		BootConfig conf;
+		conf.success = false;
+		return conf;
+	}
+}

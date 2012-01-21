@@ -32,8 +32,10 @@ libvjoy_la_SOURCES =	\
 libvjoy_la_CXXFLAGS = -Ivjoy -I${prefix}/include/ddk -w @WXCPPFLAGS@ -fpermissive
 libvjoy_la_LIBADD = @WXBASELIBS@
 
+AM_CPPFLAGS = -DOS_WIN32
+
 if OS_64BIT
 # libvjoy_la_LDFLAGS = -static-libgcc
+AM_CPPFLAGS += -DOS_64BIT
 endif
-
 endif

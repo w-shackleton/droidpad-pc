@@ -23,7 +23,9 @@
 #include <string>
 
 namespace droidpad {
-	std::string runProcess(std::string cmd, std::string args);
+	std::string runProcess(std::string cmd, std::string args = "");
+
+	int runProcess(std::string &result, std::string cmd, std::string args);
 
 	void forkProcess(std::string cmd);
 

@@ -3,12 +3,15 @@
 #include "data.hpp"
 #include "log.hpp"
 
+#include "bootConf.hpp"
+
 #include "win32/winUtil.hpp"
 #include "win32/vjoy.hpp"
 
 #include <wx/intl.h>
 #include <wx/file.h>
 #include <wx/stdpaths.h>
+#include <wx/utils.h>
 
 #include <string>
 #include <iostream>
@@ -58,7 +61,12 @@ void* SetupThread::Entry() {
 	{
 		SetupEvent evt(SETUP_SHOW_DRIVERCHOICE);
 		callback.AddPendingEvent(evt);
-		return NULL; // TODO: Add waiting for user response.
+		go = false;
+		while(!go) {
+			wxMilliSleep(30);
+		}
+		bootconf::getCurrentConfig();
+		mode = 42; // TODO: Remove to re-enable driver installing
 	}
 #endif
 
@@ -138,7 +146,7 @@ void* SetupThread::Entry() {
 	SetupEvent evt(SETUP_FINISHED);
 	callback.AddPendingEvent(evt);
 
-	Sleep(1000);
+	wxMilliSleep(1000);
 
 	{
 		SetupEvent evt(SETUP_EXIT);
