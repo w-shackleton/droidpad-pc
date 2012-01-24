@@ -28,7 +28,7 @@ SRC_LINUX =	\
 SRC_WIN32 =	\
 		output/win32/wOutputMgr.cpp	output/win32/wOutputMgr.hpp	\
 		output/win32/winOutputs.cpp	output/win32/winOutputs.hpp	\
-		output/win32/vJoyOutputs.cpp	output/win32/vJoyOutputs.hpp	\
+		output/win32/jsOutputs.cpp	output/win32/jsOutputs.hpp	\
 		output/win32/wPlatformSettings.hpp				\
 		msw/winSetup.cpp		msw/winSetup.hpp		\
 		msw/updater.cpp			msw/updater.hpp
@@ -76,7 +76,7 @@ libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@ -I. -Iext
 libdroidpad_la_CFLAGS = @WXCPPFLAGS@ -I. -Iext
 
 if OS_WIN32
-libdroidpad_la_LIBADD += -lws2_32 ext/win32/libvjoy.la
+libdroidpad_la_LIBADD += -lws2_32 ext/win32/libjs.la
 libdroidpad_la_LDFLAGS = -Wl,--enable-auto-import
 libdroidpad_la_CXXFLAGS += -Imsw
 libdroidpad_la_CFLAGS += -Imsw

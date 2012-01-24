@@ -6,7 +6,7 @@
 #include "bootConf.hpp"
 
 #include "win32/winUtil.hpp"
-#include "win32/vjoy.hpp"
+#include "win32/jsDriver.hpp"
 
 #include <wx/intl.h>
 #include <wx/file.h>
@@ -58,7 +58,7 @@ void* SetupThread::Entry() {
 	}
 
 #ifdef OS_64BIT
-	{
+	if(mode == MODE_SETUP) {
 		SetupEvent evt(SETUP_SHOW_DRIVERCHOICE);
 		callback.AddPendingEvent(evt);
 		go = false;
@@ -66,7 +66,11 @@ void* SetupThread::Entry() {
 			wxMilliSleep(30);
 		}
 		bootconf::getCurrentConfig();
-		mode = 42; // TODO: Remove to re-enable driver installing
+		if(vJoyIsInstalled())
+			LOGE("JS DRIVER INSTALLED");
+		else
+			LOGE("JS DRIVER NOT INSTALLED");
+		// mode = 42; // TODO: Remove to re-enable driver installing
 	}
 #endif
 
@@ -75,10 +79,10 @@ void* SetupThread::Entry() {
 	wxString infFileLocation;
 	switch(cpuType()) {
 		case CPU_amd64:
-			infFileLocation = Data::getFilePath(wxT("driver/amd64/vJoy.inf"));
+			infFileLocation = Data::getFilePath(wxT("driver/amd64/droidpad.inf"));
 			break;
 		case CPU_x86:
-			infFileLocation = Data::getFilePath(wxT("driver/x86/vJoy.inf"));
+			infFileLocation = Data::getFilePath(wxT("driver/x86/droidpad.inf"));
 			break;
 		default:
 			SetupEvent evt(SETUP_ERROR, _("Incompatible processor architecture."));
@@ -100,31 +104,31 @@ void* SetupThread::Entry() {
 
 	LOGMwx(wxString(wxT("Using inf file at ") + infFileLocation));
 
-	vJoyOpenLog(logFile);
+	jsInstallOpenLog(logFile);
 
-	wxString hwId = vJoyGetDevHwId();
+	wxString hwId = jsGetDevHwId();
 	LOGMwx(wxString(wxT("HW ID is ") + hwId));
 
 	switch(mode) {
 		case MODE_SETUP: // Setup DP if necessary.
-			if(vJoyIsInstalled()) { // Installed, so remove first.
-				LOGM("vJoy already installed, removing first... ");
+			if(isJsInstalledAndRunning()) { // Installed, so remove first.
+				LOGM("Driver already installed, removing first... ");
 				{
 					SetupEvent evt(SETUP_REMOVING_OLD);
 					callback.AddPendingEvent(evt);
 				}
-				if(!vJoyRemove(infFileLocation, hwId)) {
-					LOGE("ERROR: Couldn't remove old vJoy version!");
+				if(!jsRemove(infFileLocation, hwId)) {
+					LOGE("ERROR: Couldn't remove old driver version!");
 				}
 			} else {
-				LOGM("first vJoy install.");
+				LOGM("first driver install.");
 			}
 			{
 				SetupEvent evt(SETUP_INSTALLING_NEW);
 				callback.AddPendingEvent(evt);
 			}
-			if(!vJoyInstall(infFileLocation, hwId)) {
-				LOGE("ERROR: Couldn't install new vJoy version!");
+			if(!jsInstall(infFileLocation, hwId)) {
+				LOGE("ERROR: Couldn't install new driver version!");
 				{
 					SetupEvent evt(SETUP_ERROR, _("New driver couldn't be installed correctly."));
 					callback.AddPendingEvent(evt);
@@ -139,14 +143,18 @@ void* SetupThread::Entry() {
 				SetupEvent evt(REMOVE_REMOVING);
 				callback.AddPendingEvent(evt);
 			}
-			vJoyPurge(infFileLocation, hwId);
+			jsPurge(infFileLocation, hwId);
 			break;
 	}
 
 	SetupEvent evt(SETUP_FINISHED);
 	callback.AddPendingEvent(evt);
 
+#ifdef DEBUG
+	wxMilliSleep(5000); // Allow time to view logs
+#else
 	wxMilliSleep(1000);
+#endif
 
 	{
 		SetupEvent evt(SETUP_EXIT);
@@ -157,7 +165,7 @@ void* SetupThread::Entry() {
 }
 
 void SetupThread::Cleanup() {
-	vJoyCloseLog();
+	jsInstallCloseLog();
 }
 
 

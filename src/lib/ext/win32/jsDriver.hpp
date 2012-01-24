@@ -18,39 +18,28 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-/*
-   This code contains the functions used to output code on the windows input API,
-   as opposed to the PPJoy API
-   */
-#ifndef DP_VJOY_OUTPUTS_H
-#define DP_VJOY_OUTPUTS_H
+// wxWidgets-ized definitions for the vJoy installer functions.
 
-#include <stdexcept>
-#include <map>
+#ifndef DP_VJOY_H
+#define DP_VJOY_H
 
-#define UNICODE
-#ifndef _WIN32_WINNT
-#define _WIN32_WINNT 0x0600
-#endif
-#include <windows.h>
+#include <wx/string.h>
 
-#include "ext/win32/vjoy/public.h"
+wxString jsGetDevHwId();
 
-namespace droidpad {
-	namespace win32 {
-		class VJoyOutputs {
-			public:
-				// Opens the joystick.
-				// returns true on success.
-				int OpenJoystick();
-				virtual ~VJoyOutputs();
+void jsInstallOpenLog(wxString location);
 
-				int SendPositions(JOYSTICK_POSITION &data);
+void jsInstallCloseLog();
 
-			private:
-				HANDLE vJoyHandle;
-		};
-	};
-};
+bool jsInstall(wxString infPath, wxString hwId);
+bool jsRemove(wxString infPath, wxString hwId);
+bool jsPurge(wxString infPath, wxString hwId);
+bool jsRepair(wxString infPath, wxString hwId);
+
+/**
+ * If true, the DP driver is installed and also running.
+ * This could return false if installed but not running.
+ */
+bool isJsInstalledAndRunning();
 
 #endif

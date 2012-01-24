@@ -37,7 +37,7 @@ host_triplet = @host@
 @OS_LINUX_TRUE@am__append_1 = $(SRC_LINUX)
 @OS_WIN32_TRUE@am__append_2 = $(SRC_WIN32)
 @OS_64BIT_TRUE@@OS_WIN32_TRUE@am__append_3 = $(SRC_WIN64)
-@OS_WIN32_TRUE@am__append_4 = -lws2_32 ext/win32/libvjoy.la
+@OS_WIN32_TRUE@am__append_4 = -lws2_32 ext/win32/libjs.la
 @OS_WIN32_TRUE@am__append_5 = -Imsw
 @OS_WIN32_TRUE@am__append_6 = -Imsw
 
@@ -84,7 +84,7 @@ am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
-@OS_WIN32_TRUE@am__DEPENDENCIES_1 = ext/win32/libvjoy.la
+@OS_WIN32_TRUE@am__DEPENDENCIES_1 = ext/win32/libjs.la
 libdroidpad_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am__libdroidpad_la_SOURCES_DIST = include/adb.hpp \
 	include/outputMgr.hpp include/platformSettings.hpp log.hpp \
@@ -104,14 +104,14 @@ am__libdroidpad_la_SOURCES_DIST = include/adb.hpp \
 	output/linux/dpinput.h output/linux/platformSettings.hpp \
 	output/win32/wOutputMgr.cpp output/win32/wOutputMgr.hpp \
 	output/win32/winOutputs.cpp output/win32/winOutputs.hpp \
-	output/win32/vJoyOutputs.cpp output/win32/vJoyOutputs.hpp \
+	output/win32/jsOutputs.cpp output/win32/jsOutputs.hpp \
 	output/win32/wPlatformSettings.hpp msw/winSetup.cpp \
 	msw/winSetup.hpp msw/updater.cpp msw/updater.hpp \
 	msw/bootConf.cpp msw/bootConf.hpp
 am__objects_1 = libdroidpad_la-outputMgr.lo libdroidpad_la-dpinput.lo
 @OS_LINUX_TRUE@am__objects_2 = $(am__objects_1)
 am__objects_3 = libdroidpad_la-wOutputMgr.lo \
-	libdroidpad_la-winOutputs.lo libdroidpad_la-vJoyOutputs.lo \
+	libdroidpad_la-winOutputs.lo libdroidpad_la-jsOutputs.lo \
 	libdroidpad_la-winSetup.lo libdroidpad_la-updater.lo
 @OS_WIN32_TRUE@am__objects_4 = $(am__objects_3)
 am__objects_5 = libdroidpad_la-bootConf.lo
@@ -389,7 +389,7 @@ SRC_LINUX = \
 SRC_WIN32 = \
 		output/win32/wOutputMgr.cpp	output/win32/wOutputMgr.hpp	\
 		output/win32/winOutputs.cpp	output/win32/winOutputs.hpp	\
-		output/win32/vJoyOutputs.cpp	output/win32/vJoyOutputs.hpp	\
+		output/win32/jsOutputs.cpp	output/win32/jsOutputs.hpp	\
 		output/win32/wPlatformSettings.hpp				\
 		msw/winSetup.cpp		msw/winSetup.hpp		\
 		msw/updater.cpp			msw/updater.hpp
@@ -505,6 +505,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-dpinput.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-droidpadCallbacks.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-events.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-jsOutputs.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-mainThread.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-md5c.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-mdns.Plo@am__quote@
@@ -513,7 +514,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-outputSmoothBuffer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-proc.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-updater.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-vJoyOutputs.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-wOutputMgr.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-winOutputs.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-winSetup.Plo@am__quote@
@@ -734,13 +734,13 @@ libdroidpad_la-winOutputs.lo: output/win32/winOutputs.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-winOutputs.lo `test -f 'output/win32/winOutputs.cpp' || echo '$(srcdir)/'`output/win32/winOutputs.cpp
 
-libdroidpad_la-vJoyOutputs.lo: output/win32/vJoyOutputs.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -MT libdroidpad_la-vJoyOutputs.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-vJoyOutputs.Tpo -c -o libdroidpad_la-vJoyOutputs.lo `test -f 'output/win32/vJoyOutputs.cpp' || echo '$(srcdir)/'`output/win32/vJoyOutputs.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libdroidpad_la-vJoyOutputs.Tpo $(DEPDIR)/libdroidpad_la-vJoyOutputs.Plo
+libdroidpad_la-jsOutputs.lo: output/win32/jsOutputs.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -MT libdroidpad_la-jsOutputs.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-jsOutputs.Tpo -c -o libdroidpad_la-jsOutputs.lo `test -f 'output/win32/jsOutputs.cpp' || echo '$(srcdir)/'`output/win32/jsOutputs.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libdroidpad_la-jsOutputs.Tpo $(DEPDIR)/libdroidpad_la-jsOutputs.Plo
 @am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='output/win32/vJoyOutputs.cpp' object='libdroidpad_la-vJoyOutputs.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='output/win32/jsOutputs.cpp' object='libdroidpad_la-jsOutputs.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-vJoyOutputs.lo `test -f 'output/win32/vJoyOutputs.cpp' || echo '$(srcdir)/'`output/win32/vJoyOutputs.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-jsOutputs.lo `test -f 'output/win32/jsOutputs.cpp' || echo '$(srcdir)/'`output/win32/jsOutputs.cpp
 
 libdroidpad_la-winSetup.lo: msw/winSetup.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -MT libdroidpad_la-winSetup.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-winSetup.Tpo -c -o libdroidpad_la-winSetup.lo `test -f 'msw/winSetup.cpp' || echo '$(srcdir)/'`msw/winSetup.cpp

@@ -20,6 +20,8 @@
 
 #include "bootConf.hpp"
 
+#include <wx/tokenzr.h>
+
 #include "proc.hpp"
 #include "log.hpp"
 
@@ -30,11 +32,35 @@ using namespace droidpad;
 using namespace droidpad::bootconf;
 
 BootConfig bootconf::getCurrentConfig() {
-	string bcdOutput;
-	int exitCode = runProcess(bcdOutput, CMD, "");
+	string _bcdOutput;
+	int exitCode = runProcess(_bcdOutput, CMD, "");
+	wxString bcdOutput(_bcdOutput.c_str(), wxConvUTF8);
 	if(exitCode != 0) { // Something went wrong
 		BootConfig conf;
 		conf.success = false;
 		return conf;
 	}
+
+	wxStringTokenizer lines(bcdOutput, wxT("\r\n"));
+
+	// Find various lines
+	BootConfig conf;
+	conf.success = true;
+	/**
+	 * Counts how many times testsigning is found.
+	 * if > 1, something odd is going on; report it.
+	 */
+	int testsignlines = 0;
+	while(lines.HasMoreTokens()) {
+		wxString line = lines.GetNextToken().Lower();
+		if(line.Find(wxT("testsigning"))) {
+			if(line.EndsWith(wxT("on")))
+				conf.testsigning = true;
+			testsignlines++;
+		}
+	}
+	if(testsignlines > 1)
+		LOGWwx(wxString::Format(wxT("Number of entries for testsigning was %d!"), testsignlines));
+
+	return conf;
 }

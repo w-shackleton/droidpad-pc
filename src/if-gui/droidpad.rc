@@ -32,7 +32,7 @@ BEGIN
       VALUE "FileDescription", "DroidPad - phone joystick controller"
       VALUE "FileVersion", VERSION
       VALUE "InternalName", "droidpad"
-      VALUE "LegalCopyright", "This program is licensed under the GPL-3 license."
+      VALUE "LegalCopyright", "This program is licensed under the GPLv3 license."
       VALUE "OriginalFilename", "droidpad.exe"
       VALUE "ProductName", "DroidPad"
       VALUE "ProductVersion", VERSION
@@ -47,7 +47,7 @@ END
 
 id ICON "../data/icon.ico"
 
-#include "wx/msw/wx.rc"
+// #include "wx/msw/wx.rc"
 
 // see "about isolated applications" topic in MSDN
 #ifdef ISOLATION_AWARE_ENABLED
@@ -57,7 +57,7 @@ id ICON "../data/icon.ico"
 #endif
 
 #if defined(WX_CPU_AMD64)
-wxMANIFEST_ID 24 "amd64.manifest"
+wxMANIFEST_ID 24 "if-gui/amd64.manifest"
 #elif defined(WX_CPU_X86)
-wxMANIFEST_ID 24 "x86.manifest"
+wxMANIFEST_ID 24 "if-gui/x86.manifest"
 #endif

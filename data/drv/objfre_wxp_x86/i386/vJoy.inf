@@ -14,7 +14,7 @@ Class=HIDClass
 ClassGuid={745a17a0-74d3-11d0-b6fe-00a0c90f57da}
 Provider=%VENDOR%
 ;LayoutFile=layout.inf
-DriverVer=12/26/2011,6.1.7600.16385
+DriverVer=01/21/2012,6.1.7600.16385
 CatalogFile = vJoy.cat
 
 
@@ -156,7 +156,7 @@ KmdfLibraryVersion = 1.9
 
 [Strings] 
 ;  *******Localizable Strings******* 
-VENDOR         = "Shaul Eizikovich" 
+VENDOR         = "Digitalsquid" 
 vjoy       	= "vJoy Device (DroidPad)" 
 DISK_NAME      = "vJoy Device Install Disk"
 hidkmdf.SVCDESC= "Filter Driver Service for HID-KMDF Interface layer"

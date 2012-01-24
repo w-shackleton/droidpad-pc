@@ -17,7 +17,7 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#include "vJoyOutputs.hpp"
+#include "jsOutputs.hpp"
 
 #include "log.hpp"
 #include <wx/string.h>
@@ -27,26 +27,26 @@
 using namespace droidpad::win32;
 
 int VJoyOutputs::OpenJoystick() {
-	vJoyHandle = CreateFile(TEXT(DOS_FILE_NAME), GENERIC_WRITE | GENERIC_READ, FILE_SHARE_WRITE | FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
-	if(vJoyHandle == INVALID_HANDLE_VALUE) {
+	dosDeviceHandle = CreateFile(TEXT(DOS_FILE_NAME), GENERIC_WRITE | GENERIC_READ, FILE_SHARE_WRITE | FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+	if(dosDeviceHandle == INVALID_HANDLE_VALUE) {
 		return GetLastError();
 	}
 	return 0;
 }
 
 VJoyOutputs::~VJoyOutputs() {
-	CloseHandle(vJoyHandle);
+	CloseHandle(dosDeviceHandle);
 }
 
-int VJoyOutputs::SendPositions(JOYSTICK_POSITION &data) {
-	unsigned int ioCode = IOCTL_VJOY_LOAD_POSITIONS;
-	unsigned int ioSize = sizeof(JOYSTICK_POSITION);
+int VJoyOutputs::SendPositions(INPUT_DATA &data) {
+	unsigned int ioCode = IOCTL_DP_SEND_INPUT_DATA;
+	unsigned int ioSize = sizeof(INPUT_DATA);
 
-	LOGVwx(wxString::Format(wxT("(%d, %d)"), data.wAxisX, data.wAxisY));
+	LOGVwx(wxString::Format(wxT("(%d, %d)"), data.axisX, data.axisY));
 
 	DWORD bytesReturned;
 
-	if(!DeviceIoControl(vJoyHandle, ioCode, &data, ioSize, NULL, 0, &bytesReturned, NULL)) {
+	if(!DeviceIoControl(dosDeviceHandle, ioCode, &data, ioSize, NULL, 0, &bytesReturned, NULL)) {
 		int error = GetLastError();
 		LOGWwx(wxString::Format(wxT("Couldn't send JS data, error is %d."), error));
 		return error;

@@ -36,7 +36,7 @@ build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = droidpad$(EXEEXT)
 @IF_GUI_TRUE@am__append_1 = $(SRC_IF_GUI)
-@OS_WIN32_TRUE@am__append_2 = -lws2_32 lib/ext/win32/libvjoy.la
+@OS_WIN32_TRUE@am__append_2 = -lws2_32 lib/ext/win32/libjs.la
 @OS_WIN32_TRUE@am__append_3 = -Ilib/msw
 
 # Currently just update UI
@@ -89,7 +89,7 @@ am__objects_1 = droidpad-droidFrame.$(OBJEXT) \
 am_droidpad_OBJECTS = $(am__objects_2) $(am__objects_3) \
 	$(am__objects_4)
 droidpad_OBJECTS = $(am_droidpad_OBJECTS)
-@OS_WIN32_TRUE@am__DEPENDENCIES_1 = lib/ext/win32/libvjoy.la
+@OS_WIN32_TRUE@am__DEPENDENCIES_1 = lib/ext/win32/libjs.la
 @IF_GUI_TRUE@@OS_WIN32_TRUE@am__DEPENDENCIES_2 = if-gui/droidpad.res \
 @IF_GUI_TRUE@@OS_WIN32_TRUE@	${prefix}/lib/libsetupapi.a
 @IF_GUI_FALSE@droidpad_DEPENDENCIES = lib/libdroidpad.la \

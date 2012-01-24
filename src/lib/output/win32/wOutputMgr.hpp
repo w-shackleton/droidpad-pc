@@ -24,7 +24,7 @@
 #include "wPlatformSettings.hpp"
 #include "output/IOutputMgr.hpp"
 
-#include "vJoyOutputs.hpp"
+#include "jsOutputs.hpp"
 
 namespace droidpad {
 	class DPJSData;

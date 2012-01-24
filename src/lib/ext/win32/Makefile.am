@@ -20,22 +20,22 @@
 
 if OS_WIN32
 
-lib_LTLIBRARIES = libvjoy.la
+lib_LTLIBRARIES = libjs.la
 
-libvjoy_la_SOURCES =	\
-	vjoy/vJoyInstallLib.cpp	vjoy/vJoyInstall.h	\
-	vjoy/stdafx.h		vjoy/public.h		\
-	vjoy/targetver.h	vJoy/winheader/salfix.h	\
+libjs_la_SOURCES =	\
+	js/vJoyInstallLib.cpp	js/vJoyInstall.h	\
+	js/stdafx.h		js/defs.h		\
+	js/targetver.h		js/winheader/salfix.h	\
 	winUtil.cpp		winUtil.hpp		\
-	vjoy.cpp		vjoy.hpp
+	jsDriver.cpp		jsDriver.hpp
 
-libvjoy_la_CXXFLAGS = -Ivjoy -I${prefix}/include/ddk -w @WXCPPFLAGS@ -fpermissive
-libvjoy_la_LIBADD = @WXBASELIBS@
+libjs_la_CXXFLAGS = -Ijs -I${prefix}/include/ddk -w @WXCPPFLAGS@ -fpermissive
+libjs_la_LIBADD = @WXBASELIBS@
 
 AM_CPPFLAGS = -DOS_WIN32
 
 if OS_64BIT
-# libvjoy_la_LDFLAGS = -static-libgcc
+# libjs_la_LDFLAGS = -static-libgcc
 AM_CPPFLAGS += -DOS_64BIT
 endif
 endif

@@ -1,6 +1,6 @@
 #include <winUtil.hpp>
 
-#include "vjoy/targetver.h"
+#include "js/targetver.h"
 
 #include <windows.h>
 #include <winnt.h>

@@ -18,6 +18,8 @@ libtool
 doc
 test
 winexport
+winexport32
+winexport64
 src/droidpad.exe
 src/if-gui/droidpad.res
 build

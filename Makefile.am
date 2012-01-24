@@ -86,8 +86,10 @@ DRVS_amd64 =	\
 
 if OS_64BIT
 OUTDIR = winexport64
+MANIFEST = src/if-gui/amd64.manifest
 else
 OUTDIR = winexport32
+MANIFEST = src/if-gui/x86.manifest
 endif
 
 winexport: all
@@ -99,6 +101,7 @@ winexport: all
 	test -d "$(OUTDIR)/data/driver/x86" || mkdir $(OUTDIR)/data/driver/x86
 	test -d "$(OUTDIR)/data/driver/amd64" || mkdir $(OUTDIR)/data/driver/amd64
 	cp src/droidpad.exe $(OUTDIR)/
+	cp $(MANIFEST) $(OUTDIR)/droidpad.exe.manifest
 	cp $(DPDATA) $(OUTDIR)/data
 	cp $(ADB) $(OUTDIR)/data/adb
 	cp $(MINGW_FILES) $(OUTDIR)/

@@ -18,24 +18,39 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-// wxWidgets-ized definitions for the vJoy functions.
+/*
+   This code contains the functions used to output code on the windows input API,
+   as opposed to the PPJoy API
+   */
+#ifndef DP_VJOY_OUTPUTS_H
+#define DP_VJOY_OUTPUTS_H
 
-#ifndef DP_VJOY_H
-#define DP_VJOY_H
+#include <stdexcept>
+#include <map>
 
-#include <wx/string.h>
+#define UNICODE
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0600
+#endif
+#include <windows.h>
 
-wxString vJoyGetDevHwId();
+#include "ext/win32/js/defs.h"
 
-void vJoyOpenLog(wxString location);
+namespace droidpad {
+	namespace win32 {
+		class VJoyOutputs {
+			public:
+				// Opens the joystick.
+				// returns true on success.
+				int OpenJoystick();
+				virtual ~VJoyOutputs();
 
-void vJoyCloseLog();
+				int SendPositions(INPUT_DATA &data);
 
-bool vJoyInstall(wxString infPath, wxString hwId);
-bool vJoyRemove(wxString infPath, wxString hwId);
-bool vJoyPurge(wxString infPath, wxString hwId);
-bool vJoyRepair(wxString infPath, wxString hwId);
-
-bool vJoyIsInstalled();
+			private:
+				HANDLE dosDeviceHandle;
+		};
+	};
+};
 
 #endif

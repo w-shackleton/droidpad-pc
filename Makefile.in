@@ -315,6 +315,8 @@ DRVS_amd64 = \
 
 @OS_64BIT_FALSE@OUTDIR = winexport32
 @OS_64BIT_TRUE@OUTDIR = winexport64
+@OS_64BIT_FALSE@MANIFEST = src/if-gui/x86.manifest
+@OS_64BIT_TRUE@MANIFEST = src/if-gui/amd64.manifest
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -823,6 +825,7 @@ winexport: all
 	test -d "$(OUTDIR)/data/driver/x86" || mkdir $(OUTDIR)/data/driver/x86
 	test -d "$(OUTDIR)/data/driver/amd64" || mkdir $(OUTDIR)/data/driver/amd64
 	cp src/droidpad.exe $(OUTDIR)/
+	cp $(MANIFEST) $(OUTDIR)/droidpad.exe.manifest
 	cp $(DPDATA) $(OUTDIR)/data
 	cp $(ADB) $(OUTDIR)/data/adb
 	cp $(MINGW_FILES) $(OUTDIR)/

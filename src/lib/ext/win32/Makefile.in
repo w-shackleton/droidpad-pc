@@ -55,7 +55,7 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 
-# libvjoy_la_LDFLAGS = -static-libgcc
+# libjs_la_LDFLAGS = -static-libgcc
 @OS_64BIT_TRUE@@OS_WIN32_TRUE@am__append_1 = -DOS_64BIT
 subdir = src/lib/ext/win32
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
@@ -93,21 +93,20 @@ am__base_list = \
   sed '$$!N;$$!N;$$!N;$$!N;s/\n/ /g'
 am__installdirs = "$(DESTDIR)$(libdir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libvjoy_la_DEPENDENCIES =
-am__libvjoy_la_SOURCES_DIST = vjoy/vJoyInstallLib.cpp \
-	vjoy/vJoyInstall.h vjoy/stdafx.h vjoy/public.h \
-	vjoy/targetver.h vJoy/winheader/salfix.h winUtil.cpp \
-	winUtil.hpp vjoy.cpp vjoy.hpp
-@OS_WIN32_TRUE@am_libvjoy_la_OBJECTS = libvjoy_la-vJoyInstallLib.lo \
-@OS_WIN32_TRUE@	libvjoy_la-winUtil.lo libvjoy_la-vjoy.lo
-libvjoy_la_OBJECTS = $(am_libvjoy_la_OBJECTS)
+libjs_la_DEPENDENCIES =
+am__libjs_la_SOURCES_DIST = js/vJoyInstallLib.cpp js/vJoyInstall.h \
+	js/stdafx.h js/defs.h js/targetver.h js/winheader/salfix.h \
+	winUtil.cpp winUtil.hpp jsDriver.cpp jsDriver.hpp
+@OS_WIN32_TRUE@am_libjs_la_OBJECTS = libjs_la-vJoyInstallLib.lo \
+@OS_WIN32_TRUE@	libjs_la-winUtil.lo libjs_la-jsDriver.lo
+libjs_la_OBJECTS = $(am_libjs_la_OBJECTS)
 AM_V_lt = $(am__v_lt_$(V))
 am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
 am__v_lt_0 = --silent
-libvjoy_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
-	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(libvjoy_la_CXXFLAGS) \
+libjs_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(libjs_la_CXXFLAGS) \
 	$(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-@OS_WIN32_TRUE@am_libvjoy_la_rpath = -rpath $(libdir)
+@OS_WIN32_TRUE@am_libjs_la_rpath = -rpath $(libdir)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -150,8 +149,8 @@ am__v_CCLD_0 = @echo "  CCLD  " $@;
 AM_V_GEN = $(am__v_GEN_$(V))
 am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
 am__v_GEN_0 = @echo "  GEN   " $@;
-SOURCES = $(libvjoy_la_SOURCES)
-DIST_SOURCES = $(am__libvjoy_la_SOURCES_DIST)
+SOURCES = $(libjs_la_SOURCES)
+DIST_SOURCES = $(am__libjs_la_SOURCES_DIST)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -292,16 +291,16 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-@OS_WIN32_TRUE@lib_LTLIBRARIES = libvjoy.la
-@OS_WIN32_TRUE@libvjoy_la_SOURCES = \
-@OS_WIN32_TRUE@	vjoy/vJoyInstallLib.cpp	vjoy/vJoyInstall.h	\
-@OS_WIN32_TRUE@	vjoy/stdafx.h		vjoy/public.h		\
-@OS_WIN32_TRUE@	vjoy/targetver.h	vJoy/winheader/salfix.h	\
+@OS_WIN32_TRUE@lib_LTLIBRARIES = libjs.la
+@OS_WIN32_TRUE@libjs_la_SOURCES = \
+@OS_WIN32_TRUE@	js/vJoyInstallLib.cpp	js/vJoyInstall.h	\
+@OS_WIN32_TRUE@	js/stdafx.h		js/defs.h		\
+@OS_WIN32_TRUE@	js/targetver.h		js/winheader/salfix.h	\
 @OS_WIN32_TRUE@	winUtil.cpp		winUtil.hpp		\
-@OS_WIN32_TRUE@	vjoy.cpp		vjoy.hpp
+@OS_WIN32_TRUE@	jsDriver.cpp		jsDriver.hpp
 
-@OS_WIN32_TRUE@libvjoy_la_CXXFLAGS = -Ivjoy -I${prefix}/include/ddk -w @WXCPPFLAGS@ -fpermissive
-@OS_WIN32_TRUE@libvjoy_la_LIBADD = @WXBASELIBS@
+@OS_WIN32_TRUE@libjs_la_CXXFLAGS = -Ijs -I${prefix}/include/ddk -w @WXCPPFLAGS@ -fpermissive
+@OS_WIN32_TRUE@libjs_la_LIBADD = @WXBASELIBS@
 @OS_WIN32_TRUE@AM_CPPFLAGS = -DOS_WIN32 $(am__append_1)
 all: all-am
 
@@ -368,8 +367,8 @@ clean-libLTLIBRARIES:
 	  echo "rm -f \"$${dir}/so_locations\""; \
 	  rm -f "$${dir}/so_locations"; \
 	done
-libvjoy.la: $(libvjoy_la_OBJECTS) $(libvjoy_la_DEPENDENCIES) 
-	$(AM_V_CXXLD)$(libvjoy_la_LINK) $(am_libvjoy_la_rpath) $(libvjoy_la_OBJECTS) $(libvjoy_la_LIBADD) $(LIBS)
+libjs.la: $(libjs_la_OBJECTS) $(libjs_la_DEPENDENCIES) 
+	$(AM_V_CXXLD)$(libjs_la_LINK) $(am_libjs_la_rpath) $(libjs_la_OBJECTS) $(libjs_la_LIBADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -377,9 +376,9 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvjoy_la-vJoyInstallLib.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvjoy_la-vjoy.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libvjoy_la-winUtil.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libjs_la-jsDriver.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libjs_la-vJoyInstallLib.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libjs_la-winUtil.Plo@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -405,29 +404,29 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
-libvjoy_la-vJoyInstallLib.lo: vjoy/vJoyInstallLib.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvjoy_la_CXXFLAGS) $(CXXFLAGS) -MT libvjoy_la-vJoyInstallLib.lo -MD -MP -MF $(DEPDIR)/libvjoy_la-vJoyInstallLib.Tpo -c -o libvjoy_la-vJoyInstallLib.lo `test -f 'vjoy/vJoyInstallLib.cpp' || echo '$(srcdir)/'`vjoy/vJoyInstallLib.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libvjoy_la-vJoyInstallLib.Tpo $(DEPDIR)/libvjoy_la-vJoyInstallLib.Plo
+libjs_la-vJoyInstallLib.lo: js/vJoyInstallLib.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libjs_la_CXXFLAGS) $(CXXFLAGS) -MT libjs_la-vJoyInstallLib.lo -MD -MP -MF $(DEPDIR)/libjs_la-vJoyInstallLib.Tpo -c -o libjs_la-vJoyInstallLib.lo `test -f 'js/vJoyInstallLib.cpp' || echo '$(srcdir)/'`js/vJoyInstallLib.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libjs_la-vJoyInstallLib.Tpo $(DEPDIR)/libjs_la-vJoyInstallLib.Plo
 @am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='vjoy/vJoyInstallLib.cpp' object='libvjoy_la-vJoyInstallLib.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='js/vJoyInstallLib.cpp' object='libjs_la-vJoyInstallLib.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvjoy_la_CXXFLAGS) $(CXXFLAGS) -c -o libvjoy_la-vJoyInstallLib.lo `test -f 'vjoy/vJoyInstallLib.cpp' || echo '$(srcdir)/'`vjoy/vJoyInstallLib.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libjs_la_CXXFLAGS) $(CXXFLAGS) -c -o libjs_la-vJoyInstallLib.lo `test -f 'js/vJoyInstallLib.cpp' || echo '$(srcdir)/'`js/vJoyInstallLib.cpp
 
-libvjoy_la-winUtil.lo: winUtil.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvjoy_la_CXXFLAGS) $(CXXFLAGS) -MT libvjoy_la-winUtil.lo -MD -MP -MF $(DEPDIR)/libvjoy_la-winUtil.Tpo -c -o libvjoy_la-winUtil.lo `test -f 'winUtil.cpp' || echo '$(srcdir)/'`winUtil.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libvjoy_la-winUtil.Tpo $(DEPDIR)/libvjoy_la-winUtil.Plo
+libjs_la-winUtil.lo: winUtil.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libjs_la_CXXFLAGS) $(CXXFLAGS) -MT libjs_la-winUtil.lo -MD -MP -MF $(DEPDIR)/libjs_la-winUtil.Tpo -c -o libjs_la-winUtil.lo `test -f 'winUtil.cpp' || echo '$(srcdir)/'`winUtil.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libjs_la-winUtil.Tpo $(DEPDIR)/libjs_la-winUtil.Plo
 @am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='winUtil.cpp' object='libvjoy_la-winUtil.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='winUtil.cpp' object='libjs_la-winUtil.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvjoy_la_CXXFLAGS) $(CXXFLAGS) -c -o libvjoy_la-winUtil.lo `test -f 'winUtil.cpp' || echo '$(srcdir)/'`winUtil.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libjs_la_CXXFLAGS) $(CXXFLAGS) -c -o libjs_la-winUtil.lo `test -f 'winUtil.cpp' || echo '$(srcdir)/'`winUtil.cpp
 
-libvjoy_la-vjoy.lo: vjoy.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvjoy_la_CXXFLAGS) $(CXXFLAGS) -MT libvjoy_la-vjoy.lo -MD -MP -MF $(DEPDIR)/libvjoy_la-vjoy.Tpo -c -o libvjoy_la-vjoy.lo `test -f 'vjoy.cpp' || echo '$(srcdir)/'`vjoy.cpp
-@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libvjoy_la-vjoy.Tpo $(DEPDIR)/libvjoy_la-vjoy.Plo
+libjs_la-jsDriver.lo: jsDriver.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libjs_la_CXXFLAGS) $(CXXFLAGS) -MT libjs_la-jsDriver.lo -MD -MP -MF $(DEPDIR)/libjs_la-jsDriver.Tpo -c -o libjs_la-jsDriver.lo `test -f 'jsDriver.cpp' || echo '$(srcdir)/'`jsDriver.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libjs_la-jsDriver.Tpo $(DEPDIR)/libjs_la-jsDriver.Plo
 @am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='vjoy.cpp' object='libvjoy_la-vjoy.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='jsDriver.cpp' object='libjs_la-jsDriver.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libvjoy_la_CXXFLAGS) $(CXXFLAGS) -c -o libvjoy_la-vjoy.lo `test -f 'vjoy.cpp' || echo '$(srcdir)/'`vjoy.cpp
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libjs_la_CXXFLAGS) $(CXXFLAGS) -c -o libjs_la-jsDriver.lo `test -f 'jsDriver.cpp' || echo '$(srcdir)/'`jsDriver.cpp
 
 mostlyclean-libtool:
 	-rm -f *.lo
