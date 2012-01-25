@@ -1,23 +1,15 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; 
-;; Installation file for vJoy - Virtual Joystick Driver
-;;
-;; Copyright 2010-2011, Shaul Eizikovich
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
 [Version]
 Signature="$CHICAGO$"
 Class=HIDClass
-; ClassGuid={7632f26a-ea05-488d-a1e3-b3206882fa98}
 ClassGuid={745a17a0-74d3-11d0-b6fe-00a0c90f57da}
 Provider=%VENDOR%
-;LayoutFile=layout.inf
-DriverVer=01/21/2012,6.1.7600.16385
-CatalogFile = vJoy.cat
+LayoutFile=layout.inf
+DriverVer=01/24/2012,6.1.7600.16385
+CatalogFile=droidpad.cat
 
-
+;
+;   Layout.inf (etc.) list all files shipped with the operating system so the 
+;   source description sections are only needed if other files are needed.
 ;   
 ;   In order to use IHV drivers, the SourceDisksNames section must list the 
 ;   disk(s) containing the drivers and the SourceDisksFiles section must list 
@@ -30,7 +22,7 @@ CatalogFile = vJoy.cat
 ;   driver signing.
 
 [SourceDisksFiles]
-vjoy.sys = 99
+droidpad.sys = 99
 hidkmdf.sys = 99
 
 [SourceDisksNames]
@@ -39,44 +31,47 @@ hidkmdf.sys = 99
 [DestinationDirs]
 CopySystemSysFiles = 12      
 CopyFunctionDriver = 12      
-;CopyFilterDriver = 12      
+CopyFilterDriver = 12      
 CopyFilesDLL = 11 
 
 [Manufacturer]
-%VENDOR%=Vendor, NTAMD64, NTAMD64.6.1
+%VENDOR%=Vendor, NTx86, NTx86.6.1
 
+; For Win2K
+[Vendor]
+%droidpad%    = droidpad.Inst, root\VID_0547&PID_1002
+%customCollection%    = customCollection.Inst, HID_DEVICE_UP:FF00_U:0001
 
 ; For XP and later
-[Vendor.NTAMD64]
-%vjoy%    = vjoy.Inst, root\VID_8191&PID_BEAD&REV_0002
+[Vendor.NTx86]
+%droidpad%    = droidpad.Inst, root\VID_0547&PID_1002
+%customCollection%    = customCollection.Inst, HID_DEVICE_UP:FF00_U:0001
 
 ; For Win7 and later so that we can use inbox HID-KMDF mapper
-[Vendor.NTAMD64.6.1]
-%vjoy%    = vjoy.Inst.Win7, root\VID_8191&PID_BEAD&REV_0002
-
+[Vendor.NTx86.6.1]
+%droidpad%    = droidpad.Inst.Win7, root\VID_0547&PID_1002
+%customCollection%    = customCollection.Inst, HID_DEVICE_UP:FF00_U:0001
 
 ;===============================================================
-;   vJoy for XP thru Vista
+;   droidpad for Win2K thru Vista
 ;===============================================================
-[vjoy.Inst.NT]
-CopyFiles = CopySystemSysFiles, CopyFunctionDriver, CopyFilesDLL
-Include = input.inf
-Needs   = HID_Inst.NT
+[droidpad.Inst.NT]
+CopyFiles = CopySystemSysFiles, CopyFunctionDriver, CopyFilterDriver, CopyFilesDLL
 
-[vjoy.Inst.NT.HW]
-AddReg = vjoy.AddReg 
+[droidpad.Inst.NT.HW]
+AddReg = droidpad_Parameters.AddReg 
 
 ;
-; hidkmdf is the function driver and vJoy is the lower filter
+; hidkmdf is the function driver and droidpad is the lower filter
 ;
-[vjoy.Inst.NT.Services]
+[droidpad.Inst.NT.Services]
 AddService = hidkmdf,,hidkmdf_Service_Inst,
-AddService = vjoy,0x00000002, vjoy_Service_Inst
+AddService = droidpad,0x00000002, droidpad_Service_Inst
 
 [CopyFunctionDriver]
 hidkmdf.sys
 
-[vjoy.AddReg]
+[droidpad_Parameters.AddReg]
 HKR,,"UpperFilters",0x00010000,"hidkmdf"
 
 [hidkmdf_Service_Inst]
@@ -89,77 +84,94 @@ LoadOrderGroup = PNP Filter
 
 
 ;===============================================================
-;   vJoy for Win7
+;   droidpad for Win7
 ;   Instead of using hidkmdf.sys as a filter, use the inbox 
 ;   mshidkmdf.sys as a mapper filter
 ;===============================================================
-[vjoy.Inst.Win7.NT]
+[droidpad.Inst.Win7.NT]
 ; Just copy the driver. No neeed to copy other system binaries.
 CopyFiles = CopyFunctionDriver
 
-[vjoy.Inst.Win7.NT.HW]
-AddReg = vjoy_Win7_Parameters.AddReg 
+[droidpad.Inst.Win7.NT.HW]
+AddReg = droidpad_Win7_Parameters.AddReg 
 
 ;
-; hidkmdf is the function driver and vJoy is the lower filter
+; hidkmdf is the function driver and droidpad is the lower filter
 ;
-[vjoy.Inst.Win7.NT.Services]
-AddService = vjoy,0x00000002, vjoy_Service_Inst
+[droidpad.Inst.Win7.NT.Services]
+AddService = droidpad,0x00000002, droidpad_Service_Inst
 
-[vjoy_Win7_Parameters.AddReg]
+[droidpad_Win7_Parameters.AddReg]
 HKR,,"UpperFilters",0x00010000,"mshidkmdf"
+
 ;===============================================================
 ;   Sections common to all OS versions
 ;===============================================================
 
 [CopySystemSysFiles]
-;HidClass.sys,,,0x00000010    ;COPYFLG_NO_OVERWRITE (for win2k)
-;HidParse.sys,,,0x00000010    ;COPYFLG_NO_OVERWRITE (for win2k)
+HidClass.sys,,,0x00000010    ;COPYFLG_NO_OVERWRITE (for win2k)
+HidParse.sys,,,0x00000010    ;COPYFLG_NO_OVERWRITE (for win2k)
 
 [CopyFunctionDriver]
-vjoy.sys
+droidpad.sys
 
 [CopyFilesDLL]
-;Hid.dll,,,0x00000010    ;COPYFLG_NO_OVERWRITE (for win2k)
+Hid.dll,,,0x00000010    ;COPYFLG_NO_OVERWRITE (for win2k)
 
-[vjoy_Service_Inst]
-DisplayName    = %vjoy%
+[droidpad_Service_Inst]
+DisplayName    = %droidpad%
 ServiceType    = %SERVICE_KERNEL_DRIVER% 
 StartType      = %SERVICE_DEMAND_START% 
 ErrorControl   = %SERVICE_ERROR_IGNORE% 
-ServiceBinary  = %12%\vjoy.sys  
+ServiceBinary  = %12%\droidpad.sys 
 
+;===============================================================
+;   Custom Collection install section
+; - Only a Null service is installed.
+;===============================================================
+[customCollection.Inst.NT]
+; NULL section
+
+[customCollection.Inst.NT.HW]
+AddReg = customCollection.Inst.AddReg.NT.HW
+
+[customCollection.Inst.AddReg.NT.HW]
+HKR,,"SelectiveSuspendEnabled",0x00000001,0x1
+
+[customCollection.Inst.NT.Services]
+AddService = ,0x00000002,   ; NULL Service
 
 ;================================================================
 ;--- WDF Coinstaller installation ------
 ;
 [DestinationDirs]
-vjoy.Inst_CoInstaller_CopyFiles = 11
+droidpad.Inst_CoInstaller_CopyFiles = 11
 
-[vjoy.Inst.NT.CoInstallers]
-AddReg=vjoy.Inst_CoInstaller_AddReg
-CopyFiles=vjoy.Inst_CoInstaller_CopyFiles
+[droidpad.Inst.NT.CoInstallers]
+AddReg=droidpad.Inst_CoInstaller_AddReg
+CopyFiles=droidpad.Inst_CoInstaller_CopyFiles
 
-[vjoy.Inst_CoInstaller_AddReg]
+[droidpad.Inst_CoInstaller_AddReg]
 HKR,,CoInstallers32,0x00010000, "WdfCoInstaller01009.dll,WdfCoInstaller"
 
-[vjoy.Inst_CoInstaller_CopyFiles]
-WdfCoInstaller01009.dll
+[droidpad.Inst_CoInstaller_CopyFiles]
+WdfCoInstaller01009.dll,,,0x00000010    ;COPYFLG_NO_OVERWRITE (for win2k)
 
 [SourceDisksFiles]
 WdfCoInstaller01009.dll=99 ; make sure the number matches with SourceDisksNames
 
-[vjoy.Inst.NT.Wdf]
-KmdfService = vjoy, vjoy_wdfsect
-[vjoy_wdfsect]
+[droidpad.Inst.NT.Wdf]
+KmdfService = droidpad, droidpad_wdfsect
+[droidpad_wdfsect]
 KmdfLibraryVersion = 1.9
 
 [Strings] 
 ;  *******Localizable Strings******* 
 VENDOR         = "Digitalsquid" 
-vjoy       	= "vJoy Device (DroidPad)" 
-DISK_NAME      = "vJoy Device Install Disk"
-hidkmdf.SVCDESC= "Filter Driver Service for HID-KMDF Interface layer"
+droidpad       = "DroidPad Joystick" 
+customCollection = "HID Vendor-defined Collection for DroidPad"
+DISK_NAME      = "DroidPad Install disk"
+hidkmdf.SVCDESC= "Filter Driver Service for DroidPad Joystick"
 
 ;  *******Non Localizable Strings******* 
 

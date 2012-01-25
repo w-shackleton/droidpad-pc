@@ -66,7 +66,7 @@ void* SetupThread::Entry() {
 			wxMilliSleep(30);
 		}
 		bootconf::getCurrentConfig();
-		if(vJoyIsInstalled())
+		if(isJsInstalledAndRunning())
 			LOGE("JS DRIVER INSTALLED");
 		else
 			LOGE("JS DRIVER NOT INSTALLED");

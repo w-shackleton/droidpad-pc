@@ -70,17 +70,17 @@ endif
 DRVDIR_x86 = data/drv/objfre_wxp_x86/i386
 DRVDIR_amd64 = data/drv/objfre_wlh_amd64/amd64
 DRVS_x86 =	\
-	$(DRVDIR_x86)/hidkmdf.sys	\
-	$(DRVDIR_x86)/vjoy.cat		\
-	$(DRVDIR_x86)/vJoy.inf		\
-	$(DRVDIR_x86)/vJoy.sys		\
+	$(DRVDIR_x86)/hidkmdf.sys		\
+	$(DRVDIR_x86)/droidpad.cat		\
+	$(DRVDIR_x86)/droidpad.inf		\
+	$(DRVDIR_x86)/droidpad.sys		\
 	$(DRVDIR_x86)/WdfCoInstaller01009.dll	\
 	$(DRVDIR_x86)/WUDFUpdate_01009.dll
 DRVS_amd64 =	\
-	$(DRVDIR_amd64)/hidkmdf.sys	\
-	$(DRVDIR_amd64)/vjoy.cat		\
-	$(DRVDIR_amd64)/vJoy.inf		\
-	$(DRVDIR_amd64)/vJoy.sys		\
+	$(DRVDIR_amd64)/hidkmdf.sys		\
+	$(DRVDIR_amd64)/droidpad.cat		\
+	$(DRVDIR_amd64)/droidpad.inf		\
+	$(DRVDIR_amd64)/droidpad.sys		\
 	$(DRVDIR_amd64)/WdfCoInstaller01009.dll	\
 	$(DRVDIR_amd64)/WUDFUpdate_01009.dll
 
