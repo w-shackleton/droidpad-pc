@@ -4,7 +4,7 @@ Class=HIDClass
 ClassGuid={745a17a0-74d3-11d0-b6fe-00a0c90f57da}
 Provider=%VENDOR%
 LayoutFile=layout.inf
-DriverVer=01/24/2012,6.1.7600.16385
+DriverVer=01/26/2012,6.1.7600.16385
 CatalogFile=droidpad.cat
 
 ;
@@ -39,17 +39,17 @@ CopyFilesDLL = 11
 
 ; For Win2K
 [Vendor]
-%droidpad%    = droidpad.Inst, root\VID_0547&PID_1002
+%droidpad%    = droidpad.Inst, root\VID_D801&PID_D6AD&REV_0001
 %customCollection%    = customCollection.Inst, HID_DEVICE_UP:FF00_U:0001
 
 ; For XP and later
 [Vendor.NTx86]
-%droidpad%    = droidpad.Inst, root\VID_0547&PID_1002
+%droidpad%    = droidpad.Inst, root\VID_D801&PID_D6AD&REV_0001
 %customCollection%    = customCollection.Inst, HID_DEVICE_UP:FF00_U:0001
 
 ; For Win7 and later so that we can use inbox HID-KMDF mapper
 [Vendor.NTx86.6.1]
-%droidpad%    = droidpad.Inst.Win7, root\VID_0547&PID_1002
+%droidpad%    = droidpad.Inst.Win7, root\VID_D801&PID_D6AD&REV_0001
 %customCollection%    = customCollection.Inst, HID_DEVICE_UP:FF00_U:0001
 
 ;===============================================================

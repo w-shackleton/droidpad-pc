@@ -50,7 +50,7 @@ END_EVENT_TABLE()
 
 WinSetupFrame::WinSetupFrame(int mode) :
 	mode(mode),
-	wxFrame(NULL, -1, _(FRAME_TITLE), wxDefaultPosition, wxSize(180, 100))
+	wxFrame(NULL, -1, _(FRAME_TITLE), wxDefaultPosition, wxSize(320, 150))
 {
 	SetIcon(wxIcon(wxString(Data::getFilePath(_FRAME_ICON).c_str(), wxConvUTF8), wxBITMAP_TYPE_XPM));
 

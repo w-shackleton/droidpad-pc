@@ -1015,18 +1015,6 @@ EXIT_xxxx
 
 }
 
-// NOTE: ppjoy mode is disabled, so we DON'T want to ever check to see if it is installed.
-BOOL isPPJoyInstalled()
-{
-	return false;
-	/*
-	TCHAR InstanceId[MAX_DEVICE_ID_LEN];
-
-	BOOL installed = FindInstalled(HWID_PPJOY0, InstanceId);
-	return installed;
-	*/
-}
-
 BOOL isvJoyInstalled()
 {
 	TCHAR InstanceId[MAX_DEVICE_ID_LEN];
@@ -1044,17 +1032,6 @@ int Installation(LPCTSTR DeviceHWID, TCHAR * InfFile)
 	TCHAR InstanceId[MAX_DEVICE_ID_LEN];
 	GUID ClassGUID = GUID_NULL;
 	TCHAR InfPath[MAX_PATH];
-
-	//////////////// Test if PPJoy (virtual joystick 1)///////////////////////////
-	if (isPPJoyInstalled())
-	{
-		//_ftprintf(stream,_T("[E] Install failed: PPJoy (virtual joystick 1) is already installed \n"));
-		_stprintf(prt, _T("Install failed: PPJoy (virtual joystick 1) is already installed"));
-		StatusMessage( NULL, prt,  ERR);
-		return -7;
-	}
-	//////////////////////////////////////////////////////////////////////////////
-
 
 	/////////////////////////////////////
 	// Test if device already installed. 
@@ -1120,17 +1097,6 @@ int Repair(TCHAR * DeviceHWID, TCHAR * InfFile)
 	TCHAR InstanceId[MAX_DEVICE_ID_LEN];
 	GUID ClassGUID = GUID_NULL;
 	TCHAR InfPath[MAX_PATH];
-
-	//////////////// Test if PPJoy (virtual joystick 1)///////////////////////////
-	if (isPPJoyInstalled())
-	{
-		//_ftprintf(stream,_T("[E] Repair failed: PPJoy (virtual joystick 1) is already installed \n"));
-		_stprintf(prt, _T("Repair failed: PPJoy (virtual joystick 1) is already installed "));
-		StatusMessage( NULL, prt,  ERR);
-		return -7;
-	}
-	//////////////////////////////////////////////////////////////////////////////
-
 
 	/////////////////////////////////////
 	// Test if device already installed. 
