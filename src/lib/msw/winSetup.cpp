@@ -57,7 +57,7 @@ void* SetupThread::Entry() {
 		} break;
 	}
 
-#ifdef OS_64BIT
+#ifdef MSW_TESTMODE
 	if(mode == MODE_SETUP) {
 		SetupEvent evt(SETUP_SHOW_DRIVERCHOICE);
 		callback.AddPendingEvent(evt);

@@ -129,7 +129,7 @@ void WinSetupFrame::OnRemoveRemoving(SetupEvent& event) {
 }
 
 void WinSetupFrame::ShowDriverChoice(droidpad::SetupEvent& event) {
-#ifdef OS_64BIT
+#ifdef MSW_TESTMODE
 	DriverChoice *choice = new DriverChoice(this);
 	int result = choice->ShowModal();
 	delete choice;

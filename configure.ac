@@ -54,11 +54,30 @@ AC_MSG_CHECKING(whether to enable debugging)
 debug_default="no"
 AC_ARG_ENABLE(debug, [  --enable-debug=[no/yes] turn on debugging
 	                             [default=$debug_default]],, enable_debug=$debug_default)
-dnl Yes, shell scripts can be used
+
 if test "x$enable_debug" = "xyes"; then
 	CFLAGS="$CFLAGS -g -DDEBUG"
 	CXXFLAGS="$CXXFLAGS -g -DDEBUG"
 	AC_MSG_RESULT(yes)
+else
+	AC_MSG_RESULT(no)
+fi
+
+dnl NOTE: Test mode support is NOT YET FINISHED. This is only included so that the code isn't deleted if it is ever needed again.
+testmode_default="no"
+AC_MSG_CHECKING(whether to enable windows test mode)
+AC_ARG_ENABLE(testmode, [  --enable-testmode=[no/yes] enable windows testmode support
+	                             [default=$testmode_default]],, enable_testmode=$testmode_default)
+
+if test "x$enable_testmode" = "xyes"; then
+	CFLAGS="$CFLAGS -g -DMSW_TESTMODE"
+	CXXFLAGS="$CXXFLAGS -g -DMSW_TESTMODE"
+	AC_MSG_RESULT(yes)
+	echo "*************************************"
+	echo "    ****    WARNING: Test mode support is currently not finished."
+	echo "    ****    This option is only here if someone else wants to write a branch of DP which"
+	echo "    ****    requires test signed drivers."
+	echo "*************************************"
 else
 	AC_MSG_RESULT(no)
 fi
@@ -128,6 +147,7 @@ AM_CONDITIONAL([OS_LINUX], [test $os = "linux"])
 AM_CONDITIONAL([OS_UNIX], [test $os = "linux"])
 
 AM_CONDITIONAL([OS_64BIT], [test $bits = "64bit"])
+AM_CONDITIONAL([MSW_TESTMODE], [test $enable_testmode = "yes"])
 
 # TODO: Change this to a variable, to change the interface
 iface="gui"

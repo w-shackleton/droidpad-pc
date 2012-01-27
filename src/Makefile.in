@@ -44,8 +44,8 @@ bin_PROGRAMS = droidpad$(EXEEXT)
 @OS_WIN32_TRUE@		if-gui/updateDisplay.cpp	if-gui/updateDisplay.hpp
 
 
-# win64
-@OS_64BIT_TRUE@@OS_WIN32_TRUE@am__append_5 = if-gui/driverChoice.cpp	if-gui/driverChoice.hpp
+# Test mode
+@MSW_TESTMODE_TRUE@@OS_WIN32_TRUE@am__append_5 = if-gui/driverChoice.cpp	if-gui/driverChoice.hpp
 @IF_GUI_TRUE@@OS_WIN32_TRUE@am__append_6 = if-gui/droidpad.res -lws2_32 ${prefix}/lib/libsetupapi.a
 
 # droidpad_LDFLAGS += -static-libgcc
@@ -84,8 +84,7 @@ am__objects_1 = droidpad-droidFrame.$(OBJEXT) \
 	droidpad-wxImagePanel.$(OBJEXT) droidpad-setup.$(OBJEXT)
 @IF_GUI_TRUE@am__objects_2 = $(am__objects_1)
 @OS_WIN32_TRUE@am__objects_3 = droidpad-updateDisplay.$(OBJEXT)
-@OS_64BIT_TRUE@@OS_WIN32_TRUE@am__objects_4 =  \
-@OS_64BIT_TRUE@@OS_WIN32_TRUE@	droidpad-driverChoice.$(OBJEXT)
+@MSW_TESTMODE_TRUE@@OS_WIN32_TRUE@am__objects_4 = droidpad-driverChoice.$(OBJEXT)
 am_droidpad_OBJECTS = $(am__objects_2) $(am__objects_3) \
 	$(am__objects_4)
 droidpad_OBJECTS = $(am_droidpad_OBJECTS)

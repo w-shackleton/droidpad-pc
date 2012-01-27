@@ -32,8 +32,8 @@ SRC_WIN32 =	\
 		output/win32/wPlatformSettings.hpp				\
 		msw/winSetup.cpp		msw/winSetup.hpp		\
 		msw/updater.cpp			msw/updater.hpp
-# *JUST* windows 64-bit.
-SRC_WIN64 =	\
+# Test mode enabling
+SRC_TESTMODE =	\
 		msw/bootConf.cpp		msw/bootConf.hpp
 
 libdroidpad_la_SOURCES = \
@@ -66,8 +66,8 @@ if OS_LINUX
 endif
 if OS_WIN32
   libdroidpad_la_SOURCES += $(SRC_WIN32)
-if OS_64BIT
-  libdroidpad_la_SOURCES += $(SRC_WIN64)
+if MSW_TESTMODE
+  libdroidpad_la_SOURCES += $(SRC_TESTMODE)
 endif
 endif
 

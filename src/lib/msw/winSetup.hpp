@@ -61,7 +61,7 @@ namespace droidpad {
 			~SetupThread();
 			void* Entry();
 
-#ifdef OS_64BIT
+#ifdef MSW_TESTMODE
 			/**
 			 * Sets the user's response when asked how they want drivers
 			 * to be installed. Code is one of the options from above.
@@ -78,7 +78,7 @@ namespace droidpad {
 			// Used as a wait hook for user responses. Could probably be done better
 			bool go;
 
-#ifdef OS_64BIT
+#ifdef MSW_TESTMODE
 			int userDriverResponse;
 #endif
 

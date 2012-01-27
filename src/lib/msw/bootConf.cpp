@@ -29,6 +29,8 @@
 
 using namespace std;
 using namespace droidpad;
+
+#ifdef MSW_TESTMODE
 using namespace droidpad::bootconf;
 
 BootConfig bootconf::getCurrentConfig() {
@@ -64,3 +66,5 @@ BootConfig bootconf::getCurrentConfig() {
 
 	return conf;
 }
+
+#endif

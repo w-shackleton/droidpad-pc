@@ -36,7 +36,7 @@ build_triplet = @build@
 host_triplet = @host@
 @OS_LINUX_TRUE@am__append_1 = $(SRC_LINUX)
 @OS_WIN32_TRUE@am__append_2 = $(SRC_WIN32)
-@OS_64BIT_TRUE@@OS_WIN32_TRUE@am__append_3 = $(SRC_WIN64)
+@MSW_TESTMODE_TRUE@@OS_WIN32_TRUE@am__append_3 = $(SRC_TESTMODE)
 @OS_WIN32_TRUE@am__append_4 = -lws2_32 ext/win32/libjs.la
 @OS_WIN32_TRUE@am__append_5 = -Imsw
 @OS_WIN32_TRUE@am__append_6 = -Imsw
@@ -115,7 +115,7 @@ am__objects_3 = libdroidpad_la-wOutputMgr.lo \
 	libdroidpad_la-winSetup.lo libdroidpad_la-updater.lo
 @OS_WIN32_TRUE@am__objects_4 = $(am__objects_3)
 am__objects_5 = libdroidpad_la-bootConf.lo
-@OS_64BIT_TRUE@@OS_WIN32_TRUE@am__objects_6 = $(am__objects_5)
+@MSW_TESTMODE_TRUE@@OS_WIN32_TRUE@am__objects_6 = $(am__objects_5)
 am_libdroidpad_la_OBJECTS = libdroidpad_la-proc.lo \
 	libdroidpad_la-data.lo libdroidpad_la-deviceManager.lo \
 	libdroidpad_la-mainThread.lo \
@@ -394,8 +394,8 @@ SRC_WIN32 = \
 		msw/winSetup.cpp		msw/winSetup.hpp		\
 		msw/updater.cpp			msw/updater.hpp
 
-# *JUST* windows 64-bit.
-SRC_WIN64 = \
+# Test mode enabling
+SRC_TESTMODE = \
 		msw/bootConf.cpp		msw/bootConf.hpp
 
 libdroidpad_la_SOURCES = include/adb.hpp include/outputMgr.hpp \

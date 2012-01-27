@@ -618,6 +618,8 @@ LTLIBOBJS
 LIBOBJS
 IF_GUI_FALSE
 IF_GUI_TRUE
+MSW_TESTMODE_FALSE
+MSW_TESTMODE_TRUE
 OS_64BIT_FALSE
 OS_64BIT_TRUE
 OS_UNIX_FALSE
@@ -773,6 +775,7 @@ with_sysroot
 enable_libtool_lock
 enable_silent_rules
 enable_debug
+enable_testmode
 with_wxdir
 with_wx_config
 with_wx_prefix
@@ -1422,6 +1425,8 @@ Optional Features:
   --disable-silent-rules         verbose build output (undo: `make V=0')
   --enable-debug=no/yes turn on debugging
 	                             default=$debug_default
+  --enable-testmode=no/yes enable windows testmode support
+	                             default=$testmode_default
 
 Optional Packages:
   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
@@ -14952,11 +14957,38 @@ else
   enable_debug=$debug_default
 fi
 
+
 if test "x$enable_debug" = "xyes"; then
 	CFLAGS="$CFLAGS -g -DDEBUG"
 	CXXFLAGS="$CXXFLAGS -g -DDEBUG"
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
+else
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+testmode_default="no"
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether to enable windows test mode" >&5
+$as_echo_n "checking whether to enable windows test mode... " >&6; }
+# Check whether --enable-testmode was given.
+if test "${enable_testmode+set}" = set; then :
+  enableval=$enable_testmode;
+else
+  enable_testmode=$testmode_default
+fi
+
+
+if test "x$enable_testmode" = "xyes"; then
+	CFLAGS="$CFLAGS -g -DMSW_TESTMODE"
+	CXXFLAGS="$CXXFLAGS -g -DMSW_TESTMODE"
+	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+	echo "*************************************"
+	echo "    ****    WARNING: Test mode support is currently not finished."
+	echo "    ****    This option is only here if someone else wants to write a branch of DP which"
+	echo "    ****    requires test signed drivers."
+	echo "*************************************"
 else
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
@@ -15555,6 +15587,14 @@ else
   OS_64BIT_FALSE=
 fi
 
+ if test $enable_testmode = "yes"; then
+  MSW_TESTMODE_TRUE=
+  MSW_TESTMODE_FALSE='#'
+else
+  MSW_TESTMODE_TRUE='#'
+  MSW_TESTMODE_FALSE=
+fi
+
 
 # TODO: Change this to a variable, to change the interface
 iface="gui"
@@ -15713,6 +15753,10 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${OS_64BIT_TRUE}" && test -z "${OS_64BIT_FALSE}"; then
   as_fn_error $? "conditional \"OS_64BIT\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${MSW_TESTMODE_TRUE}" && test -z "${MSW_TESTMODE_FALSE}"; then
+  as_fn_error $? "conditional \"MSW_TESTMODE\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${IF_GUI_TRUE}" && test -z "${IF_GUI_FALSE}"; then

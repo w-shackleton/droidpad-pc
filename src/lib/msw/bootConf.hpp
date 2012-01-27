@@ -26,6 +26,9 @@
 // This class manages and calls bcdedit.exe on 64-bit systems to check and enable necessary modes.
 
 namespace droidpad {
+
+#ifdef MSW_TESTMODE
+
 	namespace bootconf {
 		struct BootConfig {
 			/**
@@ -40,6 +43,8 @@ namespace droidpad {
 		 */
 		BootConfig getCurrentConfig();
 	}
+
+#endif
 }
 
 #endif

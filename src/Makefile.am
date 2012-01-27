@@ -55,8 +55,8 @@ droidpad_CXXFLAGS += -Ilib/msw
 droidpad_SOURCES +=	\
 		if-gui/updateDisplay.cpp	if-gui/updateDisplay.hpp
 
-# win64
-if OS_64BIT
+# Test mode
+if MSW_TESTMODE
 droidpad_SOURCES +=	if-gui/driverChoice.cpp	if-gui/driverChoice.hpp
 endif
 
