@@ -1,4 +1,3 @@
-
 /*
  * This file is part of DroidPad.
  * DroidPad lets you use an Android mobile to control a joystick or mouse

@@ -30,6 +30,7 @@ using namespace std;
 
 #include "droidFrame.hpp"
 #include "data.hpp"
+#include "proc.hpp"
 #include "log.hpp"
 #include "setup.hpp"
 
@@ -44,12 +45,18 @@ IMPLEMENT_APP(DroidApp)
 
 bool DroidApp::OnInit()
 {
+	continueInitialising = true; // This is potentially set to false in the option parsing
+	/*
 #ifdef OS_LINUX
 	setenv("UBUNTU_MENUPROXY", "0", 1); // Ubuntu 10.10 fix
 #endif
+	*/
 
 	if(!wxApp::OnInit())
 		return false;
+	if(!continueInitialising) {
+		return false;
+	}
 #ifdef OS_LINUX
 	logger = new wxLogStream(&cerr);
 #ifdef DEBUG
@@ -119,11 +126,17 @@ void DroidApp::OnInitCmdLine(wxCmdLineParser& parser) {
 	parser.SetSwitchChars(wxT("-"));
 }
 bool DroidApp::OnCmdLineParsed(wxCmdLineParser& parser) {
+	wxApp::OnCmdLineParsed(parser);
 	runSetup = parser.Found(wxT("s"));
 	runRemove = parser.Found(wxT("u"));
 
 	if(!parser.Found(wxT("n"))) { // If user didn't request no root, check.
+#ifdef OS_LINUX // Linux requires root checking for all operations
 		requestNecessaryPermissions();
+#elif OS_WIN32 // Windows requires root checking for only driver installation ops
+		if(runSetup || runRemove)
+			requestNecessaryPermissions();
+#endif
 	}
 
 	return true;
@@ -131,34 +144,39 @@ bool DroidApp::OnCmdLineParsed(wxCmdLineParser& parser) {
 
 void DroidApp::requestNecessaryPermissions() {
 #ifdef OS_LINUX
-	LOGV("Checking if permissions needed...");
-	if(geteuid() == 0) return; // We should be fine if sudo / su.
+	LOGV("Checking if permissions needed");
+	if(isAdmin()) return; // We should be fine if sudo / su.
 	if(dpinput_checkUInput() == CHECKRESULT_PERMS) { // Checking permissions
-		LOGV("Getting elevated permissions...");
-		// Execute correct SU process - guessing it
-		wxChar* session = wxGetenv(wxT("DESKTOP_SESSION"));
-		wxString suCmd;
-		if(session == NULL) suCmd = wxT("gksu");
-		else {
-			wxString sSession = session;
-			if(sSession == wxT("ubuntu") || sSession.find(wxT("gnome"))) {
-				suCmd = wxT("gksu");
-			} else if(sSession.find(wxT("kde")) || sSession.find(wxT("kwin"))) {
-				suCmd = wxT("kdesu");
+		LOGV("Getting elevated permissions");
+		wxString args;
+		if(argc > 1) {
+			args += argv[1];
+			for(int i = 2; i < argc; i++) {
+				args += wxT("");
+				args += argv[i];
 			}
 		}
-
-		wxString thisProcess = argv[0];
-
-		if(suCmd == wxT("gksu")) {
-			execlp(
-					suCmd.mb_str(),
-					(const char *)suCmd.mb_str(),
-					"-m",
-					"DroidPad must be run with elevated privileges.",
-					(const char *)thisProcess.mb_str(),
-					(char *)0);
-		}
+		wxString cmd = argv[0];
+		// This shouldn't return if exec is successful
+		runAsAdminAndExit((string)cmd.mb_str(), (string)args.mb_str());
 	}
-#endif // No windows probably.
+#elif OS_WIN32
+	// If admin or just running normal operation
+	if(isAdmin() || !(runSetup || runRemove)) {
+		continueInitialising = true;
+	} else {
+		continueInitialising = false;
+		LOGV("Getting elevated permissions");
+		wxString args;
+		if(argc > 1) {
+			args += argv[1];
+			for(int i = 2; i < argc; i++) {
+				args += wxT("");
+				args += argv[i];
+			}
+		}
+		wxString cmd = argv[0];
+		runAsAdminAndExit((string)cmd.mb_str(), (string)args.mb_str());
+	}
+#endif
 }

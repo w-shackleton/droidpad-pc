@@ -105,14 +105,16 @@ am__libdroidpad_la_SOURCES_DIST = include/adb.hpp \
 	output/win32/wOutputMgr.cpp output/win32/wOutputMgr.hpp \
 	output/win32/winOutputs.cpp output/win32/winOutputs.hpp \
 	output/win32/jsOutputs.cpp output/win32/jsOutputs.hpp \
-	output/win32/wPlatformSettings.hpp msw/winSetup.cpp \
-	msw/winSetup.hpp msw/updater.cpp msw/updater.hpp \
-	msw/bootConf.cpp msw/bootConf.hpp
+	output/win32/wPlatformSettings.hpp msw/adminCheck.c \
+	msw/adminCheck.h msw/winSetup.cpp msw/winSetup.hpp \
+	msw/updater.cpp msw/updater.hpp msw/bootConf.cpp \
+	msw/bootConf.hpp
 am__objects_1 = libdroidpad_la-outputMgr.lo libdroidpad_la-dpinput.lo
 @OS_LINUX_TRUE@am__objects_2 = $(am__objects_1)
 am__objects_3 = libdroidpad_la-wOutputMgr.lo \
 	libdroidpad_la-winOutputs.lo libdroidpad_la-jsOutputs.lo \
-	libdroidpad_la-winSetup.lo libdroidpad_la-updater.lo
+	libdroidpad_la-adminCheck.lo libdroidpad_la-winSetup.lo \
+	libdroidpad_la-updater.lo
 @OS_WIN32_TRUE@am__objects_4 = $(am__objects_3)
 am__objects_5 = libdroidpad_la-bootConf.lo
 @MSW_TESTMODE_TRUE@@OS_WIN32_TRUE@am__objects_6 = $(am__objects_5)
@@ -391,6 +393,7 @@ SRC_WIN32 = \
 		output/win32/winOutputs.cpp	output/win32/winOutputs.hpp	\
 		output/win32/jsOutputs.cpp	output/win32/jsOutputs.hpp	\
 		output/win32/wPlatformSettings.hpp				\
+		msw/adminCheck.c		msw/adminCheck.h		\
 		msw/winSetup.cpp		msw/winSetup.hpp		\
 		msw/updater.cpp			msw/updater.hpp
 
@@ -495,6 +498,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-1035.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-IOutputMgr.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-adb.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-adminCheck.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-base64.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-bootConf.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-connection.Plo@am__quote@
@@ -573,6 +577,14 @@ libdroidpad_la-dpinput.lo: output/linux/dpinput.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='output/linux/dpinput.c' object='libdroidpad_la-dpinput.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CFLAGS) $(CFLAGS) -c -o libdroidpad_la-dpinput.lo `test -f 'output/linux/dpinput.c' || echo '$(srcdir)/'`output/linux/dpinput.c
+
+libdroidpad_la-adminCheck.lo: msw/adminCheck.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CFLAGS) $(CFLAGS) -MT libdroidpad_la-adminCheck.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-adminCheck.Tpo -c -o libdroidpad_la-adminCheck.lo `test -f 'msw/adminCheck.c' || echo '$(srcdir)/'`msw/adminCheck.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libdroidpad_la-adminCheck.Tpo $(DEPDIR)/libdroidpad_la-adminCheck.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='msw/adminCheck.c' object='libdroidpad_la-adminCheck.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CFLAGS) $(CFLAGS) -c -o libdroidpad_la-adminCheck.lo `test -f 'msw/adminCheck.c' || echo '$(srcdir)/'`msw/adminCheck.c
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

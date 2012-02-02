@@ -30,6 +30,7 @@ SRC_WIN32 =	\
 		output/win32/winOutputs.cpp	output/win32/winOutputs.hpp	\
 		output/win32/jsOutputs.cpp	output/win32/jsOutputs.hpp	\
 		output/win32/wPlatformSettings.hpp				\
+		msw/adminCheck.c		msw/adminCheck.h		\
 		msw/winSetup.cpp		msw/winSetup.hpp		\
 		msw/updater.cpp			msw/updater.hpp
 # Test mode enabling

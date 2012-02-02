@@ -17,31 +17,15 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef DP_PROC_H
-#define DP_PROC_H
+#ifndef ADMIN_CHECKER_H
+#define ADMIN_CHECKER_H
 
-// This file does process starting and other things related to processes and executables.
+#include <windows.h>
 
-#include <string>
-
-namespace droidpad {
-	std::string runProcess(std::string cmd, std::string args = "");
-
-	int runProcess(std::string &result, std::string cmd, std::string args);
-
-	void forkProcess(std::string cmd);
-
-	void openWebpage(std::string url);
-
-	/**
-	 * verifies an md5. Returns true on success.
-	 */
-	bool md5check(std::string filePath, std::string checksum);
-
-	// Returns true if the current user is an admin. Note that admin isn't actually required
-	// on all platforms
-	bool isAdmin();
-	void runAsAdminAndExit(std::string cmd, std::string args = "");
+#ifdef __cplusplus
+extern "C" {
+BOOL isCurrentUserLocalAdministrator(void);
 }
+#endif
 
 #endif

@@ -38,6 +38,10 @@ class DroidApp : public wxApp
 
 		bool runSetup;
 		bool runRemove;
+		/**
+		 * If set to false, the app will quit asap
+		 */
+		bool continueInitialising;
 
 		void requestNecessaryPermissions();
 

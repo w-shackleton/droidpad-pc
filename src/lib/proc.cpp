@@ -25,8 +25,12 @@
 #ifdef OS_UNIX
 #include <stdio.h>
 #include <unistd.h>
+
+#include <wx/utils.h>
+#include <wx/string.h>
 #elif OS_WIN32
 #include <windows.h>
+#include "adminCheck.h"
 #endif
 
 #include "md5/md5.h"
@@ -104,7 +108,7 @@ bad1:
 	char c[strlen(constC)];
 	strcpy(c, constC);
 
-	// Start the child process. 
+	// Start the child process.
 	if(!CreateProcess(	NULL,		// No module name (use command line)
 				c,		// Command line
 				NULL,		// Process handle not inheritable
@@ -112,10 +116,10 @@ bad1:
 				FALSE,		// Set handle inheritance to FALSE
 				0,		// No creation flags
 				NULL,		// Use parent's environment block
-				NULL,		// Use parent's starting directory 
+				NULL,		// Use parent's starting directory
 				&si,		// Pointer to STARTUPINFO structure
 				&pi)		// Pointer to PROCESS_INFORMATION structure
-	  ) 
+	  )
 	{
 		errorToThrow = "CreateProcess failed: " + GetLastError();
 bad2:
@@ -166,7 +170,7 @@ bad2:
 		printf("GetExitCodeProcess failed (%d)\n", GetLastError());
 	}
 
-	// Close process and thread handles. 
+	// Close process and thread handles.
 	CloseHandle(pi.hProcess);
 	CloseHandle(pi.hThread);
 
@@ -235,3 +239,56 @@ bool droidpad::md5check(std::string filePath, std::string checksum) {
 	}
 	return false;
 }
+
+#ifdef OS_LINUX
+bool droidpad::isAdmin() {
+	return geteuid() == 0; // 0 is root on linux. Effective ID so su / sudo work
+}
+
+void droidpad::runAsAdminAndExit(string cmd, string args) {
+	// Execute correct SU process - guessing it
+	wxChar* session = wxGetenv(wxT("DESKTOP_SESSION"));
+	wxString suCmd;
+	if(session == NULL) suCmd = wxT("gksu");
+	else {
+		wxString sSession = session;
+		if(sSession == wxT("ubuntu") || sSession.find(wxT("gnome"))) {
+			suCmd = wxT("gksu");
+		} else if(sSession.find(wxT("kde")) || sSession.find(wxT("kwin"))) {
+			suCmd = wxT("kdesu");
+		}
+	}
+
+	string runCommand;
+	if(args == "")
+		runCommand = cmd;
+	else
+		runCommand = cmd + " " + args;
+
+	if(suCmd == wxT("gksu")) {
+		execlp(
+				suCmd.mb_str(),
+				(const char *)suCmd.mb_str(),
+				"-m",
+				"DroidPad must be run with elevated privileges.",
+				(const char *)runCommand.c_str(),
+				(char *)0);
+	} else {
+		execlp(
+				suCmd.mb_str(),
+				(const char *)suCmd.mb_str(),
+				(const char *)runCommand.c_str(),
+				(char *)0);
+	}
+
+}
+#elif OS_WIN32
+bool droidpad::isAdmin() {
+	return isCurrentUserLocalAdministrator() == TRUE;
+}
+
+// NOTE / TODO: On MSW this doesn't stop, but this is handled when this is called.
+void droidpad::runAsAdminAndExit(string cmd, string args) {
+	ShellExecute(NULL, "runas", cmd.c_str(), args.c_str(), NULL, SW_SHOWNORMAL);
+}
+#endif
