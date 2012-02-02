@@ -30,6 +30,7 @@ g++
 autotools-dev
 wx2.8-headers
 libwxgtk-2.8-dev
+(maybe more?)
 
 Windows
 -------
@@ -40,7 +41,8 @@ compiled into its prefix.
 64-bit: I Use my own compiled version of MinGW-64 in a different prefix.
 
 To compile, run ./configure-mingw or ./configure-mingw64. These scripts will
-need to be changed to use your prefix location from mine.
+need to be changed to use your prefix location from mine. They can also be
+set with some environment variables.
 make can then be used to compile the software; make winexport then copies all
 necessary files to the folder winexport32 or winexport64, allowing for easy
 running on Windows.
