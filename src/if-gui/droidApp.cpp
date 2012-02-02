@@ -131,12 +131,7 @@ bool DroidApp::OnCmdLineParsed(wxCmdLineParser& parser) {
 	runRemove = parser.Found(wxT("u"));
 
 	if(!parser.Found(wxT("n"))) { // If user didn't request no root, check.
-#ifdef OS_LINUX // Linux requires root checking for all operations
 		requestNecessaryPermissions();
-#elif OS_WIN32 // Windows requires root checking for only driver installation ops
-		if(runSetup || runRemove)
-			requestNecessaryPermissions();
-#endif
 	}
 
 	return true;

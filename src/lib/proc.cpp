@@ -28,6 +28,7 @@
 
 #include <wx/utils.h>
 #include <wx/string.h>
+#include "log.hpp"
 #elif OS_WIN32
 #include <windows.h>
 #include "adminCheck.h"
@@ -252,9 +253,9 @@ void droidpad::runAsAdminAndExit(string cmd, string args) {
 	if(session == NULL) suCmd = wxT("gksu");
 	else {
 		wxString sSession = session;
-		if(sSession == wxT("ubuntu") || sSession.find(wxT("gnome"))) {
+		if(sSession == wxT("ubuntu") || sSession.find(wxT("gnome")) != wxNOT_FOUND) {
 			suCmd = wxT("gksu");
-		} else if(sSession.find(wxT("kde")) || sSession.find(wxT("kwin"))) {
+		} else if(sSession.find(wxT("kde")) != wxNOT_FOUND || sSession.find(wxT("kwin")) != wxNOT_FOUND) {
 			suCmd = wxT("kdesu");
 		}
 	}
@@ -280,6 +281,7 @@ void droidpad::runAsAdminAndExit(string cmd, string args) {
 				(const char *)runCommand.c_str(),
 				(char *)0);
 	}
+	LOGE("Failed to run DroidPad as administrator.");
 
 }
 #elif OS_WIN32
