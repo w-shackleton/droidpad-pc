@@ -1,3 +1,10 @@
+droidpad (1.9.0ubuntu1) oneiric; urgency=low
+
+  * Beta release; working on Linux, Win32 and Win64 (Win64 requires test mode
+    to be enabled)
+
+ -- William Shackleton <w.shackleton@gmail.com>  Fri, 03 Feb 2012 20:30:33 +0000
+
 droidpad (1.9.0) oneiric; urgency=low
 
   * First debianisation attempt

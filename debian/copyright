@@ -1,10 +1,10 @@
 This work was packaged for Debian by:
 
-    William Shackleton <w.shackleton@gmail.com> on Mon, 28 Feb 2011 21:51:06 +0000
+    William Shackleton <w.shackleton@gmail.com> on Mon, 28 Feb 2011 20:21:00 +0000
 
 Copyright:
 
-    Copyright (C) 2010 William Shackleton <w.shackleton@gmail.com>
+    Copyright (C) 2012 William Shackleton <w.shackleton@gmail.com>
 
 License:
 
@@ -26,5 +26,5 @@ Public License version 3 can be found in "/usr/share/common-licenses/GPL-3".
 
 The Debian packaging is:
 
-    Copyright (C) 2011 William Shackleton <w.shackleton@gmail.com>
+    Copyright (C) 2012 William Shackleton <w.shackleton@gmail.com>
     and is licensed under the GPL version 3, see above.
