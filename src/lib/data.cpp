@@ -44,7 +44,7 @@ int Data::port = 3141;
 bool Data::initialise()
 {
 	std::vector<wxString> datadirs;
-	wxString testFile = wxT("icon.xpm");
+	wxString testFile = wxT("layout.xrc");
 
 	// TODO: make this code better, to use app directory rather than cwd
 

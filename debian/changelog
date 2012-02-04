@@ -1,3 +1,9 @@
+droidpad (1.9.0ubuntu2) oneiric; urgency=low
+
+  * Fixed Linux data folder searching; using layout.xrc as reference file.
+
+ -- William Shackleton <w.shackleton@gmail.com>  Sat, 04 Feb 2012 22:57:22 +0000
+
 droidpad (1.9.0ubuntu1) oneiric; urgency=low
 
   * Beta release; working on Linux, Win32 and Win64 (Win64 requires test mode
