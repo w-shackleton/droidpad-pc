@@ -2,7 +2,7 @@ Source: droidpad
 Section: utils
 Priority: optional
 Maintainer: William Shackleton <w.shackleton@gmail.com>
-Build-Depends: debhelper (>= 7.0.50~), autotools-dev
+Build-Depends: debhelper (>= 7.0.50~), autotools-dev, automake, libtool, libwxgtk2.8-dev, wx-common
 Standards-Version: 3.9.2
 Homepage: https://launchpad.net/droidpad-pc
 
