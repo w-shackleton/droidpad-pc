@@ -1,3 +1,9 @@
+droidpad (1.9.0ubuntu3) oneiric; urgency=low
+
+  * Changed linked utilities to copies of files.
+
+ -- William Shackleton <w.shackleton@gmail.com>  Sun, 05 Feb 2012 22:45:28 +0000
+
 droidpad (1.9.0ubuntu2) oneiric; urgency=low
 
   * Fixed Linux data folder searching; using layout.xrc as reference file.
