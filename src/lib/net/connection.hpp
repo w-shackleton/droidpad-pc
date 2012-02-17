@@ -58,6 +58,11 @@ namespace droidpad {
 			 * If true, the connection was closed normally.
 			 */
 			bool connectionClosed;
+
+			/**
+			 * Reorders the axes according to the given reordering data.
+			 */
+			void reorder(std::vector<int> bmap, std::vector<int> amap);
 	};
 
 	class DPMouseData {

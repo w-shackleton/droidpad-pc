@@ -26,6 +26,7 @@
 #include <wx/msgdlg.h>
 
 #include "customHost.hpp"
+#include "reorderDialog.hpp"
 #include "about.hpp"
 #include "log.hpp"
 #ifdef OS_WIN32
@@ -35,6 +36,7 @@
 BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
 	EVT_BUTTON(XRCID("buttonStart"), DroidFrame::OnStart)
 	EVT_BUTTON(XRCID("buttonStop"), DroidFrame::OnStop)
+	EVT_BUTTON(XRCID("reorderButton"), DroidFrame::ReorderAxes)
 
 	EVT_MENU(XRCID("menuFileStart"), DroidFrame::OnStart)
 	EVT_MENU(XRCID("menuFileStop"), DroidFrame::OnStop)
@@ -89,6 +91,7 @@ void DroidFrame::init()
 
 	LOADXRC(buttonStart,	buttonStart,		wxButton);
 	LOADXRC(buttonStop,	buttonStop,		wxButton);
+	LOADXRC(reorderButton,	reorderButton,		wxButton);
 	LOADXRC(statusText,	statusText,	wxStaticText);
 	LOADXRC(devicesList,	devListBox,	wxListBox);
 
@@ -135,6 +138,11 @@ void DroidFrame::OnStop(wxCommandEvent& event)
 	wxLogInfo(wxT("Stopping DP"));
 	buttonStop->Disable();
 	devices->Stop();
+}
+
+void DroidFrame::ReorderAxes(wxCommandEvent& event) {
+	ReorderDialog dlg(this);
+	dlg.ShowModal();
 }
 
 void DroidFrame::dpInitComplete(bool complete)
@@ -195,6 +203,7 @@ void DroidFrame::threadStarted()
 {
 	buttonStop->Enable();
 	buttonStart->Disable();
+	reorderButton->Disable();
 }
 
 void DroidFrame::threadError(wxString failReason)
@@ -210,6 +219,7 @@ void DroidFrame::threadStopped()
 {
 	buttonStart->Enable();
 	buttonStop->Disable();
+	reorderButton->Enable();
 }
 
 
