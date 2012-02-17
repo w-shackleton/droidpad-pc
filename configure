@@ -14980,8 +14980,8 @@ fi
 
 
 if test "x$enable_testmode" = "xyes"; then
-	CFLAGS="$CFLAGS -g -DMSW_TESTMODE"
-	CXXFLAGS="$CXXFLAGS -g -DMSW_TESTMODE"
+	CFLAGS="$CFLAGS -DMSW_TESTMODE"
+	CXXFLAGS="$CXXFLAGS -DMSW_TESTMODE"
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
 	echo "*************************************"

@@ -70,8 +70,8 @@ AC_ARG_ENABLE(testmode, [  --enable-testmode=[no/yes] enable windows testmode su
 	                             [default=$testmode_default]],, enable_testmode=$testmode_default)
 
 if test "x$enable_testmode" = "xyes"; then
-	CFLAGS="$CFLAGS -g -DMSW_TESTMODE"
-	CXXFLAGS="$CXXFLAGS -g -DMSW_TESTMODE"
+	CFLAGS="$CFLAGS -DMSW_TESTMODE"
+	CXXFLAGS="$CXXFLAGS -DMSW_TESTMODE"
 	AC_MSG_RESULT(yes)
 	echo "*************************************"
 	echo "    ****    WARNING: Test mode support is currently not finished."
