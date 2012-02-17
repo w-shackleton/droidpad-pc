@@ -25,6 +25,7 @@
 
 #include "events.hpp"
 #include "log.hpp"
+#include "data.hpp"
 
 #include <string>
 #include <iostream>
@@ -169,10 +170,11 @@ bool MainThread::setup()
 int MainThread::loop()
 {
 	try {
-		const DPJSData data = conn->GetData();
+		DPJSData data = conn->GetData();
 		if(data.connectionClosed) return LOOP_FINISHED;
 		switch(conn->GetMode().type) {
 			case MODE_JS:
+				data.reorder(Data::buttonOrder, Data::axisOrder);
 				mgr->SendJSData(data);
 				break;
 			case MODE_MOUSE:

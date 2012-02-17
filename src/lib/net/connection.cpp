@@ -58,6 +58,38 @@ DPJSData::DPJSData(const DPJSData& old) :
 	connectionClosed(connectionClosed)
 { }
 
+void DPJSData::reorder(std::vector<int> bmap, std::vector<int> amap) {
+	vector<bool> newButtons(buttons.size());
+	for(int i = 0; i < buttons.size(); i++) {
+		if(i >= bmap.size()) { // Map doesn't do this part
+			newButtons[i] = buttons[i];
+		} else {
+			int destination = bmap[i];
+			if(destination >= newButtons.size()) { // Mapped to invalid space
+				// Do nothing
+			} else {
+				newButtons[destination] = buttons[i];
+			}
+		}
+	}
+
+	vector<int> newAxes(axes.size());
+	for(int i = 0; i < axes.size(); i++) {
+		if(i >= amap.size()) { // Map doesn't do this part
+			newAxes[i] = axes[i];
+		} else {
+			int destination = amap[i];
+			if(destination >= newAxes.size()) { // Mapped to invalid space
+				// Do nothing
+			} else {
+				newAxes[destination] = axes[i];
+			}
+		}
+	}
+	buttons = newButtons;
+	axes = newAxes;
+}
+
 DPMouseData::DPMouseData(const DPMouseData& old) :
 	x(old.x),
 	y(old.y),
