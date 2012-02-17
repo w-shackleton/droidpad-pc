@@ -75,13 +75,15 @@ am__droidpad_SOURCES_DIST = if-gui/droidFrame.cpp \
 	if-gui/customHost.cpp if-gui/customHost.hpp if-gui/about.cpp \
 	if-gui/about.hpp if-gui/pageSizer.cpp if-gui/pageSizer.hpp \
 	if-gui/wxImagePanel.cpp if-gui/wxImagePanel.hpp \
+	if-gui/reorderDialog.cpp if-gui/reorderDialog.hpp \
 	if-gui/setup.cpp if-gui/setup.h if-gui/updateDisplay.cpp \
 	if-gui/updateDisplay.hpp if-gui/driverChoice.cpp \
 	if-gui/driverChoice.hpp
 am__objects_1 = droidpad-droidFrame.$(OBJEXT) \
 	droidpad-droidApp.$(OBJEXT) droidpad-customHost.$(OBJEXT) \
 	droidpad-about.$(OBJEXT) droidpad-pageSizer.$(OBJEXT) \
-	droidpad-wxImagePanel.$(OBJEXT) droidpad-setup.$(OBJEXT)
+	droidpad-wxImagePanel.$(OBJEXT) \
+	droidpad-reorderDialog.$(OBJEXT) droidpad-setup.$(OBJEXT)
 @IF_GUI_TRUE@am__objects_2 = $(am__objects_1)
 @OS_WIN32_TRUE@am__objects_3 = droidpad-updateDisplay.$(OBJEXT)
 @MSW_TESTMODE_TRUE@@OS_WIN32_TRUE@am__objects_4 = droidpad-driverChoice.$(OBJEXT)
@@ -351,6 +353,7 @@ SRC_IF_GUI = \
 		   if-gui/about.cpp		if-gui/about.hpp	\
 		   if-gui/pageSizer.cpp		if-gui/pageSizer.hpp	\
 		   if-gui/wxImagePanel.cpp	if-gui/wxImagePanel.hpp	\
+		   if-gui/reorderDialog.cpp	if-gui/reorderDialog.hpp\
 		   if-gui/setup.cpp		if-gui/setup.h
 
 droidpad_SOURCES = $(am__append_1) $(am__append_4) $(am__append_5)
@@ -465,6 +468,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-droidApp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-droidFrame.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-pageSizer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-reorderDialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-setup.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-updateDisplay.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-wxImagePanel.Po@am__quote@
@@ -588,6 +592,22 @@ droidpad-wxImagePanel.obj: if-gui/wxImagePanel.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='if-gui/wxImagePanel.cpp' object='droidpad-wxImagePanel.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-wxImagePanel.obj `if test -f 'if-gui/wxImagePanel.cpp'; then $(CYGPATH_W) 'if-gui/wxImagePanel.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/wxImagePanel.cpp'; fi`
+
+droidpad-reorderDialog.o: if-gui/reorderDialog.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -MT droidpad-reorderDialog.o -MD -MP -MF $(DEPDIR)/droidpad-reorderDialog.Tpo -c -o droidpad-reorderDialog.o `test -f 'if-gui/reorderDialog.cpp' || echo '$(srcdir)/'`if-gui/reorderDialog.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/droidpad-reorderDialog.Tpo $(DEPDIR)/droidpad-reorderDialog.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='if-gui/reorderDialog.cpp' object='droidpad-reorderDialog.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-reorderDialog.o `test -f 'if-gui/reorderDialog.cpp' || echo '$(srcdir)/'`if-gui/reorderDialog.cpp
+
+droidpad-reorderDialog.obj: if-gui/reorderDialog.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -MT droidpad-reorderDialog.obj -MD -MP -MF $(DEPDIR)/droidpad-reorderDialog.Tpo -c -o droidpad-reorderDialog.obj `if test -f 'if-gui/reorderDialog.cpp'; then $(CYGPATH_W) 'if-gui/reorderDialog.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/reorderDialog.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/droidpad-reorderDialog.Tpo $(DEPDIR)/droidpad-reorderDialog.Po
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='if-gui/reorderDialog.cpp' object='droidpad-reorderDialog.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-reorderDialog.obj `if test -f 'if-gui/reorderDialog.cpp'; then $(CYGPATH_W) 'if-gui/reorderDialog.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/reorderDialog.cpp'; fi`
 
 droidpad-setup.o: if-gui/setup.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -MT droidpad-setup.o -MD -MP -MF $(DEPDIR)/droidpad-setup.Tpo -c -o droidpad-setup.o `test -f 'if-gui/setup.cpp' || echo '$(srcdir)/'`if-gui/setup.cpp

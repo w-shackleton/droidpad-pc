@@ -21,11 +21,14 @@
 #define _DATA_H
 
 #include <iostream>
+#include <vector>
 #include "config.h"
 
 #include <wx/string.h>
 
 #define STD_TO_WX_STRING(_str) wxString(_str.c_str(), wxConvUTF8)
+#define NUM_AXIS 6
+#define NUM_BUTTONS 12
 
 namespace droidpad
 {
@@ -42,10 +45,20 @@ namespace droidpad
 			static wxString host;
 			static int port;
 
+			/**
+			 * Maps buttons and axes to where the user wants them.
+			 */
+			static std::vector<int> buttonOrder;
+			static std::vector<int> axisOrder;
+
 			// static wxString serial;
 			static void savePreferences();
 		protected:
 			static wxString confLocation;
+
+			// The count variables declare how many there *should* be. This will pad out if not enough present.
+			static std::vector<int> decodeOrderConf(wxString input, int count);
+			static wxString encodeOrderConf(std::vector<int> input, int count);
 		private:
 			Data(); // To stop initialising static class
 

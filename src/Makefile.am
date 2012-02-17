@@ -27,6 +27,7 @@ SRC_IF_GUI = \
 		   if-gui/about.cpp		if-gui/about.hpp	\
 		   if-gui/pageSizer.cpp		if-gui/pageSizer.hpp	\
 		   if-gui/wxImagePanel.cpp	if-gui/wxImagePanel.hpp	\
+		   if-gui/reorderDialog.cpp	if-gui/reorderDialog.hpp\
 		   if-gui/setup.cpp		if-gui/setup.h
 droidpad_SOURCES =
 

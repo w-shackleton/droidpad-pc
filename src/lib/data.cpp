@@ -37,6 +37,12 @@ wxString Data::host = wxT("");
 
 wxString Data::version = wxT(VERSION);
 
+// REMEMBER: Update these if more buttons / axes added in future
+const int initialButtons[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+vector<int> Data::buttonOrder = vector<int>(initialButtons, initialButtons + 12);
+const int initialAxes[] = {0, 1, 2, 3, 4, 5};
+vector<int> Data::axisOrder = vector<int>(initialAxes, initialAxes + 6);
+
 int Data::port = 3141;
 
 #define CONF_FILE "dp.conf"
@@ -90,9 +96,12 @@ bool Data::initialise()
 
 			if(key.Cmp(wxT("host")) == 0) {
 				host = value;
-			}
-			if(key.Cmp(wxT("port")) == 0) {
+			} else if(key.Cmp(wxT("port")) == 0) {
 				port = atoi(value.mb_str());
+			} else if(key.Cmp(wxT("buttonOrder")) == 0) {
+				buttonOrder = decodeOrderConf(value, NUM_BUTTONS);
+			} else if(key.Cmp(wxT("axisOrder")) == 0) {
+				axisOrder = decodeOrderConf(value, NUM_AXIS);
 			}
 		}
 		config.Close();
@@ -120,6 +129,10 @@ void Data::savePreferences()
 		config.Clear();
 		config.AddLine(wxString::Format(wxT("%s;%s"), wxT("host"), (const char *)host.c_str()));
 		config.AddLine(wxString::Format(wxT("%s;%d"), wxT("port"), port));
+		config.AddLine(wxString::Format(wxT("%s;%s"),
+					wxT("buttonOrder"), (const wxChar*) encodeOrderConf(buttonOrder, NUM_BUTTONS).c_str()));
+		config.AddLine(wxString::Format(wxT("%s;%s"),
+					wxT("axisOrder"), (const wxChar*) encodeOrderConf(axisOrder, NUM_AXIS).c_str()));
 
 		config.Write();
 	}
@@ -145,3 +158,8 @@ wxString stringToLower(wxString strToConvert)
 	return strToConvert;
 }
 
+vector<int> Data::decodeOrderConf(wxString input, int count) {
+}
+
+wxString Data::encodeOrderConf(vector<int> input, int count) {
+}

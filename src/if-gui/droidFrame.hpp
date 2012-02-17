@@ -44,7 +44,7 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 		wxPanel *panel;
 		wxMenuBar *menuBar;
 
-		wxButton *buttonStart, *buttonStop;
+		wxButton *buttonStart, *buttonStop, *reorderButton;
 		
 		wxListBox *devListBox;
 
@@ -59,6 +59,8 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 		void OnDevicesRefresh(wxCommandEvent& event);
 		void OnStart(wxCommandEvent& event);
 		void OnStop(wxCommandEvent& event);
+
+		void ReorderAxes(wxCommandEvent& event);
 
 		void OnClose(wxCloseEvent& event);
 		void OnMenuClose(wxCommandEvent& event);
