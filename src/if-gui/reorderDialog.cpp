@@ -84,7 +84,7 @@ ReorderDialog::ReorderDialog(wxWindow *parent) {
 		axisGrid->Add(text, 0, wxALIGN_CENTRE | wxEXPAND | wxALL, 3);
 
 		wxComboBox *box = new wxComboBox(this, -1,
-				getAxisText(i),
+				getAxisText(Data::axisOrder[i]),
 				wxDefaultPosition, wxSize(80, -1), NUM_AXIS,
 				axisSelections,
 				wxCB_READONLY);
@@ -97,7 +97,7 @@ ReorderDialog::ReorderDialog(wxWindow *parent) {
 		buttonGrid->Add(text, 0, wxALIGN_CENTRE | wxEXPAND | wxALL, 3);
 
 		wxComboBox *box = new wxComboBox(this, -1,
-				getButtonText(i),
+				getButtonText(Data::buttonOrder[i]),
 				wxDefaultPosition, wxSize(90, -1), NUM_BUTTONS,
 				buttonSelections,
 				wxCB_READONLY);

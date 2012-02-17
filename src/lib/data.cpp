@@ -130,9 +130,9 @@ void Data::savePreferences()
 		config.AddLine(wxString::Format(wxT("%s;%s"), wxT("host"), (const char *)host.c_str()));
 		config.AddLine(wxString::Format(wxT("%s;%d"), wxT("port"), port));
 		config.AddLine(wxString::Format(wxT("%s;%s"),
-					wxT("buttonOrder"), (const wxChar*) encodeOrderConf(buttonOrder, NUM_BUTTONS).c_str()));
+					wxT("buttonOrder"), encodeOrderConf(buttonOrder, NUM_BUTTONS).c_str()));
 		config.AddLine(wxString::Format(wxT("%s;%s"),
-					wxT("axisOrder"), (const wxChar*) encodeOrderConf(axisOrder, NUM_AXIS).c_str()));
+					wxT("axisOrder"), encodeOrderConf(axisOrder, NUM_AXIS).c_str()));
 
 		config.Write();
 	}
@@ -159,7 +159,31 @@ wxString stringToLower(wxString strToConvert)
 }
 
 vector<int> Data::decodeOrderConf(wxString input, int count) {
+	vector<int> ret;
+
+	wxStringTokenizer tkz(input, wxT(","));
+	for(int i = 0; i < count; i++) {
+		if(tkz.HasMoreTokens()) {
+			long num;
+			if(!tkz.GetNextToken().ToLong(&num)) { // If fail
+				num = i;
+			}
+			ret.push_back(num);
+		} else {
+			ret.push_back(i);
+		}
+	}
+	return ret;
 }
 
 wxString Data::encodeOrderConf(vector<int> input, int count) {
+	wxString ret;
+	for(int i = 0; i < count; i++) {
+		if(i < input.size()) {
+			ret += wxString::Format(wxT("%d,"), input[i]);
+		} else { // Write default out
+			ret += wxString::Format(wxT("%d,"), i);
+		}
+	}
+	return ret;
 }
