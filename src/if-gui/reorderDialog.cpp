@@ -31,6 +31,7 @@ BEGIN_EVENT_TABLE(ReorderDialog, wxDialog)
 END_EVENT_TABLE()
 
 using namespace droidpad;
+using namespace std;
 
 #ifdef __WXMSW__
 #define _FRAME_ICON wxT("icon.xpm")
@@ -85,7 +86,7 @@ ReorderDialog::ReorderDialog(wxWindow *parent) {
 
 		wxComboBox *box = new wxComboBox(this, -1,
 				getAxisText(Data::axisOrder[i]),
-				wxDefaultPosition, wxSize(80, -1), NUM_AXIS,
+				wxDefaultPosition, wxSize(100, -1), NUM_AXIS,
 				axisSelections,
 				wxCB_READONLY);
 		axes.push_back(box);
@@ -98,7 +99,7 @@ ReorderDialog::ReorderDialog(wxWindow *parent) {
 
 		wxComboBox *box = new wxComboBox(this, -1,
 				getButtonText(Data::buttonOrder[i]),
-				wxDefaultPosition, wxSize(90, -1), NUM_BUTTONS,
+				wxDefaultPosition, wxSize(120, -1), NUM_BUTTONS,
 				buttonSelections,
 				wxCB_READONLY);
 		buttons.push_back(box);
@@ -109,9 +110,25 @@ ReorderDialog::ReorderDialog(wxWindow *parent) {
 }
 
 void ReorderDialog::onDone(wxCommandEvent &evt) {
+	// Save selection to prefs again
+	int i = 0;
+	for(vector<wxComboBox*>::iterator it = axes.begin(); it != axes.end(); it++) {
+		int selection = (*it)->GetSelection();
+		Data::axisOrder[i] = selection == wxNOT_FOUND ? i : selection;
+		i++;
+	}
+
+	i = 0;
+	for(vector<wxComboBox*>::iterator it = buttons.begin(); it != buttons.end(); it++) {
+		int selection = (*it)->GetSelection();
+		Data::buttonOrder[i] = selection == wxNOT_FOUND ? i : selection;
+		i++;
+	}
+	Data::savePreferences();
+	EndModal(1);
 }
 void ReorderDialog::onCancel(wxCommandEvent &evt) {
-	EndModal(1);
+	EndModal(0);
 }
 
 void ReorderDialog::handleXMLError(wxString name)
