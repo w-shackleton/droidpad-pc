@@ -88,7 +88,7 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 libdroidpad_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am__libdroidpad_la_SOURCES_DIST = include/adb.hpp \
 	include/outputMgr.hpp include/platformSettings.hpp log.hpp \
-	types.hpp proc.cpp proc.hpp data.cpp data.hpp \
+	types.cpp types.hpp proc.cpp proc.hpp data.cpp data.hpp \
 	deviceManager.cpp deviceManager.hpp mainThread.cpp \
 	mainThread.hpp deviceManagerThreads.cpp \
 	deviceManagerThreads.hpp events.cpp events.hpp \
@@ -97,18 +97,18 @@ am__libdroidpad_la_SOURCES_DIST = include/adb.hpp \
 	ext/md5/md5c.c ext/md5/md5.h ext/md5/global.h \
 	ext/b64/base64.cpp ext/b64/base64.hpp net/mdns.cpp \
 	net/mdns.hpp net/deviceDiscover.cpp net/deviceDiscover.hpp \
-	net/connection.cpp net/connection.hpp output/IOutputMgr.cpp \
-	output/IOutputMgr.hpp output/outputSmoothBuffer.cpp \
-	output/outputSmoothBuffer.hpp output/linux/outputMgr.cpp \
-	output/linux/outputMgr.hpp output/linux/dpinput.c \
-	output/linux/dpinput.h output/linux/platformSettings.hpp \
-	output/win32/wOutputMgr.cpp output/win32/wOutputMgr.hpp \
-	output/win32/winOutputs.cpp output/win32/winOutputs.hpp \
-	output/win32/jsOutputs.cpp output/win32/jsOutputs.hpp \
-	output/win32/wPlatformSettings.hpp msw/adminCheck.c \
-	msw/adminCheck.h msw/winSetup.cpp msw/winSetup.hpp \
-	msw/updater.cpp msw/updater.hpp msw/bootConf.cpp \
-	msw/bootConf.hpp
+	net/dataDecode.cpp net/dataDecode.hpp net/connection.cpp \
+	net/connection.hpp output/IOutputMgr.cpp output/IOutputMgr.hpp \
+	output/outputSmoothBuffer.cpp output/outputSmoothBuffer.hpp \
+	output/linux/outputMgr.cpp output/linux/outputMgr.hpp \
+	output/linux/dpinput.c output/linux/dpinput.h \
+	output/linux/platformSettings.hpp output/win32/wOutputMgr.cpp \
+	output/win32/wOutputMgr.hpp output/win32/winOutputs.cpp \
+	output/win32/winOutputs.hpp output/win32/jsOutputs.cpp \
+	output/win32/jsOutputs.hpp output/win32/wPlatformSettings.hpp \
+	msw/adminCheck.c msw/adminCheck.h msw/winSetup.cpp \
+	msw/winSetup.hpp msw/updater.cpp msw/updater.hpp \
+	msw/bootConf.cpp msw/bootConf.hpp
 am__objects_1 = libdroidpad_la-outputMgr.lo libdroidpad_la-dpinput.lo
 @OS_LINUX_TRUE@am__objects_2 = $(am__objects_1)
 am__objects_3 = libdroidpad_la-wOutputMgr.lo \
@@ -118,16 +118,16 @@ am__objects_3 = libdroidpad_la-wOutputMgr.lo \
 @OS_WIN32_TRUE@am__objects_4 = $(am__objects_3)
 am__objects_5 = libdroidpad_la-bootConf.lo
 @MSW_TESTMODE_TRUE@@OS_WIN32_TRUE@am__objects_6 = $(am__objects_5)
-am_libdroidpad_la_OBJECTS = libdroidpad_la-proc.lo \
-	libdroidpad_la-data.lo libdroidpad_la-deviceManager.lo \
-	libdroidpad_la-mainThread.lo \
+am_libdroidpad_la_OBJECTS = libdroidpad_la-types.lo \
+	libdroidpad_la-proc.lo libdroidpad_la-data.lo \
+	libdroidpad_la-deviceManager.lo libdroidpad_la-mainThread.lo \
 	libdroidpad_la-deviceManagerThreads.lo \
 	libdroidpad_la-events.lo libdroidpad_la-droidpadCallbacks.lo \
 	libdroidpad_la-adb.lo libdroidpad_la-1035.lo \
 	libdroidpad_la-mdnsd.lo libdroidpad_la-md5c.lo \
 	libdroidpad_la-base64.lo libdroidpad_la-mdns.lo \
-	libdroidpad_la-deviceDiscover.lo libdroidpad_la-connection.lo \
-	libdroidpad_la-IOutputMgr.lo \
+	libdroidpad_la-deviceDiscover.lo libdroidpad_la-dataDecode.lo \
+	libdroidpad_la-connection.lo libdroidpad_la-IOutputMgr.lo \
 	libdroidpad_la-outputSmoothBuffer.lo $(am__objects_2) \
 	$(am__objects_4) $(am__objects_6)
 libdroidpad_la_OBJECTS = $(am_libdroidpad_la_OBJECTS)
@@ -402,15 +402,16 @@ SRC_TESTMODE = \
 		msw/bootConf.cpp		msw/bootConf.hpp
 
 libdroidpad_la_SOURCES = include/adb.hpp include/outputMgr.hpp \
-	include/platformSettings.hpp log.hpp types.hpp proc.cpp \
-	proc.hpp data.cpp data.hpp deviceManager.cpp deviceManager.hpp \
-	mainThread.cpp mainThread.hpp deviceManagerThreads.cpp \
-	deviceManagerThreads.hpp events.cpp events.hpp \
-	droidpadCallbacks.cpp droidpadCallbacks.hpp usb/all/adb.cpp \
-	usb/all/adb.hpp ext/1035.c ext/1035.h ext/mdnsd.c ext/mdnsd.h \
-	ext/md5/md5c.c ext/md5/md5.h ext/md5/global.h \
-	ext/b64/base64.cpp ext/b64/base64.hpp net/mdns.cpp \
-	net/mdns.hpp net/deviceDiscover.cpp net/deviceDiscover.hpp \
+	include/platformSettings.hpp log.hpp types.cpp types.hpp \
+	proc.cpp proc.hpp data.cpp data.hpp deviceManager.cpp \
+	deviceManager.hpp mainThread.cpp mainThread.hpp \
+	deviceManagerThreads.cpp deviceManagerThreads.hpp events.cpp \
+	events.hpp droidpadCallbacks.cpp droidpadCallbacks.hpp \
+	usb/all/adb.cpp usb/all/adb.hpp ext/1035.c ext/1035.h \
+	ext/mdnsd.c ext/mdnsd.h ext/md5/md5c.c ext/md5/md5.h \
+	ext/md5/global.h ext/b64/base64.cpp ext/b64/base64.hpp \
+	net/mdns.cpp net/mdns.hpp net/deviceDiscover.cpp \
+	net/deviceDiscover.hpp net/dataDecode.cpp net/dataDecode.hpp \
 	net/connection.cpp net/connection.hpp output/IOutputMgr.cpp \
 	output/IOutputMgr.hpp output/outputSmoothBuffer.cpp \
 	output/outputSmoothBuffer.hpp $(am__append_1) $(am__append_2) \
@@ -503,6 +504,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-bootConf.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-connection.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-data.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-dataDecode.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-deviceDiscover.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-deviceManager.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-deviceManagerThreads.Plo@am__quote@
@@ -517,6 +519,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-outputMgr.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-outputSmoothBuffer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-proc.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-types.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-updater.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-wOutputMgr.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-winOutputs.Plo@am__quote@
@@ -610,6 +613,14 @@ libdroidpad_la-adminCheck.lo: msw/adminCheck.c
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LTCXXCOMPILE) -c -o $@ $<
 
+libdroidpad_la-types.lo: types.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -MT libdroidpad_la-types.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-types.Tpo -c -o libdroidpad_la-types.lo `test -f 'types.cpp' || echo '$(srcdir)/'`types.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libdroidpad_la-types.Tpo $(DEPDIR)/libdroidpad_la-types.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='types.cpp' object='libdroidpad_la-types.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-types.lo `test -f 'types.cpp' || echo '$(srcdir)/'`types.cpp
+
 libdroidpad_la-proc.lo: proc.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -MT libdroidpad_la-proc.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-proc.Tpo -c -o libdroidpad_la-proc.lo `test -f 'proc.cpp' || echo '$(srcdir)/'`proc.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libdroidpad_la-proc.Tpo $(DEPDIR)/libdroidpad_la-proc.Plo
@@ -697,6 +708,14 @@ libdroidpad_la-deviceDiscover.lo: net/deviceDiscover.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='net/deviceDiscover.cpp' object='libdroidpad_la-deviceDiscover.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-deviceDiscover.lo `test -f 'net/deviceDiscover.cpp' || echo '$(srcdir)/'`net/deviceDiscover.cpp
+
+libdroidpad_la-dataDecode.lo: net/dataDecode.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -MT libdroidpad_la-dataDecode.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-dataDecode.Tpo -c -o libdroidpad_la-dataDecode.lo `test -f 'net/dataDecode.cpp' || echo '$(srcdir)/'`net/dataDecode.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libdroidpad_la-dataDecode.Tpo $(DEPDIR)/libdroidpad_la-dataDecode.Plo
+@am__fastdepCXX_FALSE@	$(AM_V_CXX) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='net/dataDecode.cpp' object='libdroidpad_la-dataDecode.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-dataDecode.lo `test -f 'net/dataDecode.cpp' || echo '$(srcdir)/'`net/dataDecode.cpp
 
 libdroidpad_la-connection.lo: net/connection.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -MT libdroidpad_la-connection.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-connection.Tpo -c -o libdroidpad_la-connection.lo `test -f 'net/connection.cpp' || echo '$(srcdir)/'`net/connection.cpp

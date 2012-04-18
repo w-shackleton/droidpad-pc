@@ -26,9 +26,6 @@
 #include "output/IOutputMgr.hpp"
 
 namespace droidpad {
-	class DPJSData;
-	class DPMouseData;
-	class DPSlideData;
 	class OutputManager : public IOutputManager {
 		public:
 			/**
@@ -37,9 +34,9 @@ namespace droidpad {
 			OutputManager(const int type, const int numAxes, const int numButtons);
 			~OutputManager();
 
-			void SendJSData(const DPJSData& data, bool firstIteration = true);
-			void SendMouseData(const DPMouseData& data, bool firstIteration = true);
-			void SendSlideData(const DPSlideData& data, bool firstIteration = true);
+			void SendJSData(const decode::DPJSData& data, bool firstIteration = true);
+			void SendMouseData(const decode::DPMouseData& data, bool firstIteration = true);
+			void SendSlideData(const decode::DPSlideData& data, bool firstIteration = true);
 		private:
 			dpinfo *dpinput;
 

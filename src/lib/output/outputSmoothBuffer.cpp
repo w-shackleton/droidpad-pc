@@ -23,6 +23,7 @@
 #define SLEEP_TIME 15
 
 using namespace droidpad;
+using namespace droidpad::decode;
 
 OutputSmoothBuffer::OutputSmoothBuffer(IOutputManager *mgr, const int type, const int numAxes, const int numButtons) :
 	IOutputManager(type, numAxes, numButtons),

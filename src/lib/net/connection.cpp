@@ -29,147 +29,16 @@
 #include "log.hpp"
 
 using namespace droidpad;
+using namespace droidpad::decode;
 using namespace std;
 
 ModeSetting::ModeSetting() :
 	initialised(false),
+	supportsBinary(false),
 	type(MODE_JS),
 	numRawAxes(0),
 	numAxes(0),
 	numButtons(0) {}
-
-DPMouseData::DPMouseData() :
-	x(0),
-	y(0),
-	scrollDelta(0),
-	bLeft(false),
-	bMiddle(false),
-	bRight(false)
-{ }
-
-DPJSData::DPJSData() :
-	connectionClosed(false)
-{ }
-
-DPJSData::DPJSData(const DPJSData& old) :
-	axes(old.axes),
-	touchpadAxes(old.touchpadAxes),
-	buttons(old.buttons),
-	connectionClosed(connectionClosed)
-{ }
-
-void DPJSData::reorder(std::vector<int> bmap, std::vector<int> amap) {
-	vector<bool> newButtons(buttons.size());
-	for(int i = 0; i < buttons.size(); i++) {
-		if(i >= bmap.size()) { // Map doesn't do this part
-			newButtons[i] = buttons[i];
-		} else {
-			int destination = bmap[i];
-			if(destination >= newButtons.size()) { // Mapped to invalid space
-				// Do nothing
-			} else {
-				newButtons[destination] = buttons[i];
-			}
-		}
-	}
-
-	vector<int> newAxes(axes.size());
-	for(int i = 0; i < axes.size(); i++) {
-		if(i >= amap.size()) { // Map doesn't do this part
-			newAxes[i] = axes[i];
-		} else {
-			int destination = amap[i];
-			if(destination >= newAxes.size()) { // Mapped to invalid space
-				// Do nothing
-			} else {
-				newAxes[destination] = axes[i];
-			}
-		}
-	}
-	buttons = newButtons;
-	axes = newAxes;
-}
-
-DPMouseData::DPMouseData(const DPMouseData& old) :
-	x(old.x),
-	y(old.y),
-	scrollDelta(old.scrollDelta),
-	bLeft(old.bLeft),
-	bMiddle(old.bMiddle),
-	bRight(old.bRight)
-{ }
-
-DPMouseData::DPMouseData(const DPJSData& rawData, const DPJSData& prevData) {
-	if(rawData.axes.size() < 2) {
-		x = 0;
-		y = 0;
-	} else {
-		x = rawData.axes[0];
-		y = -rawData.axes[1];
-	}
-	if(rawData.touchpadAxes.size() == 1 && prevData.touchpadAxes.size() == 1) {
-		incrementalScrollDelta = rawData.touchpadAxes[2] / (50 * 120) - prevData.touchpadAxes[2] / (50 * 120); // Scroll is last.
-		incrementalScrollDelta *= 120;
-		scrollDelta = rawData.touchpadAxes[2] / 50 - prevData.touchpadAxes[2] / 50;
-	} else if(rawData.touchpadAxes.size() >= 3 && prevData.touchpadAxes.size() >= 3) {
-		x = rawData.touchpadAxes[0] - prevData.touchpadAxes[0];
-		y = rawData.touchpadAxes[1] - prevData.touchpadAxes[1];
-		x *= 10;
-		y *= 10;
-
-		incrementalScrollDelta = rawData.touchpadAxes[2] / (50 * 120) - prevData.touchpadAxes[2] / (50 * 120); // Scroll is last.
-		incrementalScrollDelta *= 120;
-		scrollDelta = rawData.touchpadAxes[2] / 50 - prevData.touchpadAxes[2] / 50;
-	} else {
-		scrollDelta = 0;
-		incrementalScrollDelta = 0;
-	}
-	if(rawData.buttons.size() > 0) {
-		bLeft = rawData.buttons[0];
-		bMiddle = rawData.buttons[1];
-		bRight = rawData.buttons[2];
-	} else {
-		bLeft = false;
-		bMiddle = false;
-		bRight = false;
-	}
-}
-
-DPSlideData::DPSlideData() :
-	next(false),
-	prev(false),
-	start(false),
-	finish(false),
-	white(false),
-	black(false),
-	beginning(false),
-	end(false)
-{ }
-DPSlideData::DPSlideData(const DPSlideData& old) :
-	next(old.next),
-	prev(old.prev),
-	start(old.start),
-	finish(old.finish),
-	white(old.white),
-	black(old.black),
-	beginning(old.beginning),
-	end(old.end)
-{
-}
-DPSlideData::DPSlideData(const DPJSData& rawData, const DPJSData& prevData) {
-	if(rawData.buttons.size() >= 8) {
-		next	= rawData.buttons[0];
-		prev	= rawData.buttons[1];
-		start	= rawData.buttons[2];
-		finish	= rawData.buttons[3];
-		white	= rawData.buttons[4] ^
-			(prevData.buttons.size() < 8 ? 0 : prevData.buttons[4]); // Toggle, but only want
-		black	= rawData.buttons[5] ^
-			(prevData.buttons.size() < 8 ? 0 : prevData.buttons[5]); // to be pressed once.
-		beginning=rawData.buttons[6];
-		end	= rawData.buttons[7];
-	}
-}
 
 DPConnection::DPConnection(wxString host, uint16_t port) :
 	wxSocketClient(wxSOCKET_BLOCK)
@@ -202,25 +71,32 @@ void DPConnection::SendMessage(string message) {
 	Write(message.c_str(), message.length());
 }
 
-wxString DPConnection::GetLine() throw (runtime_error)
-{
-	while(inData.Find('\n') == wxNOT_FOUND) {
+wxString DPConnection::GetLine() throw (runtime_error) {
+	size_t returnPosition;
+	while((returnPosition = inData.find('\n')) == string::npos) {
 		if(!ParseFromNet()) throw runtime_error("Connection closed");
 	}
-	wxString ret = inData.Left(inData.Find('\n'));
-	inData = inData.Mid(inData.Find('\n') + 1); // Trim old stuff off
+	wxString ret = wxString(inData.substr(0, returnPosition).c_str(), wxConvUTF8);
+	inData = inData.substr(returnPosition + 1); // Trim old stuff off
 	return ret;
 }
 
 /**
  * Returns true if the parse was successful.
  */
-bool DPConnection::ParseFromNet()
-{
+bool DPConnection::ParseFromNet() {
 	memset(buffer, 0, CONN_BUFFER_SIZE);
 	Read(buffer, CONN_BUFFER_SIZE);
-	inData += wxString(buffer, wxConvUTF8);
+	inData.append(buffer, LastCount());
+	cout << LastCount() << endl;
 	return !Error();
+}
+
+char DPConnection::PeekChar() throw (runtime_error) {
+	while(inData.length() < 1) {
+		if(!ParseFromNet()) throw runtime_error("Connection closed");
+	}
+	return inData[0];
 }
 
 const ModeSetting &DPConnection::GetMode() throw (runtime_error)
@@ -262,6 +138,9 @@ const ModeSetting &DPConnection::GetMode() throw (runtime_error)
 	long numButtons;
 	tkz.GetNextToken().ToLong(&numButtons);
 	mode.numButtons = numButtons;
+
+	if(line.Contains(wxT("<SUPPORTSBINARY>")))
+		mode.supportsBinary = true;
 
 	mode.initialised = true;
 	return mode;

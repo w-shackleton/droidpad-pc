@@ -20,13 +20,24 @@
 #ifndef DP_TYPES_H
 #define DP_TYPES_H
 
+// No includes!
+
 namespace droidpad {
-	enum{
+	enum {
 		MODE_JS,
 		MODE_MOUSE,
 		MODE_SLIDE,
 	};
 
+	/**
+	 * Misc vector class
+	 */
+	class Vec2 {
+		public:
+			float x, y;
+			Vec2(float x, float y);
+			Vec2();
+	};
 }
 
 #endif

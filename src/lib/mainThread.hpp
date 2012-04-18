@@ -50,7 +50,7 @@ namespace droidpad {
 
 			DPConnection *conn;
 
-			DPJSData prevData;
+			decode::DPJSData prevData;
 
 			bool running;
 

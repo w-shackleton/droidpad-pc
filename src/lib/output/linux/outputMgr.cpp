@@ -27,6 +27,7 @@
 
 using namespace std;
 using namespace droidpad;
+using namespace droidpad::decode;
 
 OutputManager::OutputManager(const int type, const int numAxes, const int numButtons) :
 	IOutputManager(type, numAxes, numButtons)

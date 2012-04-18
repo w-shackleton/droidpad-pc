@@ -32,6 +32,7 @@
 using namespace std;
 
 using namespace droidpad;
+using namespace droidpad::decode;
 
 MainThread::MainThread(DeviceManager &parent, AndroidDevice &device) :
 	parent(parent),

@@ -23,9 +23,11 @@
 #include <stdexcept>
 
 namespace droidpad {
-	class DPJSData;
-	class DPMouseData;
-	class DPSlideData;
+	namespace decode {
+		class DPJSData;
+		class DPMouseData;
+		class DPSlideData;
+	}
 	class IOutputManager {
 		public:
 			/**
@@ -36,9 +38,9 @@ namespace droidpad {
 
 			virtual void BeginToStop();
 
-			virtual void SendJSData(const DPJSData& data, bool firstIteration = true) = 0;
-			virtual void SendMouseData(const DPMouseData& data, bool firstIteration = true) = 0;
-			virtual void SendSlideData(const DPSlideData& data, bool firstIteration = true) = 0;
+			virtual void SendJSData(const decode::DPJSData& data, bool firstIteration = true) = 0;
+			virtual void SendMouseData(const decode::DPMouseData& data, bool firstIteration = true) = 0;
+			virtual void SendSlideData(const decode::DPSlideData& data, bool firstIteration = true) = 0;
 		protected:
 			int type;
 	};

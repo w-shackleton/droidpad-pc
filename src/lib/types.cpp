@@ -17,23 +17,14 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#include "IOutputMgr.hpp"
+#include "types.hpp"
 
-// #include "net/connection.hpp"
-
-using namespace std;
 using namespace droidpad;
-using namespace droidpad::decode;
 
-IOutputManager::IOutputManager(const int type, const int numAxes, const int numButtons) :
-	type(type) {}
+Vec2::Vec2() :
+	x(0),
+	y(0) { }
 
-IOutputManager::~IOutputManager() {}
-
-void IOutputManager::BeginToStop() { }
-
-OutputException::OutputException(int error, string msg) :
-	runtime_error(msg),
-	error(error)
-{
-}
+Vec2::Vec2(float x, float y) :
+	x(x),
+	y(y) { }

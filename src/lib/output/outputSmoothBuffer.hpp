@@ -37,16 +37,16 @@ namespace droidpad {
 
 			void BeginToStop();
 
-			void SendJSData   (const DPJSData& data, bool firstIteration = true);
-			void SendMouseData(const DPMouseData& data, bool firstIteration = true);
-			void SendSlideData(const DPSlideData& data, bool firstIteration = true);
+			void SendJSData   (const decode::DPJSData& data, bool firstIteration = true);
+			void SendMouseData(const decode::DPMouseData& data, bool firstIteration = true);
+			void SendSlideData(const decode::DPSlideData& data, bool firstIteration = true);
 		private:
 			IOutputManager* mgr;
 
 			wxMutex callMutex;
-			DPJSData jsData;
-			DPMouseData mouseData;
-			DPSlideData slideData;
+			decode::DPJSData jsData;
+			decode::DPMouseData mouseData;
+			decode::DPSlideData slideData;
 	};
 }
 

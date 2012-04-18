@@ -42,8 +42,8 @@ libdroidpad_la_SOURCES = \
 		   include/outputMgr.hpp	\
 		   include/platformSettings.hpp	\
 		   log.hpp		\
-		   types.hpp		\
 		   			\
+		   types.cpp			types.hpp			\
 		   proc.cpp			proc.hpp			\
 		   data.cpp			data.hpp			\
 		   deviceManager.cpp		deviceManager.hpp		\
@@ -58,6 +58,7 @@ libdroidpad_la_SOURCES = \
 		   ext/b64/base64.cpp		ext/b64/base64.hpp		\
 		   net/mdns.cpp			net/mdns.hpp			\
 		   net/deviceDiscover.cpp	net/deviceDiscover.hpp		\
+		   net/dataDecode.cpp		net/dataDecode.hpp		\
 		   net/connection.cpp		net/connection.hpp		\
 		   output/IOutputMgr.cpp	output/IOutputMgr.hpp		\
 		   output/outputSmoothBuffer.cpp output/outputSmoothBuffer.hpp
