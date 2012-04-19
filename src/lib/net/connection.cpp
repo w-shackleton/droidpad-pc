@@ -22,9 +22,9 @@
 #include <wx/tokenzr.h>
 
 #include <iostream>
-#include <sstream>
 #include <cmath>
 #include "include/platformSettings.hpp"
+#include "hexdump.h"
 
 #include "log.hpp"
 
@@ -88,7 +88,6 @@ bool DPConnection::ParseFromNet() {
 	memset(buffer, 0, CONN_BUFFER_SIZE);
 	Read(buffer, CONN_BUFFER_SIZE);
 	inData.append(buffer, LastCount());
-	cout << LastCount() << endl;
 	return !Error();
 }
 
@@ -97,6 +96,15 @@ char DPConnection::PeekChar() throw (runtime_error) {
 		if(!ParseFromNet()) throw runtime_error("Connection closed");
 	}
 	return inData[0];
+}
+
+string DPConnection::GetBytes(size_t n) {
+	while(inData.length() < n) {
+		if(!ParseFromNet()) throw runtime_error("Connection closed");
+	}
+	string ret = inData.substr(0, n);
+	inData = inData.substr(n + 1); // Trim old stuff off
+	return ret;
 }
 
 const ModeSetting &DPConnection::GetMode() throw (runtime_error)
@@ -162,101 +170,29 @@ AXES LAYOUTS
 */
 const DPJSData DPConnection::GetData() throw (runtime_error)
 {
-	DPJSData data;
-
-	wxString line = GetLine();
-
-	if(line.find(wxT("<STOP>")) != wxNOT_FOUND) {
-		data.connectionClosed = true;
-		return data;
-	} else data.connectionClosed = false;
-
-	int start = line.Find(wxT("[")) + 1;
-	int end = line.Find(wxT("]"));
-
-	locale cLocale("C");
-
-	wxStringTokenizer tk(line(start, end - start), wxT(";"));
-	while(tk.HasMoreTokens()) {
-		wxString t = tk.GetNextToken();
-		start = 2;
-		end = t.Find(wxT("}"));
-		wxStringTokenizer valTk;
-		if(t.StartsWith(wxT("{"))) { // Axis of some sort
-
-			switch(t[1]) {
-				case 'A': // 2way axis
-				case 'S': // 1way axis
-					if(end < start) break; // Malformed?
-					// cout << t(start, end - start).mb_str() << endl;
-					valTk = wxStringTokenizer(t(start, end - start), wxT(","));
-
-					while(valTk.HasMoreTokens()) {
-						{
-							int value;
-							istringstream inNum(string(valTk.GetNextToken().mb_str()));
-							inNum.imbue(cLocale);
-							inNum >> value;
-							data.axes.push_back(value);
-						}
-					}
-
-					break;
-				case 'C': // 1way touchpad
-				case 'T': // 2way touchpad
-					if(end < start) break; // Malformed?
-					// cout << t(start, end - start).mb_str() << endl;
-					valTk = wxStringTokenizer(t(start, end - start), wxT(","));
-
-					while(valTk.HasMoreTokens()) {
-						{
-							int value;
-							istringstream inNum(string(valTk.GetNextToken().mb_str()));
-							inNum.imbue(cLocale);
-							inNum >> value;
-							data.touchpadAxes.push_back(value);
-						}
-					}
-
-					break;
-				default: // Must be a raw JS
-					start = 1;
-					if(end < start) break; // Malformed?
-					valTk = wxStringTokenizer(t(start, end - start), wxT(","));
-					if(valTk.CountTokens() == 3) { // Else something wrong / malformed
-						int i = 0;
-						float x, y, z, ax, ay;
-						while(valTk.HasMoreTokens()) {
-							{
-								float value;
-								istringstream inNum(string(valTk.GetNextToken().mb_str()));
-								inNum.imbue(cLocale);
-								switch(i) {
-									case 0: inNum >> x; break;
-									case 1: inNum >> y; break;
-									case 2: inNum >> z; break;
-								}
-								i++;
-							}
-						}
-						ax = atan2(x, sqrt(y * y + z * z)) / M_PI * AXIS_CUTOFF_MULTIPLIER;
-						if(ax < -AXIS_SIZE) ax = -AXIS_SIZE;
-						if(ax > +AXIS_SIZE) ax = +AXIS_SIZE;
-						ay = atan2(y, z) / M_PI * AXIS_CUTOFF_MULTIPLIER;
-						if(ay < -AXIS_SIZE) ay = -AXIS_SIZE;
-						if(ay > +AXIS_SIZE) ay = +AXIS_SIZE;
-
-						data.axes.push_back(ax);
-						data.axes.push_back(ay);
-					}
-					break;
-			}
-		}
-		else { // Must be a button.
-			data.buttons.push_back(t == wxT("1"));
-		}
+	char first = PeekChar();
+	cout << "Hexdumping buffer" << endl;
+	hexdump(inData.c_str(), inData.length());
+	switch(first) {
+		case '[': // Indicates text
+			LOGV("Text received");
+			return getTextData(GetLine());
+		case 'D': { // Binary header begins "DPAD"
+			LOGV("Binary received");
+			RawBinaryHeader header = getBinaryHeader(GetBytes(sizeof(RawBinaryHeader)));
+			int remainingSize = sizeof(RawBinaryElement) * header.numElements;
+			GetBytes(remainingSize);
+			  } break;
+		default:
+			LOGW("Unrecognised message recieved from phone");
+			cout << first << endl;
+			// hexdump(GetBytes(sizeof(RawBinaryHeader)).c_str(), sizeof(RawBinaryHeader));
+			break;
 	}
-
-	return data;
+	return DPJSData();
 }
 
+void DPConnection::RequestBinary() throw (std::runtime_error) {
+	SendMessage("<BINARY>\n");
+	LOGV("Binary request sent to server");
+}

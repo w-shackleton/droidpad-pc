@@ -68,10 +68,17 @@ namespace droidpad {
 			 */
 			char PeekChar() throw (std::runtime_error);
 
+			/**
+			 * Returns a string containing n bytes of data from the network
+			 */
+			std::string GetBytes(size_t n);
+
 			ModeSetting mode;
 		public:
 			const ModeSetting &GetMode() throw (std::runtime_error);
 			const decode::DPJSData GetData() throw (std::runtime_error);
+
+			void RequestBinary() throw (std::runtime_error);
 	};
 };
 

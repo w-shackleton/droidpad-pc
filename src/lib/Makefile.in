@@ -95,20 +95,21 @@ am__libdroidpad_la_SOURCES_DIST = include/adb.hpp \
 	droidpadCallbacks.cpp droidpadCallbacks.hpp usb/all/adb.cpp \
 	usb/all/adb.hpp ext/1035.c ext/1035.h ext/mdnsd.c ext/mdnsd.h \
 	ext/md5/md5c.c ext/md5/md5.h ext/md5/global.h \
-	ext/b64/base64.cpp ext/b64/base64.hpp net/mdns.cpp \
-	net/mdns.hpp net/deviceDiscover.cpp net/deviceDiscover.hpp \
-	net/dataDecode.cpp net/dataDecode.hpp net/connection.cpp \
-	net/connection.hpp output/IOutputMgr.cpp output/IOutputMgr.hpp \
-	output/outputSmoothBuffer.cpp output/outputSmoothBuffer.hpp \
-	output/linux/outputMgr.cpp output/linux/outputMgr.hpp \
-	output/linux/dpinput.c output/linux/dpinput.h \
-	output/linux/platformSettings.hpp output/win32/wOutputMgr.cpp \
-	output/win32/wOutputMgr.hpp output/win32/winOutputs.cpp \
-	output/win32/winOutputs.hpp output/win32/jsOutputs.cpp \
-	output/win32/jsOutputs.hpp output/win32/wPlatformSettings.hpp \
-	msw/adminCheck.c msw/adminCheck.h msw/winSetup.cpp \
-	msw/winSetup.hpp msw/updater.cpp msw/updater.hpp \
-	msw/bootConf.cpp msw/bootConf.hpp
+	ext/b64/base64.cpp ext/b64/base64.hpp ext/hexdump.c \
+	ext/hexdump.h net/mdns.cpp net/mdns.hpp net/deviceDiscover.cpp \
+	net/deviceDiscover.hpp net/dataDecode.cpp net/dataDecode.hpp \
+	net/connection.cpp net/connection.hpp output/IOutputMgr.cpp \
+	output/IOutputMgr.hpp output/outputSmoothBuffer.cpp \
+	output/outputSmoothBuffer.hpp output/linux/outputMgr.cpp \
+	output/linux/outputMgr.hpp output/linux/dpinput.c \
+	output/linux/dpinput.h output/linux/platformSettings.hpp \
+	output/win32/wOutputMgr.cpp output/win32/wOutputMgr.hpp \
+	output/win32/winOutputs.cpp output/win32/winOutputs.hpp \
+	output/win32/jsOutputs.cpp output/win32/jsOutputs.hpp \
+	output/win32/wPlatformSettings.hpp msw/adminCheck.c \
+	msw/adminCheck.h msw/winSetup.cpp msw/winSetup.hpp \
+	msw/updater.cpp msw/updater.hpp msw/bootConf.cpp \
+	msw/bootConf.hpp
 am__objects_1 = libdroidpad_la-outputMgr.lo libdroidpad_la-dpinput.lo
 @OS_LINUX_TRUE@am__objects_2 = $(am__objects_1)
 am__objects_3 = libdroidpad_la-wOutputMgr.lo \
@@ -125,9 +126,10 @@ am_libdroidpad_la_OBJECTS = libdroidpad_la-types.lo \
 	libdroidpad_la-events.lo libdroidpad_la-droidpadCallbacks.lo \
 	libdroidpad_la-adb.lo libdroidpad_la-1035.lo \
 	libdroidpad_la-mdnsd.lo libdroidpad_la-md5c.lo \
-	libdroidpad_la-base64.lo libdroidpad_la-mdns.lo \
-	libdroidpad_la-deviceDiscover.lo libdroidpad_la-dataDecode.lo \
-	libdroidpad_la-connection.lo libdroidpad_la-IOutputMgr.lo \
+	libdroidpad_la-base64.lo libdroidpad_la-hexdump.lo \
+	libdroidpad_la-mdns.lo libdroidpad_la-deviceDiscover.lo \
+	libdroidpad_la-dataDecode.lo libdroidpad_la-connection.lo \
+	libdroidpad_la-IOutputMgr.lo \
 	libdroidpad_la-outputSmoothBuffer.lo $(am__objects_2) \
 	$(am__objects_4) $(am__objects_6)
 libdroidpad_la_OBJECTS = $(am_libdroidpad_la_OBJECTS)
@@ -410,12 +412,12 @@ libdroidpad_la_SOURCES = include/adb.hpp include/outputMgr.hpp \
 	usb/all/adb.cpp usb/all/adb.hpp ext/1035.c ext/1035.h \
 	ext/mdnsd.c ext/mdnsd.h ext/md5/md5c.c ext/md5/md5.h \
 	ext/md5/global.h ext/b64/base64.cpp ext/b64/base64.hpp \
-	net/mdns.cpp net/mdns.hpp net/deviceDiscover.cpp \
-	net/deviceDiscover.hpp net/dataDecode.cpp net/dataDecode.hpp \
-	net/connection.cpp net/connection.hpp output/IOutputMgr.cpp \
-	output/IOutputMgr.hpp output/outputSmoothBuffer.cpp \
-	output/outputSmoothBuffer.hpp $(am__append_1) $(am__append_2) \
-	$(am__append_3)
+	ext/hexdump.c ext/hexdump.h net/mdns.cpp net/mdns.hpp \
+	net/deviceDiscover.cpp net/deviceDiscover.hpp \
+	net/dataDecode.cpp net/dataDecode.hpp net/connection.cpp \
+	net/connection.hpp output/IOutputMgr.cpp output/IOutputMgr.hpp \
+	output/outputSmoothBuffer.cpp output/outputSmoothBuffer.hpp \
+	$(am__append_1) $(am__append_2) $(am__append_3)
 libdroidpad_la_LIBADD = @WXBASELIBS@ $(am__append_4)
 libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@ -I. -Iext $(am__append_5)
 libdroidpad_la_CFLAGS = @WXCPPFLAGS@ -I. -Iext $(am__append_6)
@@ -511,6 +513,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-dpinput.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-droidpadCallbacks.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-events.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-hexdump.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-jsOutputs.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-mainThread.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-md5c.Plo@am__quote@
@@ -572,6 +575,14 @@ libdroidpad_la-md5c.lo: ext/md5/md5c.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ext/md5/md5c.c' object='libdroidpad_la-md5c.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CFLAGS) $(CFLAGS) -c -o libdroidpad_la-md5c.lo `test -f 'ext/md5/md5c.c' || echo '$(srcdir)/'`ext/md5/md5c.c
+
+libdroidpad_la-hexdump.lo: ext/hexdump.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CFLAGS) $(CFLAGS) -MT libdroidpad_la-hexdump.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-hexdump.Tpo -c -o libdroidpad_la-hexdump.lo `test -f 'ext/hexdump.c' || echo '$(srcdir)/'`ext/hexdump.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libdroidpad_la-hexdump.Tpo $(DEPDIR)/libdroidpad_la-hexdump.Plo
+@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ext/hexdump.c' object='libdroidpad_la-hexdump.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CFLAGS) $(CFLAGS) -c -o libdroidpad_la-hexdump.lo `test -f 'ext/hexdump.c' || echo '$(srcdir)/'`ext/hexdump.c
 
 libdroidpad_la-dpinput.lo: output/linux/dpinput.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CFLAGS) $(CFLAGS) -MT libdroidpad_la-dpinput.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-dpinput.Tpo -c -o libdroidpad_la-dpinput.lo `test -f 'output/linux/dpinput.c' || echo '$(srcdir)/'`output/linux/dpinput.c

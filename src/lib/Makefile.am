@@ -56,6 +56,7 @@ libdroidpad_la_SOURCES = \
 		   ext/mdnsd.c			ext/mdnsd.h			\
 		   ext/md5/md5c.c		ext/md5/md5.h	ext/md5/global.h\
 		   ext/b64/base64.cpp		ext/b64/base64.hpp		\
+		   ext/hexdump.c		ext/hexdump.h			\
 		   net/mdns.cpp			net/mdns.hpp			\
 		   net/deviceDiscover.cpp	net/deviceDiscover.hpp		\
 		   net/dataDecode.cpp		net/dataDecode.hpp		\

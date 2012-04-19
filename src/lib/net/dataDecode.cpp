@@ -22,12 +22,20 @@
 
 #include <cmath>
 #include "include/platformSettings.hpp"
+#include <iostream>
+#include <sstream>
+
+#include <wx/tokenzr.h>
+
+#include <arpa/inet.h>
+
+#define NTOH(_x) _x = ntohl((_x))
 
 using namespace std;
 using namespace droidpad;
 using namespace droidpad::decode;
 
-Vec2 accelToAxes(float x, float y, float z) {
+Vec2 droidpad::decode::accelToAxes(float x, float y, float z) {
 	float ax = atan2(x, sqrt(y * y + z * z)) / M_PI * AXIS_CUTOFF_MULTIPLIER;
 	if(ax < -AXIS_SIZE) ax = -AXIS_SIZE;
 	if(ax > +AXIS_SIZE) ax = +AXIS_SIZE;
@@ -170,3 +178,109 @@ DPSlideData::DPSlideData(const DPJSData& rawData, const DPJSData& prevData) {
 	}
 }
 
+const DPJSData droidpad::decode::getTextData(wxString line) {
+	DPJSData data;
+
+	if(line.find(wxT("<STOP>")) != wxNOT_FOUND) {
+		data.connectionClosed = true;
+		return data;
+	} else data.connectionClosed = false;
+
+	int start = line.Find(wxT("[")) + 1;
+	int end = line.Find(wxT("]"));
+
+	locale cLocale("C");
+
+	wxStringTokenizer tk(line(start, end - start), wxT(";"));
+	while(tk.HasMoreTokens()) {
+		wxString t = tk.GetNextToken();
+		start = 2;
+		end = t.Find(wxT("}"));
+		wxStringTokenizer valTk;
+		if(t.StartsWith(wxT("{"))) { // Axis of some sort
+
+			switch(t[1]) {
+				case 'A': // 2way axis
+				case 'S': // 1way axis
+					if(end < start) break; // Malformed?
+					// cout << t(start, end - start).mb_str() << endl;
+					valTk = wxStringTokenizer(t(start, end - start), wxT(","));
+
+					while(valTk.HasMoreTokens()) {
+						{
+							int value;
+							istringstream inNum(string(valTk.GetNextToken().mb_str()));
+							inNum.imbue(cLocale);
+							inNum >> value;
+							data.axes.push_back(value);
+						}
+					}
+
+					break;
+				case 'C': // 1way touchpad
+				case 'T': // 2way touchpad
+					if(end < start) break; // Malformed?
+					// cout << t(start, end - start).mb_str() << endl;
+					valTk = wxStringTokenizer(t(start, end - start), wxT(","));
+
+					while(valTk.HasMoreTokens()) {
+						{
+							int value;
+							istringstream inNum(string(valTk.GetNextToken().mb_str()));
+							inNum.imbue(cLocale);
+							inNum >> value;
+							data.touchpadAxes.push_back(value);
+						}
+					}
+
+					break;
+				default: // Must be a raw JS
+					start = 1;
+					if(end < start) break; // Malformed?
+					valTk = wxStringTokenizer(t(start, end - start), wxT(","));
+					if(valTk.CountTokens() == 3) { // Else something wrong / malformed
+						int i = 0;
+						float x, y, z;
+						while(valTk.HasMoreTokens()) {
+							{
+								float value;
+								istringstream inNum(string(valTk.GetNextToken().mb_str()));
+								inNum.imbue(cLocale);
+								switch(i) {
+									case 0: inNum >> x; break;
+									case 1: inNum >> y; break;
+									case 2: inNum >> z; break;
+								}
+								i++;
+							}
+						}
+						Vec2 a = accelToAxes(x, y, z);
+
+						data.axes.push_back(a.x);
+						data.axes.push_back(a.y);
+					}
+					break;
+			}
+		}
+		else { // Must be a button.
+			data.buttons.push_back(t == wxT("1"));
+		}
+	}
+
+	return data;
+}
+
+const RawBinaryHeader droidpad::decode::getBinaryHeader(string binaryHeader) {
+	RawBinaryHeader header;
+	memcpy(&header, binaryHeader.c_str(), sizeof(RawBinaryHeader));
+	
+	// Flip round various endianness issues
+	NTOH(header.numElements);
+	NTOH(header.flags);
+#ifdef DEBUG
+	cout << "Binary header:" << endl;
+	cout << header.numElements << " elements, flags = " << header.flags << endl;
+	cout << "Accel: " << header.ax << ", " << header.ay << "," << header.az << endl;
+#endif
+	return header;
+}

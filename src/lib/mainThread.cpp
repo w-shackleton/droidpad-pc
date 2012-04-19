@@ -97,6 +97,7 @@ void* MainThread::Entry()
 						break;
 				}
 #endif
+				if(mode.supportsBinary) conn->RequestBinary();
 			} catch(invalid_argument &e) {
 				LOGEwx(wxString::FromAscii(e.what()));
 				DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_NO_JS_DEVICE);

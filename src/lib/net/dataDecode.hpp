@@ -22,6 +22,8 @@
 
 #include "types.hpp"
 #include <vector>
+#include <string>
+#include <wx/string.h>
 
 namespace droidpad {
 	namespace decode {
@@ -73,6 +75,32 @@ namespace droidpad {
 				bool next, prev, start, finish, white, black, beginning, end;
 		};
 		
+
+		typedef struct {
+			char headerBytes[4];
+			int32_t numElements;
+			int32_t flags;
+			// Accel
+			float ax, ay, az;
+			// Gyro
+			float gx, gy, gz;
+			// Reserved
+			float rx, ry, rz;
+		} RawBinaryHeader;
+
+		typedef struct {
+			int32_t flags;
+			char data1[4];
+			char data2[4];
+			char data3[4];
+		} RawBinaryElement;
+
+		/**
+		 * Converts an input line to a DPJSData
+		 */
+		const DPJSData getTextData(wxString line);
+
+		const RawBinaryHeader getBinaryHeader(std::string binaryHeader);
 	};
 };
 
