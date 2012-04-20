@@ -84,6 +84,20 @@ namespace droidpad {
 				bool bLeft, bMiddle, bRight;
 		};
 
+		class DPTouchData {
+			public:
+				DPTouchData();
+				DPTouchData(const DPTouchData& old);
+				DPTouchData(const DPJSData& rawData, const DPJSData& prevData, const DPTouchData& prevAbsData);
+
+				/**
+				 * scrollDelta: down is positive, same scale as incrementalScrollDelta.
+				 * incrementalScrollDelta: increments are 120.
+				 */
+				int x, y, scrollDelta, incrementalScrollDelta;
+				bool bLeft, bMiddle, bRight;
+		};
+
 		class DPSlideData {
 			public:
 				DPSlideData();

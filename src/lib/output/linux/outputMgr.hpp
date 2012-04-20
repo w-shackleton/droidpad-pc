@@ -36,6 +36,7 @@ namespace droidpad {
 
 			void SendJSData(const decode::DPJSData& data, bool firstIteration = true);
 			void SendMouseData(const decode::DPMouseData& data, bool firstIteration = true);
+			void SendTouchData(const decode::DPTouchData& data, bool firstIteration = true);
 			void SendSlideData(const decode::DPSlideData& data, bool firstIteration = true);
 		private:
 			dpinfo *dpinput;

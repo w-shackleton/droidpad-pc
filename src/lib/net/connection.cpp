@@ -189,8 +189,10 @@ const DPJSData DPConnection::GetData() throw (runtime_error)
 			  }
 		default:
 			LOGW("Unrecognised message recieved from phone");
+#ifdef DEBUG
 			// cout << first << endl;
-			// hexdump(GetBytes(sizeof(RawBinaryHeader)).c_str(), sizeof(RawBinaryHeader));
+			hexdump(GetBytes(sizeof(RawBinaryHeader)).c_str(), sizeof(RawBinaryHeader));
+#endif
 			  break;
 	}
 	return DPJSData();

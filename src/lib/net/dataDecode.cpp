@@ -46,15 +46,6 @@ Vec2 droidpad::decode::accelToAxes(float x, float y, float z) {
 	return Vec2(ax, ay);
 }
 
-DPMouseData::DPMouseData() :
-	x(0),
-	y(0),
-	scrollDelta(0),
-	bLeft(false),
-	bMiddle(false),
-	bRight(false)
-{ }
-
 DPJSData::DPJSData() :
 	connectionClosed(false),
 	reset(false)
@@ -99,6 +90,15 @@ void DPJSData::reorder(std::vector<int> bmap, std::vector<int> amap) {
 	axes = newAxes;
 }
 
+DPMouseData::DPMouseData() :
+	x(0),
+	y(0),
+	scrollDelta(0),
+	bLeft(false),
+	bMiddle(false),
+	bRight(false)
+{ }
+
 DPMouseData::DPMouseData(const DPMouseData& old) :
 	x(old.x),
 	y(old.y),
@@ -133,7 +133,7 @@ DPMouseData::DPMouseData(const DPJSData& rawData, const DPJSData& prevData) {
 		scrollDelta = 0;
 		incrementalScrollDelta = 0;
 	}
-	if(rawData.buttons.size() > 0) {
+	if(rawData.buttons.size() >= 3) {
 		bLeft = rawData.buttons[0];
 		bMiddle = rawData.buttons[1];
 		bRight = rawData.buttons[2];
@@ -143,6 +143,61 @@ DPMouseData::DPMouseData(const DPJSData& rawData, const DPJSData& prevData) {
 		bRight = false;
 	}
 }
+
+DPTouchData::DPTouchData() :
+	x(0),
+	y(0),
+	scrollDelta(0),
+	bLeft(false),
+	bMiddle(false),
+	bRight(false)
+{ }
+
+DPTouchData::DPTouchData(const DPTouchData& old) :
+	x(old.x),
+	y(old.y),
+	scrollDelta(old.scrollDelta),
+	bLeft(old.bLeft),
+	bMiddle(old.bMiddle),
+	bRight(old.bRight)
+{ }
+
+DPTouchData::DPTouchData(const DPJSData& rawData, const DPJSData& prevData, const DPTouchData& prevAbsData) {
+	if(rawData.axes.size() < 2) {
+		x = 0;
+		y = 0;
+	} else {
+		x = rawData.axes[0];
+		y = -rawData.axes[1];
+	}
+	if(rawData.touchpadAxes.size() == 1 && prevData.touchpadAxes.size() == 1) {
+		incrementalScrollDelta = rawData.touchpadAxes[0] / (50 * 120) - prevData.touchpadAxes[0] / (50 * 120);
+		incrementalScrollDelta *= 120;
+		scrollDelta = rawData.touchpadAxes[2] / 50 - prevData.touchpadAxes[2] / 50;
+	} else if(rawData.touchpadAxes.size() >= 3 && prevData.touchpadAxes.size() >= 3) {
+		x = rawData.touchpadAxes[0] - prevData.touchpadAxes[0];
+		y = rawData.touchpadAxes[1] - prevData.touchpadAxes[1];
+		x *= 10;
+		y *= 10;
+
+		incrementalScrollDelta = rawData.touchpadAxes[2] / (50 * 120) - prevData.touchpadAxes[2] / (50 * 120); // Scroll is last.
+		incrementalScrollDelta *= 120;
+		scrollDelta = rawData.touchpadAxes[2] / 50 - prevData.touchpadAxes[2] / 50;
+	} else {
+		scrollDelta = 0;
+		incrementalScrollDelta = 0;
+	}
+	if(rawData.buttons.size() >= 3) {
+		bLeft = rawData.buttons[0];
+		bMiddle = rawData.buttons[1];
+		bRight = rawData.buttons[2];
+	} else {
+		bLeft = false;
+		bMiddle = false;
+		bRight = false;
+	}
+}
+
 
 DPSlideData::DPSlideData() :
 	next(false),

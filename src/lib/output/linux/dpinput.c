@@ -165,59 +165,49 @@ int dpinput_setup(dpInfo *info, int type)
 	
 	ioctl(info->ufile, UI_SET_EVBIT, EV_SYN);
 	ioctl(info->ufile, UI_SET_EVBIT, EV_KEY);
-	if(type == TYPE_JS)
-	{
-		ioctl(info->ufile, UI_SET_EVBIT, EV_ABS);
-		for(i = 0; i < info->axisNum; i++)
-			ioctl(info->ufile, UI_SET_ABSBIT, joystickAxes[i]);
-		for(i = 0; i < info->buttonNum; i++)
-			ioctl(info->ufile, UI_SET_KEYBIT, joystickKeys[i]);
-	}
-	if(type == TYPE_MOUSE)
-	{
-		ioctl(info->ufile, UI_SET_EVBIT, EV_REL);
-		ioctl(info->ufile, UI_SET_RELBIT, REL_X);
-		ioctl(info->ufile, UI_SET_RELBIT, REL_Y);
-		ioctl(info->ufile, UI_SET_RELBIT, REL_WHEEL);
-		
-		ioctl(info->ufile, UI_SET_KEYBIT, BTN_LEFT);
-		ioctl(info->ufile, UI_SET_KEYBIT, BTN_MIDDLE);
-		ioctl(info->ufile, UI_SET_KEYBIT, BTN_RIGHT);
-	}
-	if(type == TYPE_KEYBD)
-	{
-		// All regular keys on a KB
-		for(i = 0; i < 128; i++)
-			ioctl(info->ufile, UI_SET_KEYBIT, i);
+	switch(type) {
+		case TYPE_JS:
+			ioctl(info->ufile, UI_SET_EVBIT, EV_ABS);
+			for(i = 0; i < info->axisNum; i++)
+				ioctl(info->ufile, UI_SET_ABSBIT, joystickAxes[i]);
+			for(i = 0; i < info->buttonNum; i++)
+				ioctl(info->ufile, UI_SET_KEYBIT, joystickKeys[i]);
+			break;
+		case TYPE_MOUSE:
+			ioctl(info->ufile, UI_SET_EVBIT, EV_REL);
+			ioctl(info->ufile, UI_SET_RELBIT, REL_X);
+			ioctl(info->ufile, UI_SET_RELBIT, REL_Y);
+			ioctl(info->ufile, UI_SET_RELBIT, REL_WHEEL);
+			
+			ioctl(info->ufile, UI_SET_KEYBIT, BTN_LEFT);
+			ioctl(info->ufile, UI_SET_KEYBIT, BTN_MIDDLE);
+			ioctl(info->ufile, UI_SET_KEYBIT, BTN_RIGHT);
+			break;
+		case TYPE_TOUCHSCREEN:
+			ioctl(info->ufile, UI_SET_EVBIT, EV_ABS);
+			ioctl(info->ufile, UI_SET_ABSBIT, ABS_X);
+			ioctl(info->ufile, UI_SET_ABSBIT, ABS_Y);
+			ioctl(info->ufile, UI_SET_ABSBIT, ABS_PRESSURE);
+			
+			ioctl(info->ufile, UI_SET_KEYBIT, BTN_DIGI); // Indicates this is absolute
+			ioctl(info->ufile, UI_SET_KEYBIT, BTN_LEFT);
+			ioctl(info->ufile, UI_SET_KEYBIT, BTN_MIDDLE);
+			ioctl(info->ufile, UI_SET_KEYBIT, BTN_RIGHT);
+			break;
+		case TYPE_KEYBD:
+			// All regular keys on a KB
+			for(i = 0; i < 128; i++)
+				ioctl(info->ufile, UI_SET_KEYBIT, i);
+			break;
 	}
 	
 	if(info->buttonNum > ARRAY_COUNT(joystickKeys, __u16))
 		info->buttonNum = ARRAY_COUNT(joystickKeys, __u16);
 	
-	
-	/*ioctl(info->ufile, UI_SET_KEYBIT, BTN_A); // Buttons
-	ioctl(info->ufile, UI_SET_KEYBIT, BTN_B);
-	ioctl(info->ufile, UI_SET_KEYBIT, BTN_C);
-	ioctl(info->ufile, UI_SET_KEYBIT, BTN_X);
-	ioctl(info->ufile, UI_SET_KEYBIT, BTN_Y);
-	ioctl(info->ufile, UI_SET_KEYBIT, BTN_Z);
-	ioctl(info->ufile, UI_SET_KEYBIT, BTN_TL);
-	ioctl(info->ufile, UI_SET_KEYBIT, BTN_TR);
-	ioctl(info->ufile, UI_SET_KEYBIT, BTN_TL2);
-	ioctl(info->ufile, UI_SET_KEYBIT, BTN_TR2);
-	ioctl(info->ufile, UI_SET_KEYBIT, BTN_SELECT);
-	ioctl(info->ufile, UI_SET_KEYBIT, BTN_START);
-	ioctl(info->ufile, UI_SET_KEYBIT, BTN_MODE);
-	ioctl(info->ufile, UI_SET_KEYBIT, BTN_THUMBL);
-	ioctl(info->ufile, UI_SET_KEYBIT, BTN_THUMBR);*/
-	
-	
 	retcode = write(info->ufile, &uinp, sizeof(uinp));
 	
 	retcode = (ioctl(info->ufile, UI_DEV_CREATE));
-	//printf("ioctl UI_DEV_CREATE returned %d.\n", retcode);
-	if (retcode)
-	{
+	if (retcode) {
 		printf(" ** Error creating uinput device %d.\n", retcode);
 		
 		ioctl (info->ufile, UI_DEV_DESTROY);
@@ -250,7 +240,7 @@ int dpinput_sendPos(dpInfo *info, int code, int val)
 	if(info == NULL) return -2;
 	RESET_EVENT();
 	
-	if(info->type == TYPE_JS)
+	if(info->type == TYPE_JS || info->type == TYPE_TOUCHSCREEN)
 		event.type = EV_ABS;
 	else if(info->type == TYPE_MOUSE)
 		event.type = EV_REL;
@@ -269,7 +259,7 @@ int dpinput_send2Pos(dpInfo *info, int posX, int posY)
 	if(info == NULL) return -2;
 	RESET_EVENT();
 	
-	if(info->type == TYPE_JS)
+	if(info->type == TYPE_JS || info->type == TYPE_TOUCHSCREEN)
 	{
 		event.type = EV_ABS;
 		event.code = ABS_X;
@@ -277,6 +267,10 @@ int dpinput_send2Pos(dpInfo *info, int posX, int posY)
 		write(info->ufile, &event, sizeof(event));
 		event.code = ABS_Y;
 		event.value = trimMinMax(posY, info->axisMin, info->axisMax);
+		write(info->ufile, &event, sizeof(event));
+
+		event.code = ABS_PRESSURE;
+		event.value = info->axisMax;
 		write(info->ufile, &event, sizeof(event));
 	}
 	else if(info->type == TYPE_MOUSE)

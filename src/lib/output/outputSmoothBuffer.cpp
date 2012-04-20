@@ -79,6 +79,13 @@ void OutputSmoothBuffer::SendMouseData(const DPMouseData& data, bool firstIterat
 	mgr->SendMouseData(mouseData);
 }
 
+// TODO: Do properly
+void OutputSmoothBuffer::SendTouchData(const decode::DPTouchData& data, bool firstIteration) {
+	wxMutexLocker lock(callMutex);
+	touchData = data;
+	mgr->SendTouchData(touchData);
+}
+
 void OutputSmoothBuffer::SendSlideData(const DPSlideData& data, bool firstIteration)
 {
 	wxMutexLocker lock(callMutex);

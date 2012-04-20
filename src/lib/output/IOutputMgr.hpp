@@ -27,6 +27,7 @@ namespace droidpad {
 		class DPJSData;
 		class DPMouseData;
 		class DPSlideData;
+		class DPTouchData;
 	}
 	class IOutputManager {
 		public:
@@ -40,6 +41,7 @@ namespace droidpad {
 
 			virtual void SendJSData(const decode::DPJSData& data, bool firstIteration = true) = 0;
 			virtual void SendMouseData(const decode::DPMouseData& data, bool firstIteration = true) = 0;
+			virtual void SendTouchData(const decode::DPTouchData& data, bool firstIteration = true) = 0;
 			virtual void SendSlideData(const decode::DPSlideData& data, bool firstIteration = true) = 0;
 		protected:
 			int type;

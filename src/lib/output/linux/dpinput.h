@@ -40,6 +40,7 @@ typedef struct dpinfo
 enum {
 TYPE_JS,
 TYPE_MOUSE,
+TYPE_TOUCHSCREEN,
 TYPE_KEYBD
 };
 
