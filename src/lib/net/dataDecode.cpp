@@ -22,6 +22,7 @@
 
 #include <cmath>
 #include "include/platformSettings.hpp"
+#include "log.hpp"
 #include <iostream>
 #include <sstream>
 
@@ -55,7 +56,8 @@ DPMouseData::DPMouseData() :
 { }
 
 DPJSData::DPJSData() :
-	connectionClosed(false)
+	connectionClosed(false),
+	reset(false)
 { }
 
 DPJSData::DPJSData(const DPJSData& old) :
@@ -270,17 +272,75 @@ const DPJSData droidpad::decode::getTextData(wxString line) {
 	return data;
 }
 
-const RawBinaryHeader droidpad::decode::getBinaryHeader(string binaryHeader) {
+const RawBinaryHeader droidpad::decode::getBinaryHeader(const char *binaryHeader) {
 	RawBinaryHeader header;
-	memcpy(&header, binaryHeader.c_str(), sizeof(RawBinaryHeader));
+	memcpy(&header, binaryHeader, sizeof(RawBinaryHeader));
 	
 	// Flip round various endianness issues
 	NTOH(header.numElements);
 	NTOH(header.flags);
+
+	NTOH(header.raw.ax);
+	NTOH(header.raw.ay);
+	NTOH(header.raw.az);
+	NTOH(header.raw.gx);
+	NTOH(header.raw.gy);
+	NTOH(header.raw.gz);
+	NTOH(header.raw.rx);
+	NTOH(header.raw.ry);
+	NTOH(header.raw.rz);
+#if 0
 #ifdef DEBUG
 	cout << "Binary header:" << endl;
 	cout << header.numElements << " elements, flags = " << header.flags << endl;
-	cout << "Accel: " << header.ax << ", " << header.ay << "," << header.az << endl;
+	cout << "Accel: " << header.axis.ax << ", " << header.axis.ay << "," << header.axis.az << endl;
+#endif
 #endif
 	return header;
+}
+
+const RawBinaryElement droidpad::decode::getBinaryElement(const char *binaryElement) {
+	RawBinaryElement elem;
+	memcpy(&elem, binaryElement, sizeof(RawBinaryElement));
+
+	NTOH(elem.flags);
+	NTOH(elem.raw.data1);
+	NTOH(elem.raw.data2);
+	NTOH(elem.raw.data3);
+
+	return elem;
+}
+
+const DPJSData droidpad::decode::getBinaryData(const RawBinaryHeader header, std::vector<RawBinaryElement> elems) {
+	DPJSData ret;
+	ret.connectionClosed = header.flags & HEADER_FLAG_STOP;
+	// TODO: Add support for gyro when modes are implemented
+	if(header.flags & HEADER_FLAG_HAS_ACCEL) {
+		Vec2 accel = accelToAxes(header.axis.ax, header.axis.ay, header.axis.az);
+		ret.axes.push_back(accel.x);
+		ret.axes.push_back(accel.y);
+	}
+
+	for(vector<RawBinaryElement>::iterator it = elems.begin(); it != elems.end(); it++) {
+		if(it->flags & ITEM_FLAG_BUTTON) {
+			ret.buttons.push_back(it->raw.data1);
+		}
+		if(it->flags & ITEM_FLAG_SLIDER) {
+			if(it->flags & ITEM_FLAG_HAS_X_AXIS)
+				ret.axes.push_back(it->integer.data1);
+			if(it->flags & ITEM_FLAG_HAS_Y_AXIS)
+				ret.axes.push_back(it->integer.data2);
+		}
+		if(it->flags & ITEM_FLAG_TRACKPAD) {
+			if(it->flags & ITEM_FLAG_HAS_X_AXIS)
+				ret.touchpadAxes.push_back(it->integer.data1);
+			if(it->flags & ITEM_FLAG_HAS_Y_AXIS)
+				ret.touchpadAxes.push_back(it->integer.data2);
+		}
+		if(it->flags & ITEM_FLAG_BUTTON & ITEM_FLAG_IS_RESET) {
+			LOGV("Reset pressed");
+			ret.reset = true;
+		}
+	}
+	return ret;
 }

@@ -103,7 +103,7 @@ string DPConnection::GetBytes(size_t n) {
 		if(!ParseFromNet()) throw runtime_error("Connection closed");
 	}
 	string ret = inData.substr(0, n);
-	inData = inData.substr(n + 1); // Trim old stuff off
+	inData = inData.substr(n); // Trim old stuff off
 	return ret;
 }
 
@@ -171,23 +171,27 @@ AXES LAYOUTS
 const DPJSData DPConnection::GetData() throw (runtime_error)
 {
 	char first = PeekChar();
-	cout << "Hexdumping buffer" << endl;
-	hexdump(inData.c_str(), inData.length());
 	switch(first) {
 		case '[': // Indicates text
-			LOGV("Text received");
 			return getTextData(GetLine());
 		case 'D': { // Binary header begins "DPAD"
-			LOGV("Binary received");
-			RawBinaryHeader header = getBinaryHeader(GetBytes(sizeof(RawBinaryHeader)));
+			RawBinaryHeader header = getBinaryHeader(GetBytes(sizeof(RawBinaryHeader)).c_str());
 			int remainingSize = sizeof(RawBinaryElement) * header.numElements;
-			GetBytes(remainingSize);
-			  } break;
+
+			// Iterate through data, parsing each element.
+			string elemData = GetBytes(remainingSize);
+			const char *start = elemData.c_str();
+			vector<RawBinaryElement> elems;
+			for(const char *elem = start; elem < start + remainingSize; elem += sizeof(RawBinaryElement)) {
+				elems.push_back(getBinaryElement(elem));
+			}
+			return getBinaryData(header, elems);
+			  }
 		default:
 			LOGW("Unrecognised message recieved from phone");
-			cout << first << endl;
+			// cout << first << endl;
 			// hexdump(GetBytes(sizeof(RawBinaryHeader)).c_str(), sizeof(RawBinaryHeader));
-			break;
+			  break;
 	}
 	return DPJSData();
 }

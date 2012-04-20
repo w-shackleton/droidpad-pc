@@ -21,9 +21,22 @@
 #define DP_DATADECODE_H
 
 #include "types.hpp"
+#include <stdint.h>
 #include <vector>
 #include <string>
 #include <wx/string.h>
+
+#define HEADER_FLAG_HAS_ACCEL 0x1
+#define HEADER_FLAG_HAS_GYRO 0x2
+#define HEADER_FLAG_STOP 0x4
+
+#define ITEM_FLAG_BUTTON 0x1
+#define ITEM_FLAG_TOGGLE_BUTTON (0x2 | ITEM_FLAG_BUTTON)
+#define ITEM_FLAG_SLIDER 0x4
+#define ITEM_FLAG_TRACKPAD 0x8
+#define ITEM_FLAG_HAS_X_AXIS 0x10
+#define ITEM_FLAG_HAS_Y_AXIS 0x20
+#define ITEM_FLAG_IS_RESET 0x40
 
 namespace droidpad {
 	namespace decode {
@@ -45,6 +58,11 @@ namespace droidpad {
 				 * If true, the connection was closed normally.
 				 */
 				bool connectionClosed;
+
+				/**
+				 * If true, reset the axes / button (context specific)
+				 */
+				bool reset;
 
 				/**
 				 * Reorders the axes according to the given reordering data.
@@ -80,19 +98,46 @@ namespace droidpad {
 			char headerBytes[4];
 			int32_t numElements;
 			int32_t flags;
-			// Accel
-			float ax, ay, az;
-			// Gyro
-			float gx, gy, gz;
-			// Reserved
-			float rx, ry, rz;
+
+			union {
+				struct {
+					// Accel
+					float ax, ay, az;
+					// Gyro
+					float gx, gy, gz;
+					// Reserved
+					float rx, ry, rz;
+				} axis;
+				struct {
+					// Accel
+					uint32_t ax, ay, az;
+					// Gyro
+					uint32_t gx, gy, gz;
+					// Reserved
+					uint32_t rx, ry, rz;
+				} raw;
+			};
 		} RawBinaryHeader;
 
 		typedef struct {
 			int32_t flags;
-			char data1[4];
-			char data2[4];
-			char data3[4];
+			union {
+				struct {
+					uint32_t data1;
+					uint32_t data2;
+					uint32_t data3;
+				} raw;
+				struct {
+					float data1;
+					float data2;
+					float data3;
+				} floating;
+				struct {
+					int32_t data1;
+					int32_t data2;
+					int32_t data3;
+				} integer;
+			};
 		} RawBinaryElement;
 
 		/**
@@ -100,7 +145,10 @@ namespace droidpad {
 		 */
 		const DPJSData getTextData(wxString line);
 
-		const RawBinaryHeader getBinaryHeader(std::string binaryHeader);
+		const RawBinaryHeader getBinaryHeader(const char *binaryHeader);
+		const RawBinaryElement getBinaryElement(const char *binaryElement);
+
+		const DPJSData getBinaryData(const RawBinaryHeader header, std::vector<RawBinaryElement> elems);
 	};
 };
 
