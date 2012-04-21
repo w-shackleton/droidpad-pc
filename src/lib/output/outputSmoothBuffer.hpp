@@ -23,6 +23,7 @@
 #include "IOutputMgr.hpp"
 #include <wx/thread.h>
 #include "net/connection.hpp"
+#include <vector>
 
 namespace droidpad {
 	class OutputSmoothBuffer : public IOutputManager, private wxThread {

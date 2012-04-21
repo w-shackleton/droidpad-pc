@@ -27,6 +27,7 @@ namespace droidpad {
 		MODE_JS,
 		MODE_MOUSE,
 		MODE_SLIDE,
+		MODE_ABSMOUSE,
 	};
 
 	/**
@@ -37,6 +38,17 @@ namespace droidpad {
 			float x, y;
 			Vec2(float x, float y);
 			Vec2();
+	};
+
+	class Vec3 {
+		public:
+			float x, y, z;
+			Vec3(float x, float y, float z);
+			Vec3();
+
+			Vec3 unit();
+			float dot(Vec3 other);
+			float magnitude();
 	};
 }
 

@@ -19,6 +19,8 @@
  */
 #include "types.hpp"
 
+#include <cmath>
+
 using namespace droidpad;
 
 Vec2::Vec2() :
@@ -28,3 +30,26 @@ Vec2::Vec2() :
 Vec2::Vec2(float x, float y) :
 	x(x),
 	y(y) { }
+
+Vec3::Vec3(float x, float y, float z) :
+	x(x),
+	y(y),
+	z(z) { }
+Vec3::Vec3() :
+	x(0),
+	y(0),
+	z(0) { }
+
+Vec3 Vec3::unit() {
+	float m = magnitude();
+	return Vec3(x / m, y / m, z / m);
+}
+float Vec3::dot(Vec3 other) {
+	return	x * other.x +
+		y * other.y +
+		z * other.z;
+}
+
+float Vec3::magnitude() {
+	return sqrt(x*x + y*y + z*z);
+}

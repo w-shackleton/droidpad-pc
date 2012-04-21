@@ -53,6 +53,9 @@ void* OutputSmoothBuffer::Entry()
 			case MODE_SLIDE:
 				mgr->SendSlideData(slideData, false);
 				break;
+			case MODE_ABSMOUSE:
+				mgr->SendTouchData(touchData, false);
+				break;
 		}
 	}
 }
@@ -75,7 +78,6 @@ void OutputSmoothBuffer::SendMouseData(const DPMouseData& data, bool firstIterat
 	mouseData = data;
 	mouseData.x = mouseData.x * SLEEP_TIME / 60;
 	mouseData.y = mouseData.y * SLEEP_TIME / 60;
-	// TODO: Also scrollData?
 	mgr->SendMouseData(mouseData);
 }
 

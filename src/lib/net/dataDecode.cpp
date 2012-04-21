@@ -32,6 +32,9 @@
 
 #define NTOH(_x) _x = ntohl((_x))
 
+// The size of the angle each way from the center of the screen which the phone can be moved in.
+#define POINTING_ANGLE_RANGE (M_PI / 4)
+
 using namespace std;
 using namespace droidpad;
 using namespace droidpad::decode;
@@ -117,9 +120,9 @@ DPMouseData::DPMouseData(const DPJSData& rawData, const DPJSData& prevData) {
 		y = -rawData.axes[1];
 	}
 	if(rawData.touchpadAxes.size() == 1 && prevData.touchpadAxes.size() == 1) {
-		incrementalScrollDelta = rawData.touchpadAxes[2] / (50 * 120) - prevData.touchpadAxes[2] / (50 * 120); // Scroll is last.
+		incrementalScrollDelta = rawData.touchpadAxes[0] / (50 * 120) - prevData.touchpadAxes[0] / (50 * 120); // Scroll is last.
 		incrementalScrollDelta *= 120;
-		scrollDelta = rawData.touchpadAxes[2] / 50 - prevData.touchpadAxes[2] / 50;
+		scrollDelta = rawData.touchpadAxes[0] / 50 - prevData.touchpadAxes[0] / 50;
 	} else if(rawData.touchpadAxes.size() >= 3 && prevData.touchpadAxes.size() >= 3) {
 		x = rawData.touchpadAxes[0] - prevData.touchpadAxes[0];
 		y = rawData.touchpadAxes[1] - prevData.touchpadAxes[1];
@@ -163,30 +166,22 @@ DPTouchData::DPTouchData(const DPTouchData& old) :
 { }
 
 DPTouchData::DPTouchData(const DPJSData& rawData, const DPJSData& prevData, const DPTouchData& prevAbsData) {
-	if(rawData.axes.size() < 2) {
-		x = 0;
-		y = 0;
-	} else {
+	if(rawData.containsAccel && rawData.containsGyro) {
+		x = rawData.axes[2]; // Gyro
+		y = -rawData.axes[1];
+	} else if(rawData.containsAccel) {
 		x = rawData.axes[0];
 		y = -rawData.axes[1];
+	} else if(rawData.containsGyro) {
+		x = rawData.axes[0];
 	}
+
 	if(rawData.touchpadAxes.size() == 1 && prevData.touchpadAxes.size() == 1) {
 		incrementalScrollDelta = rawData.touchpadAxes[0] / (50 * 120) - prevData.touchpadAxes[0] / (50 * 120);
 		incrementalScrollDelta *= 120;
-		scrollDelta = rawData.touchpadAxes[2] / 50 - prevData.touchpadAxes[2] / 50;
-	} else if(rawData.touchpadAxes.size() >= 3 && prevData.touchpadAxes.size() >= 3) {
-		x = rawData.touchpadAxes[0] - prevData.touchpadAxes[0];
-		y = rawData.touchpadAxes[1] - prevData.touchpadAxes[1];
-		x *= 10;
-		y *= 10;
-
-		incrementalScrollDelta = rawData.touchpadAxes[2] / (50 * 120) - prevData.touchpadAxes[2] / (50 * 120); // Scroll is last.
-		incrementalScrollDelta *= 120;
-		scrollDelta = rawData.touchpadAxes[2] / 50 - prevData.touchpadAxes[2] / 50;
-	} else {
-		scrollDelta = 0;
-		incrementalScrollDelta = 0;
+		scrollDelta = rawData.touchpadAxes[0] / 50 - prevData.touchpadAxes[0] / 50;
 	}
+
 	if(rawData.buttons.size() >= 3) {
 		bLeft = rawData.buttons[0];
 		bMiddle = rawData.buttons[1];
@@ -315,6 +310,7 @@ const DPJSData droidpad::decode::getTextData(wxString line) {
 
 						data.axes.push_back(a.x);
 						data.axes.push_back(a.y);
+						data.containsAccel = true;
 					}
 					break;
 			}
@@ -341,6 +337,7 @@ const RawBinaryHeader droidpad::decode::getBinaryHeader(const char *binaryHeader
 	NTOH(header.raw.gx);
 	NTOH(header.raw.gy);
 	NTOH(header.raw.gz);
+	NTOH(header.raw.gzn);
 	NTOH(header.raw.rx);
 	NTOH(header.raw.ry);
 	NTOH(header.raw.rz);
@@ -374,6 +371,18 @@ const DPJSData droidpad::decode::getBinaryData(const RawBinaryHeader header, std
 		Vec2 accel = accelToAxes(header.axis.ax, header.axis.ay, header.axis.az);
 		ret.axes.push_back(accel.x);
 		ret.axes.push_back(accel.y);
+		ret.containsAccel = true;
+	}
+	// Gyro but no accel
+	if((header.flags & HEADER_FLAG_HAS_GYRO) && !(header.flags & HEADER_FLAG_HAS_ACCEL)) {
+		ret.axes.push_back(header.axis.gz * POINTING_ANGLE_RANGE * AXIS_SIZE); // Put z-component
+		ret.containsGyro = true;
+	}
+	// Both
+	if((header.flags & HEADER_FLAG_HAS_GYRO) && (header.flags & HEADER_FLAG_HAS_ACCEL)) {
+		ret.axes.push_back(header.axis.gzn * POINTING_ANGLE_RANGE * AXIS_SIZE);
+		ret.containsGyro = true;
+		ret.containsAccel = true;
 	}
 
 	for(vector<RawBinaryElement>::iterator it = elems.begin(); it != elems.end(); it++) {

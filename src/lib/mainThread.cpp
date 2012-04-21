@@ -72,31 +72,23 @@ void* MainThread::Entry()
 			try { // Setup outputmanager
 				LOGV("Setting up OutputManager");
 				const ModeSetting &mode = conn->GetMode();
-#ifdef OS_LINUX
+
 				switch(mode.type) {
 					case MODE_JS:
 					case MODE_SLIDE:
 						mgr = new OutputManager(mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
 						break;
+					case MODE_ABSMOUSE: {
+						deleteOutputManager = false;
+						OutputManager *innerMgr = new OutputManager(mode.type, 2 + mode.numAxes, mode.numButtons);
+						mgr = new OutputSmoothBuffer(innerMgr, mode.type, 2 + mode.numAxes, mode.numButtons);						break;
+							    }
 					case MODE_MOUSE:
 						deleteOutputManager = false;
 						OutputManager *innerMgr = new OutputManager(mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
 						mgr = new OutputSmoothBuffer(innerMgr, mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
 						break;
 				}
-#elif defined OS_WIN32
-				switch(mode.type) {
-					case MODE_JS:
-					case MODE_SLIDE:
-						mgr = new OutputManager(mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
-						break;
-					case MODE_MOUSE:
-						deleteOutputManager = false;
-						OutputManager *innerMgr = new OutputManager(mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
-						mgr = new OutputSmoothBuffer(innerMgr, mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
-						break;
-				}
-#endif
 				if(mode.supportsBinary) conn->RequestBinary();
 			} catch(invalid_argument &e) {
 				LOGEwx(wxString::FromAscii(e.what()));
@@ -182,6 +174,11 @@ int MainThread::loop()
 			case MODE_MOUSE:
 				mgr->SendMouseData(DPMouseData(data, prevData));
 				break;
+			case MODE_ABSMOUSE: {
+				DPTouchData touchData = DPTouchData(data, prevData, prevAbsData);
+				mgr->SendTouchData(touchData);
+				prevAbsData = touchData;
+					    } break;
 			case MODE_SLIDE:
 				mgr->SendSlideData(DPSlideData(data, prevData));
 				break;

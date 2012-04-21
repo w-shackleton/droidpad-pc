@@ -49,6 +49,9 @@ OutputManager::OutputManager(const int type, const int numAxes, const int numBut
 		case MODE_SLIDE:
 			ret = dpinput_setup(dpinput,TYPE_KEYBD);
 			break;
+		case MODE_ABSMOUSE:
+			ret = dpinput_setup(dpinput,TYPE_TOUCHSCREEN);
+			break;
 		default:
 			delete dpinput;
 			throw invalid_argument("Invalid type");

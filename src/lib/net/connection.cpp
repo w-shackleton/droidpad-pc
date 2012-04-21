@@ -122,6 +122,8 @@ const ModeSetting &DPConnection::GetMode() throw (runtime_error)
 		mode.type = MODE_MOUSE;
 	} else if(dpMode.StartsWith(wxT("slide"))) {
 		mode.type = MODE_SLIDE;
+	} else if(dpMode.StartsWith(wxT("absmouse"))) {
+		mode.type = MODE_ABSMOUSE;
 	} else {
 		mode.type = MODE_JS;
 	}

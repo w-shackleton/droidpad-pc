@@ -189,7 +189,7 @@ int dpinput_setup(dpInfo *info, int type)
 			ioctl(info->ufile, UI_SET_ABSBIT, ABS_Y);
 			ioctl(info->ufile, UI_SET_ABSBIT, ABS_PRESSURE);
 			
-			ioctl(info->ufile, UI_SET_KEYBIT, BTN_DIGI); // Indicates this is absolute
+			ioctl(info->ufile, UI_SET_KEYBIT, BTN_DIGI); // Indicates this is an absolute mouse
 			ioctl(info->ufile, UI_SET_KEYBIT, BTN_LEFT);
 			ioctl(info->ufile, UI_SET_KEYBIT, BTN_MIDDLE);
 			ioctl(info->ufile, UI_SET_KEYBIT, BTN_RIGHT);

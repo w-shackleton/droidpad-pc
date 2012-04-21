@@ -59,6 +59,9 @@ namespace droidpad {
 				 */
 				bool connectionClosed;
 
+				bool containsAccel;
+				bool containsGyro;
+
 				/**
 				 * If true, reset the axes / button (context specific)
 				 */
@@ -117,16 +120,16 @@ namespace droidpad {
 				struct {
 					// Accel
 					float ax, ay, az;
-					// Gyro
-					float gx, gy, gz;
+					// Gyro, and normalised gyro
+					float gx, gy, gz, gzn;
 					// Reserved
 					float rx, ry, rz;
 				} axis;
 				struct {
 					// Accel
 					uint32_t ax, ay, az;
-					// Gyro
-					uint32_t gx, gy, gz;
+					// Gyro, and normalised gyro
+					uint32_t gx, gy, gz, gzn;
 					// Reserved
 					uint32_t rx, ry, rz;
 				} raw;
