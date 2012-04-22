@@ -19,11 +19,15 @@
  */
 #include "outputSmoothBuffer.hpp"
 
+#include <numeric>
+#include <iostream>
+
 #include "types.hpp"
 #define SLEEP_TIME 15
 
 using namespace droidpad;
 using namespace droidpad::decode;
+using namespace std;
 
 OutputSmoothBuffer::OutputSmoothBuffer(IOutputManager *mgr, const int type, const int numAxes, const int numButtons) :
 	IOutputManager(type, numAxes, numButtons),
@@ -54,7 +58,10 @@ void* OutputSmoothBuffer::Entry()
 				mgr->SendSlideData(slideData, false);
 				break;
 			case MODE_ABSMOUSE:
-				mgr->SendTouchData(touchData, false);
+				Vec2 newPos = touchCurrentSmoothed2 + touchVelocity * ((float)SLEEP_TIME / 1000);
+				// touchCurrentSmoothed2.x = newPos.x;
+				// touchCurrentSmoothed2.y = newPos.y;
+				mgr->SendTouchData(touchCurrentSmoothed2, false);
 				break;
 		}
 	}
@@ -81,11 +88,24 @@ void OutputSmoothBuffer::SendMouseData(const DPMouseData& data, bool firstIterat
 	mgr->SendMouseData(mouseData);
 }
 
-// TODO: Do properly
 void OutputSmoothBuffer::SendTouchData(const decode::DPTouchData& data, bool firstIteration) {
 	wxMutexLocker lock(callMutex);
-	touchData = data;
-	mgr->SendTouchData(touchData);
+
+	touchDataQueue.push_back(data);
+	while(touchDataQueue.size() > TOUCHSCREEN_MOVING_AVG_NUM)
+		touchDataQueue.pop_front();
+	touchPrevSmoothed = touchCurrentSmoothed;
+	touchCurrentSmoothed = getMovingAverage(touchDataQueue);
+	touchCurrentSmoothed2 = touchCurrentSmoothed;
+
+	// Get velocity
+	touchTimer.Pause();
+	if(touchTimer.Time() > 0) {// div0
+		touchVelocity = (touchCurrentSmoothed - touchPrevSmoothed) / ((float)touchTimer.Time() / 1000);
+	} else {
+		touchVelocity = Vec2();
+	}
+	touchTimer.Start();
 }
 
 void OutputSmoothBuffer::SendSlideData(const DPSlideData& data, bool firstIteration)
@@ -95,3 +115,11 @@ void OutputSmoothBuffer::SendSlideData(const DPSlideData& data, bool firstIterat
 	mgr->SendSlideData(data);
 }
 
+
+template<typename T> T OutputSmoothBuffer::getMovingAverage(deque<T> values) {
+	T ret = values.back();
+	Vec2 newCoords = accumulate(values.begin(), values.end(), Vec2(0, 0)) / values.size();
+	ret.x = newCoords.x;
+	ret.y = newCoords.y;
+	return ret;
+}

@@ -37,18 +37,18 @@ namespace droidpad {
 		public:
 			float x, y;
 			Vec2(float x, float y);
+			Vec2(const Vec2 &other);
 			Vec2();
-	};
 
-	class Vec3 {
-		public:
-			float x, y, z;
-			Vec3(float x, float y, float z);
-			Vec3();
+			Vec2 & operator+=(const Vec2 &rhs);
+			const Vec2 operator+(const Vec2 &other) const;
+			Vec2 & operator-=(const Vec2 &rhs);
+			const Vec2 operator-(const Vec2 &other) const;
 
-			Vec3 unit();
-			float dot(Vec3 other);
-			float magnitude();
+			Vec2 & operator*=(const float rhs);
+			const Vec2 operator*(const float rhs) const;
+			Vec2 & operator/=(const float rhs);
+			const Vec2 operator/(const float rhs) const;
 	};
 }
 

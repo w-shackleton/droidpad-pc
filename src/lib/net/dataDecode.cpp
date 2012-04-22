@@ -148,8 +148,6 @@ DPMouseData::DPMouseData(const DPJSData& rawData, const DPJSData& prevData) {
 }
 
 DPTouchData::DPTouchData() :
-	x(0),
-	y(0),
 	scrollDelta(0),
 	bLeft(false),
 	bMiddle(false),
@@ -157,24 +155,32 @@ DPTouchData::DPTouchData() :
 { }
 
 DPTouchData::DPTouchData(const DPTouchData& old) :
-	x(old.x),
-	y(old.y),
+	Vec2(old),
 	scrollDelta(old.scrollDelta),
 	bLeft(old.bLeft),
 	bMiddle(old.bMiddle),
-	bRight(old.bRight)
+	bRight(old.bRight),
+	xOffset(old.xOffset),
+	yOffset(old.yOffset)
 { }
 
 DPTouchData::DPTouchData(const DPJSData& rawData, const DPJSData& prevData, const DPTouchData& prevAbsData) {
 	if(rawData.containsAccel && rawData.containsGyro) {
 		x = rawData.axes[2]; // Gyro
+		if(rawData.reset)
+			xOffset = x;
 		y = -rawData.axes[1];
 	} else if(rawData.containsAccel) {
 		x = rawData.axes[0];
 		y = -rawData.axes[1];
 	} else if(rawData.containsGyro) {
 		x = rawData.axes[0];
+		if(rawData.reset)
+			xOffset = x;
 	}
+
+	x -= xOffset;
+	// y -= yOffset;
 
 	if(rawData.touchpadAxes.size() == 1 && prevData.touchpadAxes.size() == 1) {
 		incrementalScrollDelta = rawData.touchpadAxes[0] / (50 * 120) - prevData.touchpadAxes[0] / (50 * 120);
@@ -375,12 +381,12 @@ const DPJSData droidpad::decode::getBinaryData(const RawBinaryHeader header, std
 	}
 	// Gyro but no accel
 	if((header.flags & HEADER_FLAG_HAS_GYRO) && !(header.flags & HEADER_FLAG_HAS_ACCEL)) {
-		ret.axes.push_back(header.axis.gz * POINTING_ANGLE_RANGE * AXIS_SIZE); // Put z-component
+		ret.axes.push_back(header.axis.gz / POINTING_ANGLE_RANGE * AXIS_SIZE); // Put z-component
 		ret.containsGyro = true;
 	}
 	// Both
 	if((header.flags & HEADER_FLAG_HAS_GYRO) && (header.flags & HEADER_FLAG_HAS_ACCEL)) {
-		ret.axes.push_back(header.axis.gzn * POINTING_ANGLE_RANGE * AXIS_SIZE);
+		ret.axes.push_back(header.axis.gzn / POINTING_ANGLE_RANGE * AXIS_SIZE);
 		ret.containsGyro = true;
 		ret.containsAccel = true;
 	}
@@ -401,7 +407,7 @@ const DPJSData droidpad::decode::getBinaryData(const RawBinaryHeader header, std
 			if(it->flags & ITEM_FLAG_HAS_Y_AXIS)
 				ret.touchpadAxes.push_back(it->integer.data2);
 		}
-		if(it->flags & ITEM_FLAG_BUTTON & ITEM_FLAG_IS_RESET) {
+		if(it->flags & ITEM_FLAG_BUTTON && it->flags & ITEM_FLAG_IS_RESET && it->integer.data1) {
 			LOGV("Reset pressed");
 			ret.reset = true;
 		}

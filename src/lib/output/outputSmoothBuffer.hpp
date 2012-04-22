@@ -22,8 +22,11 @@
 
 #include "IOutputMgr.hpp"
 #include <wx/thread.h>
+#include <wx/stopwatch.h>
 #include "net/connection.hpp"
-#include <vector>
+#include <deque>
+
+#define TOUCHSCREEN_MOVING_AVG_NUM 10
 
 namespace droidpad {
 	class OutputSmoothBuffer : public IOutputManager, private wxThread {
@@ -49,7 +52,12 @@ namespace droidpad {
 			decode::DPJSData jsData;
 			decode::DPMouseData mouseData;
 			decode::DPSlideData slideData;
-			decode::DPTouchData touchData;
+			std::deque<decode::DPTouchData> touchDataQueue;
+			decode::DPTouchData touchCurrentSmoothed, touchCurrentSmoothed2, touchPrevSmoothed;
+			Vec2 touchVelocity;
+			wxStopWatch touchTimer;
+
+			template<typename T> static T getMovingAverage(std::deque<T> values);
 	};
 }
 

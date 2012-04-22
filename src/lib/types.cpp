@@ -27,29 +27,48 @@ Vec2::Vec2() :
 	x(0),
 	y(0) { }
 
+Vec2::Vec2(const Vec2 &other) :
+	x(other.x),
+	y(other.y) { }
+
 Vec2::Vec2(float x, float y) :
 	x(x),
 	y(y) { }
 
-Vec3::Vec3(float x, float y, float z) :
-	x(x),
-	y(y),
-	z(z) { }
-Vec3::Vec3() :
-	x(0),
-	y(0),
-	z(0) { }
-
-Vec3 Vec3::unit() {
-	float m = magnitude();
-	return Vec3(x / m, y / m, z / m);
-}
-float Vec3::dot(Vec3 other) {
-	return	x * other.x +
-		y * other.y +
-		z * other.z;
+Vec2 & Vec2::operator+=(const Vec2 &rhs) {
+	x += rhs.x;
+	y += rhs.y;
+	return *this;
 }
 
-float Vec3::magnitude() {
-	return sqrt(x*x + y*y + z*z);
+const Vec2 Vec2::operator+(const Vec2 &other) const {
+	return Vec2(*this) += other;
+}
+
+Vec2 & Vec2::operator-=(const Vec2 &rhs) {
+	x -= rhs.x;
+	y -= rhs.y;
+	return *this;
+}
+
+const Vec2 Vec2::operator-(const Vec2 &other) const {
+	return Vec2(*this) -= other;
+}
+
+Vec2 & Vec2::operator*=(const float rhs) {
+	x *= rhs;
+	y *= rhs;
+	return *this;
+}
+const Vec2 Vec2::operator*(const float other) const {
+	return Vec2(*this) *= other;
+}
+
+Vec2 & Vec2::operator/=(const float rhs) {
+	x /= rhs;
+	y /= rhs;
+	return *this;
+}
+const Vec2 Vec2::operator/(const float other) const {
+	return Vec2(*this) /= other;
 }
