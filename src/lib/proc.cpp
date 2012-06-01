@@ -234,7 +234,7 @@ bool droidpad::md5check(std::string filePath, std::string checksum) {
 				digest[10], digest[11],
 				digest[12], digest[13],
 				digest[14], digest[15]); // Can't be bothered to do this properly
-		return checksum == md5String;
+		return checksum == string(md5String);
 
 		fclose (file);
 	}
@@ -247,6 +247,9 @@ bool droidpad::isAdmin() {
 }
 
 void droidpad::runAsAdminAndExit(string cmd, string args) {
+	// First, set env variable containing original user's name - allows webpage opening later
+	int uid = getuid();
+
 	// Execute correct SU process - guessing it
 	wxChar* session = wxGetenv(wxT("DESKTOP_SESSION"));
 	wxString suCmd;

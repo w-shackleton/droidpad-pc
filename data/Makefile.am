@@ -21,7 +21,7 @@ SUBDIRS = adb
 
 if IF_GUI
   dpdatadir = $(datadir)/droidpad
-  dpdata_DATA = layout.xrc
+  dpdata_DATA = layout.xrc iconlarge.png
 if OS_LINUX
   dpdata_DATA += iconlarge.xpm
 endif
@@ -31,6 +31,10 @@ endif
 
   pixmapsdir = $(datadir)/pixmaps
   pixmaps_DATA = droidpad.png
+
+if SPONSOR_MESSAGE
+    dpdata_DATA += reactos-logo.png
+endif
 endif
 
 adbdir = $(datadir)/droidpad/adb
@@ -48,4 +52,4 @@ endif
 # menu_DATA = $(menu_in_files:.desktop.in=.desktop)
 # {at}INTLTOOL_DESKTOP_RULE{at}
 
-EXTRA_DIST = $(dpdata_DATA) $(pixmaps_DATA) layout.xrc icon.ico icon.xpm iconlarge.xpm droidpad.png adb/adb adb/adb.exe adb/AdbWinApi.dll adb/AdbWinUsbApi.dll
+EXTRA_DIST = $(dpdata_DATA) $(pixmaps_DATA) layout.xrc icon.ico icon.xpm iconlarge.xpm droidpad.png adb/adb adb/adb.exe adb/AdbWinApi.dll adb/AdbWinUsbApi.dll reactos-logo.png reactos-logo.svg

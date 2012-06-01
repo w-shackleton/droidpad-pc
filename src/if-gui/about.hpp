@@ -35,10 +35,12 @@ class About : public wxDialog {
 		enum {
 			ID_GO_WEB = wxID_HIGHEST,
 			ID_GO_BUG,
+			ID_GO_REACTOS,
 		};
 
 		void goWeb(wxCommandEvent &evt);
 		void goBugreport(wxCommandEvent &evt);
+		void goReactos(wxCommandEvent &evt);
 };
 
 #endif

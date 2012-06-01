@@ -34,13 +34,15 @@ using namespace droidpad;
 #define _FRAME_ICON wxT("iconlarge.xpm")
 #endif
 
-#define LARGE_ICON wxT("iconlarge.xpm")
+#define LARGE_ICON wxT("iconlarge.png")
+#define REACTOS_ICON wxT("reactos-logo.png")
 
 #define FRAME_TITLE "About DroidPad"
 
 BEGIN_EVENT_TABLE(About, wxDialog)
 	EVT_BUTTON(ID_GO_WEB, About::goWeb)
 	EVT_BUTTON(ID_GO_BUG, About::goBugreport)
+	EVT_BUTTON(ID_GO_REACTOS, About::goReactos)
 END_EVENT_TABLE()
 
 About::About(wxWindow *parent) :
@@ -51,17 +53,17 @@ About::About(wxWindow *parent) :
 	wxBoxSizer *panelSizer = new wxBoxSizer(wxVERTICAL);
 	SetSizer(panelSizer);
 
-	wxImagePanel *image = new wxImagePanel(this, Data::getFilePath(LARGE_ICON), wxBITMAP_TYPE_XPM);
-	panelSizer->Add(image, 0, wxALIGN_CENTRE);
+	wxImagePanel *image = new wxImagePanel(this, Data::getFilePath(LARGE_ICON), wxBITMAP_TYPE_PNG);
+	panelSizer->Add(image, 0, wxALIGN_CENTRE | wxALL, 10);
 
 	wxStaticText *title = new wxStaticText(this, -1, wxT("DroidPad"));
 	wxFont largeFont = title->GetFont();
 	largeFont.SetPointSize(18);
 	title->SetFont(largeFont);
-	panelSizer->Add(title, 0, wxALIGN_CENTRE);
+	panelSizer->Add(title, 0, wxALIGN_CENTRE | wxALL, 5);
 
 	wxStaticText *desc = new wxStaticText(this, -1, _("Use an Android phone as a computer joystick"));
-	panelSizer->Add(desc, 0, wxALIGN_CENTRE);
+	panelSizer->Add(desc, 0, wxALIGN_CENTRE | wxALL, 3);
 
 	wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
 
@@ -71,7 +73,34 @@ About::About(wxWindow *parent) :
 	wxButton *bug = new wxButton(this, ID_GO_BUG, _("Report a bug"));
 	buttonSizer->Add(bug);
 
-	panelSizer->Add(buttonSizer, 0, wxALIGN_CENTRE);
+	panelSizer->Add(buttonSizer, 0, wxALIGN_CENTRE | wxALL, 5);
+
+#ifdef SPONSOR_MESSAGE
+	wxBoxSizer *sponsorSizer = new wxBoxSizer(wxVERTICAL);
+
+	title = new wxStaticText(this, -1, _("Sponsored by ReactOS"));
+	largeFont = title->GetFont();
+	largeFont.SetPointSize(14);
+	title->SetFont(largeFont);
+	sponsorSizer->Add(title, 0, wxALIGN_CENTRE);
+
+	wxBoxSizer *centralPart = new wxBoxSizer(wxHORIZONTAL);
+	sponsorSizer->Add(centralPart, 0, wxALIGN_CENTRE);
+
+	wxBoxSizer *leftSizer = new wxBoxSizer(wxVERTICAL);
+	wxImagePanel *sponsorImage = new wxImagePanel(this, Data::getFilePath(REACTOS_ICON), wxBITMAP_TYPE_PNG);
+	wxButton *reactos = new wxButton(this, ID_GO_REACTOS, _("Visit ReactOS"));
+	wxStaticText *sponsorMessage = new wxStaticText(this, -1, _("ReactOS® is a free, modern operating system based on the design of Windows® XP/2003. ReactOS are sponsoring DroidPad by signing the joystick drivers needed on Windows."));
+	sponsorMessage->Wrap(200);
+
+	leftSizer->Add(sponsorImage, 0, wxALIGN_CENTRE);
+	leftSizer->Add(reactos, 0, wxALIGN_CENTRE);
+
+	centralPart->Add(leftSizer, 0);
+	centralPart->Add(sponsorMessage, 1);
+
+	panelSizer->Add(sponsorSizer, 0, wxALIGN_CENTRE | wxALL, 10);
+#endif
 
 	panelSizer->SetSizeHints(this);
 	Fit();
@@ -83,4 +112,8 @@ void About::goWeb(wxCommandEvent &evt) {
 
 void About::goBugreport(wxCommandEvent &evt) {
 	openWebpage("https://bugs.launchpad.net/droidpad-pc");
+}
+
+void About::goReactos(wxCommandEvent &evt) {
+	openWebpage("http://www.reactos.org/en/index.html");
 }

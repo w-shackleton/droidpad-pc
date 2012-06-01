@@ -63,6 +63,22 @@ else
 	AC_MSG_RESULT(no)
 fi
 
+AC_MSG_CHECKING(whether to display sponsor message)
+dnl This is only used on MSW
+sponsor_default="no"
+AC_ARG_ENABLE(sponsor-message, [  --enable-sponsor-message=[no/yes] show sponsor message on about page
+	                             [default=$sponsor_default]],, enable_sponsor_message=$sponsor_default)
+
+if test "x$enable_sponsor_message" = "xyes"; then
+	CFLAGS="$CFLAGS -DSPONSOR_MESSAGE"
+	CXXFLAGS="$CXXFLAGS -DSPONSOR_MESSAGE"
+	AC_MSG_RESULT(yes)
+else
+	AC_MSG_RESULT(no)
+fi
+AM_CONDITIONAL([SPONSOR_MESSAGE], [test "$enable_sponsor_message" = "yes"])
+
+
 dnl NOTE: Test mode support is NOT YET FINISHED. This is only included so that the code isn't deleted if it is ever needed again.
 testmode_default="no"
 AC_MSG_CHECKING(whether to enable windows test mode)
