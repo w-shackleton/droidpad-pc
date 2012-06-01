@@ -31,7 +31,8 @@ namespace droidpad {
 
 	void forkProcess(std::string cmd);
 
-	void openWebpage(std::string url);
+	// Returns true on success
+	bool openWebpage(std::string url);
 
 	/**
 	 * verifies an md5. Returns true on success.
@@ -42,6 +43,16 @@ namespace droidpad {
 	// on all platforms
 	bool isAdmin();
 	void runAsAdminAndExit(std::string cmd, std::string args = "");
+
+#ifdef OS_LINUX
+	// Tries to work out the UID of the user who originally started DroidPad.
+	// This is used to start the browser etc, and the ID is guessed from some
+	// environment variables.
+	//
+	// Returns the ID on success, or 0 on failure.
+	// Failure can mean DP was run as root (id of 0), or couldn't find UID.
+	int getOriginalUserID();
+#endif
 }
 
 #endif

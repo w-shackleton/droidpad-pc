@@ -21,6 +21,7 @@
 
 #include <string>
 #include <iostream>
+#include <sstream>
 
 #ifdef OS_UNIX
 #include <stdio.h>
@@ -184,12 +185,34 @@ bad2:
 
 #define BROWSER "x-www-browser"
 
-void droidpad::openWebpage(string url) {
+bool droidpad::openWebpage(string url) {
 	// Good ol' fork and exec
+	int uid = getOriginalUserID();
+	if(!uid)
+		return false;
 	if(fork() == 0) {
-		// TODO: Get this running as original user, not root!
-		execlp(BROWSER, BROWSER, url.c_str(), (char *)0);
+		stringstream userArg;
+		userArg << "-u#" << uid;
+
+		printf("Running %s %s %s %s %s %s\n",
+				"sudo",
+				userArg.str().c_str(),
+				"-i",
+				"--",
+				BROWSER,
+				url.c_str());
+
+		// Invoke sudo, login shell for user, run browser
+		execlp("sudo",
+				"sudo",
+				userArg.str().c_str(),
+				"-i",
+				"--",
+				BROWSER,
+				url.c_str(),
+				(char *)0);
 	}
+	return true;
 }
 
 void droidpad::forkProcess(string cmd) {
@@ -249,6 +272,10 @@ bool droidpad::isAdmin() {
 void droidpad::runAsAdminAndExit(string cmd, string args) {
 	// First, set env variable containing original user's name - allows webpage opening later
 	int uid = getuid();
+	stringstream uidVal;
+	uidVal << uid;
+
+	setenv("DP_UID", uidVal.str().c_str(), 1);
 
 	// Execute correct SU process - guessing it
 	wxChar* session = wxGetenv(wxT("DESKTOP_SESSION"));
@@ -295,5 +322,33 @@ bool droidpad::isAdmin() {
 // NOTE / TODO: On MSW this doesn't stop, but this is handled when this is called.
 void droidpad::runAsAdminAndExit(string cmd, string args) {
 	ShellExecute(NULL, "runas", cmd.c_str(), args.c_str(), NULL, SW_SHOWNORMAL);
+}
+#endif
+
+#ifdef OS_LINUX
+int droidpad::getOriginalUserID() {
+	char *dp_uid = getenv("DP_UID");
+	if(dp_uid) {
+		istringstream in(dp_uid);
+		int id;
+		in >> id;
+		if(id) {
+			cout << "Got UID of " << id << " from DP env variable" << endl;
+			return id;
+		}
+		// Otherwise, try next method.
+	}
+
+	char *sudo_uid = getenv("SUDO_UID");
+	if(sudo_uid) {
+		istringstream in(sudo_uid);
+		int id;
+		in >> id;
+		if(id) {
+			cout << "Got UID of " << id << " from sudo env variable" << endl;
+			return id;
+		}
+	}
+	return 0;
 }
 #endif
