@@ -89,7 +89,7 @@ void OutputManager::SendJSData(const DPJSData& data, bool firstIteration) {
 
 void OutputManager::SendMouseData(const DPMouseData& data, bool firstIteration)
 {
-	if(!WinOutputs::SendMouseEvent(data.x / 400, data.y / 400, data.bLeft, data.bMiddle, data.bRight, firstIteration ? data.incrementalScrollDelta : 0)) // TODO: Customise scale factors?
+	if(!WinOutputs::SendMouseEvent(data.x / 400, -data.y / 400, data.bLeft, data.bMiddle, data.bRight, firstIteration ? data.incrementalScrollDelta : 0)) // TODO: Customise scale factors?
 	{
 		LOGWwx(wxT("SendInput failed") + GetLastError());
 	}
@@ -107,3 +107,16 @@ void OutputManager::SendSlideData(const DPSlideData& data, bool firstIteration)
 	WinOutputs::SendKeystroke(VK_END,	data.end);
 }
 
+#define WIN_ABS_AXIS_SIZE 65536
+
+void OutputManager::SendTouchData(const decode::DPTouchData& data, bool firstIteration) {
+	int newx = (data.x + AXIS_SIZE) * WIN_ABS_AXIS_SIZE / AXIS_SIZE / 2;
+	int newy = (data.y + AXIS_SIZE) * WIN_ABS_AXIS_SIZE / AXIS_SIZE / 2;
+//	wxString dbg;
+//	dbg.Printf(wxT("Position: %d, %d"), newx, newy);
+//	LOGVwx(dbg);
+	if(!WinOutputs::SendAbsMouseEvent(newx, -newy, data.bLeft, data.bMiddle, data.bRight, firstIteration ? data.incrementalScrollDelta : 0)) // TODO: Customise scale factors?
+	{
+		LOGWwx(wxT("SendInput failed: ") + GetLastError());
+	}
+}
