@@ -11,6 +11,7 @@ convert droidpad.png -resize 128x128 icon-128.png
 convert icon-16.png icon-32.png icon-64.png icon-128.png droidpad.png -colors 256 -alpha on -background none -flatten icon.ico
 
 convert droidpad.png -resize 128x128 iconlarge.xpm
+convert droidpad.png -resize 128x128 iconlarge.png
 convert droidpad.png -resize 32x32 icon.xpm
 
 rm icon-16.png

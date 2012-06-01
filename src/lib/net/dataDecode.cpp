@@ -28,7 +28,11 @@
 
 #include <wx/tokenzr.h>
 
+#ifdef OS_LINUX
 #include <arpa/inet.h>
+#elif OS_WIN32
+#include <winsock2.h>
+#endif
 
 #define NTOH(_x) _x = ntohl((_x))
 
@@ -46,7 +50,7 @@ Vec2 droidpad::decode::accelToAxes(float x, float y, float z) {
 	float ay = atan2(y, z) / M_PI * AXIS_CUTOFF_MULTIPLIER;
 	if(ay < -AXIS_SIZE) ay = -AXIS_SIZE;
 	if(ay > +AXIS_SIZE) ay = +AXIS_SIZE;
-	return Vec2(ax, ay);
+	return Vec2(-ax, -ay);
 }
 
 DPJSData::DPJSData() :
@@ -254,6 +258,7 @@ const DPJSData droidpad::decode::getTextData(wxString line) {
 		wxString t = tk.GetNextToken();
 		start = 2;
 		end = t.Find(wxT("}"));
+		int pos;
 		wxStringTokenizer valTk;
 		if(t.StartsWith(wxT("{"))) { // Axis of some sort
 
@@ -281,14 +286,18 @@ const DPJSData droidpad::decode::getTextData(wxString line) {
 					// cout << t(start, end - start).mb_str() << endl;
 					valTk = wxStringTokenizer(t(start, end - start), wxT(","));
 
+					pos = 0;
 					while(valTk.HasMoreTokens()) {
 						{
 							int value;
 							istringstream inNum(string(valTk.GetNextToken().mb_str()));
 							inNum.imbue(cLocale);
 							inNum >> value;
+							if(pos == 1) // 'y' axis on 2way pad
+								value = -value;
 							data.touchpadAxes.push_back(value);
 						}
+						pos++;
 					}
 
 					break;
@@ -405,7 +414,7 @@ const DPJSData droidpad::decode::getBinaryData(const RawBinaryHeader header, std
 			if(it->flags & ITEM_FLAG_HAS_X_AXIS)
 				ret.touchpadAxes.push_back(it->integer.data1);
 			if(it->flags & ITEM_FLAG_HAS_Y_AXIS)
-				ret.touchpadAxes.push_back(it->integer.data2);
+				ret.touchpadAxes.push_back(-it->integer.data2);
 		}
 		if(it->flags & ITEM_FLAG_BUTTON && it->flags & ITEM_FLAG_IS_RESET && it->integer.data1) {
 			LOGV("Reset pressed");

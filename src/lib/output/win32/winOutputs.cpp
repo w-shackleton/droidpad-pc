@@ -59,6 +59,31 @@ bool WinOutputs::SendMouseEvent(int dx, int dy, bool left, bool middle, bool rig
 	return SendInput(3, event, sizeof(event[0]));
 }
 
+bool WinOutputs::SendAbsMouseEvent(int x, int y, bool left, bool middle, bool right, int scrollDelta)
+{
+	INPUT event[3];
+	ZeroMemory(event, sizeof(event));
+	event[0].type = INPUT_MOUSE;
+	event[0].mi.dwFlags |= left	? (!prevLeft	? MOUSEEVENTF_LEFTDOWN	: 0) : (prevLeft	? MOUSEEVENTF_LEFTUP	: 0);
+	event[0].mi.dwFlags |= middle	? (!prevMiddle	? MOUSEEVENTF_MIDDLEDOWN: 0) : (prevMiddle	? MOUSEEVENTF_MIDDLEUP	: 0);
+	event[0].mi.dwFlags |= right	? (!prevRight	? MOUSEEVENTF_RIGHTDOWN	: 0) : (prevRight	? MOUSEEVENTF_RIGHTUP	: 0);
+
+	event[1].type = INPUT_MOUSE;
+	int wheelClicks = -scrollDelta / 120;
+	event[1].mi.mouseData = wheelClicks * 120;
+	event[1].mi.dwFlags = MOUSEEVENTF_WHEEL;
+
+	event[2].type = INPUT_MOUSE;
+	event[2].mi.dx = x;
+	event[2].mi.dy = y;
+	event[2].mi.dwFlags = MOUSEEVENTF_ABSOLUTE | MOUSEEVENTF_MOVE | MOUSEEVENTF_VIRTUALDESK;
+
+	prevLeft = left;
+	prevMiddle = middle;
+	prevRight = right;
+	return SendInput(3, event, sizeof(event[0]));
+}
+
 bool WinOutputs::SendKeystroke(int w32keyCode, bool down)
 {
 	// Check key hasn't been pressed.

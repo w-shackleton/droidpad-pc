@@ -30,7 +30,7 @@ clean-local:
 
 DPDATA =
 if IF_GUI
-DPDATA += data/layout.xrc data/iconlarge.xpm
+DPDATA += data/layout.xrc data/iconlarge.xpm data/iconlarge.png
 
 if OS_WIN32
 DPDATA += data/icon.xpm

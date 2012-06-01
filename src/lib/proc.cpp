@@ -222,8 +222,9 @@ void droidpad::forkProcess(string cmd) {
 }
 
 #elif OS_WIN32
-void droidpad::openWebpage(string url) {
+bool droidpad::openWebpage(string url) {
 	ShellExecute(NULL, "open", url.c_str(), NULL, NULL, SW_SHOWNORMAL);
+	return true;
 }
 
 void droidpad::forkProcess(string cmd) {

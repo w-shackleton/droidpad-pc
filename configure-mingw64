@@ -9,7 +9,7 @@ fi
 export PATH="$MINGW64_PATH/bin:$PATH"
 MINGW64_LOCATION=$MINGW64_PATH/x86_64-w64-mingw32
 
-./configure --host=x86_64-w64-mingw32 --disable-shared --with-wx-prefix=$MINGW64_LOCATION --prefix=$MINGW64_LOCATION "$@"
+./configure --host=x86_64-w64-mingw32 --disable-shared --with-wx-prefix=$MINGW64_LOCATION --prefix=$MINGW64_LOCATION --enable-sponsor-message "$@"
 
 echo ""
 echo "Please run 'export PATH=$MINGW64_PATH/bin:\$PATH'"

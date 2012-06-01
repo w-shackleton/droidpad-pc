@@ -28,11 +28,17 @@
 #include <stdexcept>
 #include <map>
 
+#ifndef MOUSEEVENTF_VIRTUALDESK
+#define MOUSEEVENTF_VIRTUALDESK 0x4000
+#endif
+
 namespace droidpad {
 	namespace win32 {
 		class WinOutputs {
 			public:
 				static bool SendMouseEvent(int dx, int dy, bool left, bool middle, bool right, int scrollDelta);
+				// x and y should be in the range [0,65536)
+				static bool SendAbsMouseEvent(int x, int y, bool left, bool middle, bool right, int scrollDelta);
 
 				static bool SendKeystroke(int w32keyCode, bool up);
 			private:
