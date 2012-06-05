@@ -38,9 +38,9 @@ endif
 if OS_LINUX
 DPDATA += data/iconlarge.xpm
 endif
-if SPONSOR_MESSAGE
+# if SPONSOR_MESSAGE
 DPDATA += data/reactos-logo.png
-endif
+# endif
 endif
 
 if OS_WIN32

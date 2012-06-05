@@ -29,7 +29,7 @@ builddirs()
 	mkdir -p "$BUILD"
 
 	echo "Building 32..."
-	./configure-mingw
+	./configure-mingw --disable-sponsor-message
 	make $MAKEOPTS
 	make winexport
 	mv winexport32 "$BUILD/"
@@ -37,7 +37,7 @@ builddirs()
 	make distclean
 
 	echo "Building 64..."
-	./configure-mingw64
+	./configure-mingw64 --disable-sponsor-message
 	make $MAKEOPTS
 	make winexport
 	mv winexport64 "$BUILD/"

@@ -36,7 +36,8 @@ host_triplet = @host@
 @IF_GUI_TRUE@am__append_1 = data/layout.xrc data/iconlarge.xpm data/iconlarge.png
 @IF_GUI_TRUE@@OS_WIN32_TRUE@am__append_2 = data/icon.xpm
 @IF_GUI_TRUE@@OS_LINUX_TRUE@am__append_3 = data/iconlarge.xpm
-@IF_GUI_TRUE@@SPONSOR_MESSAGE_TRUE@am__append_4 = data/reactos-logo.png
+# if SPONSOR_MESSAGE
+@IF_GUI_TRUE@am__append_4 = data/reactos-logo.png
 @OS_64BIT_TRUE@am__append_5 = \
 @OS_64BIT_TRUE@		$(MINGW_FOLDER)/lib/libstdc++-6.dll			\
 @OS_64BIT_TRUE@		$(MINGW_FOLDER)/lib/libgcc_s_sjlj-1.dll
@@ -289,6 +290,7 @@ EXTRA_DIST = configure-mingw configure-mingw64 configure-debug updateIcons.sh
 DPDATA = $(am__append_1) $(am__append_2) $(am__append_3) \
 	$(am__append_4)
 @OS_LINUX_TRUE@ADB = data/adb/adb
+# endif
 @OS_WIN32_TRUE@ADB = data/adb/adb.exe data/adb/AdbWinApi.dll data/adb/AdbWinUsbApi.dll
 
 # MINGW_FOLDER = /usr/i586-mingw32msvc - old. Now using prefix to get DLLs. Prefix must be set; use ./configure-mingw[64]
