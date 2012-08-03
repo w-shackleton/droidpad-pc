@@ -61,6 +61,7 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 		void OnStop(wxCommandEvent& event);
 
 		void ReorderAxes(wxCommandEvent& event);
+		void TweakAxes(wxCommandEvent& event);
 
 		void OnClose(wxCloseEvent& event);
 		void OnMenuClose(wxCommandEvent& event);

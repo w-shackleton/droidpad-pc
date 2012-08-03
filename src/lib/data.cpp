@@ -35,6 +35,8 @@ wxString Data::datadir = wxT("");
 wxString Data::confLocation = wxT("");
 wxString Data::host = wxT("");
 
+Tweaks Data::tweaks = Tweaks();
+
 wxString Data::version = wxT(VERSION);
 
 // REMEMBER: Update these if more buttons / axes added in future

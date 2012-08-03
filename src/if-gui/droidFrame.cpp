@@ -27,6 +27,7 @@
 
 #include "customHost.hpp"
 #include "reorderDialog.hpp"
+#include "axisTweak.hpp"
 #include "about.hpp"
 #include "log.hpp"
 #ifdef OS_WIN32
@@ -37,6 +38,7 @@ BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
 	EVT_BUTTON(XRCID("buttonStart"), DroidFrame::OnStart)
 	EVT_BUTTON(XRCID("buttonStop"), DroidFrame::OnStop)
 	EVT_BUTTON(XRCID("reorderButton"), DroidFrame::ReorderAxes)
+	EVT_BUTTON(XRCID("tweakButton"), DroidFrame::TweakAxes)
 
 	EVT_MENU(XRCID("menuFileStart"), DroidFrame::OnStart)
 	EVT_MENU(XRCID("menuFileStop"), DroidFrame::OnStop)
@@ -142,6 +144,11 @@ void DroidFrame::OnStop(wxCommandEvent& event)
 
 void DroidFrame::ReorderAxes(wxCommandEvent& event) {
 	ReorderDialog dlg(this);
+	dlg.ShowModal();
+}
+
+void DroidFrame::TweakAxes(wxCommandEvent& event) {
+	AxisTweak dlg(this);
 	dlg.ShowModal();
 }
 
