@@ -7,7 +7,6 @@
 
 using namespace droidpad;
 using namespace std;
-
 #ifdef __WXMSW__
 #define _FRAME_ICON wxT("icon.xpm")
 #else
@@ -33,6 +32,11 @@ BEGIN_EVENT_TABLE(AxisTweak, wxDialog)
 
 	EVT_COMMAND_SCROLL(XRCID("tiltAngleSlider"), AxisTweak::onTiltUpdate)
 	EVT_COMMAND_SCROLL(XRCID("tiltGammaSlider"), AxisTweak::onTiltUpdate)
+
+	EVT_COMMAND_SCROLL(XRCID("rotationAngleSlider"), AxisTweak::onRotationUpdate)
+
+	EVT_COMBOBOX(XRCID("onScreenSelection"), AxisTweak::updateOnScreen)
+	EVT_COMMAND_SCROLL(XRCID("onScreenGammaSlider"), AxisTweak::onOnScreenUpdate)
 END_EVENT_TABLE()
 
 
@@ -47,10 +51,21 @@ AxisTweak::AxisTweak(wxWindow *parent) {
 	LOADXRC(tiltAngleSlider, tiltAngleSlider, wxSlider);
 	LOADXRC(tiltGammaSlider, tiltGammaSlider, wxSlider);
 
+	LOADXRC(rotationAngleSlider, rotationAngleSlider, wxSlider);
+
+	LOADXRC(onScreenSelection, onScreenSelection, wxComboBox);
+	LOADXRC(onScreenGammaSlider, onScreenGammaSlider, wxSlider);
+
+	for(int i = 0; i < NUM_AXIS; i++) {
+		onScreenSelection->Append(wxString::Format(_("Axis %d"), i+1));
+	}
+	onScreenSelection->Select(0);
+
 	tweaks = Data::tweaks;
 
 	wxCommandEvent tmp;
 	updateFields(tmp);
+	updateOnScreen(tmp);
 }
 
 void AxisTweak::handleXMLError(wxString name)
@@ -63,6 +78,8 @@ void AxisTweak::onCancel(wxCommandEvent &evt) {
 }
 
 void AxisTweak::onDone(wxCommandEvent &evt) {
+	Data::tweaks = tweaks;
+	Data::savePreferences();
 	EndModal(0);
 }
 
@@ -72,7 +89,29 @@ void AxisTweak::updateFields(wxCommandEvent &evt) {
 	trim(tiltIx, 0, 1);
 	tiltAngleSlider->SetValue(tweaks.tilt[tiltIx].totalAngle);
 	tiltGammaSlider->SetValue(tweaks.tilt[tiltIx].gamma);
+
+	rotationAngleSlider->SetValue(tweaks.rotation[0].totalAngle);
+}
+
+void AxisTweak::updateOnScreen(wxCommandEvent &evt) {
+	int onScreenIx = onScreenSelection->GetCurrentSelection();
+	trim(onScreenIx, 0, NUM_AXIS);
+	onScreenGammaSlider->SetValue(tweaks.onScreen[onScreenIx].gamma);
 }
 
 void AxisTweak::onTiltUpdate(wxScrollEvent &evt) {
+	int tiltIx = tiltSelection->GetCurrentSelection();
+	trim(tiltIx, 0, 1);
+	tweaks.tilt[tiltIx].totalAngle = tiltAngleSlider->GetValue();
+	tweaks.tilt[tiltIx].gamma = tiltGammaSlider->GetValue();
+}
+
+void AxisTweak::onRotationUpdate(wxScrollEvent &evt) {
+	tweaks.rotation[0].totalAngle = rotationAngleSlider->GetValue();
+}
+
+void AxisTweak::onOnScreenUpdate(wxScrollEvent &evt) {
+	int onScreenIx = onScreenSelection->GetCurrentSelection();
+	trim(onScreenIx, 0, NUM_AXIS);
+	tweaks.onScreen[onScreenIx].gamma = onScreenGammaSlider->GetValue();
 }

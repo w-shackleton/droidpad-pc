@@ -39,12 +39,17 @@ class AxisTweak : public wxDialog {
 		void onDone(wxCommandEvent &evt);
 
 		void updateFields(wxCommandEvent &evt);
+		void updateOnScreen(wxCommandEvent &evt);
 		void onTiltUpdate(wxScrollEvent &evt);
+		void onRotationUpdate(wxScrollEvent &evt);
+		void onOnScreenUpdate(wxScrollEvent &evt);
 	private:
 		void handleXMLError(wxString name);
 
-		wxSlider *tiltAngleSlider, *tiltGammaSlider;
-		wxComboBox *tiltSelection;
+		wxSlider *tiltAngleSlider, *tiltGammaSlider,
+			 *rotationAngleSlider,
+			 *onScreenGammaSlider;
+		wxComboBox *tiltSelection, *onScreenSelection;
 
 		droidpad::Tweaks tweaks;
 };
