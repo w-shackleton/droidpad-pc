@@ -26,6 +26,9 @@
 #include <iostream>
 #include <sstream>
 
+#include "data.hpp"
+#include "mathUtil.hpp"
+
 #include <wx/tokenzr.h>
 
 #ifdef OS_LINUX
@@ -34,23 +37,41 @@
 #include <winsock2.h>
 #endif
 
-#define NTOH(_x) _x = ntohl((_x))
-
 // The size of the angle each way from the center of the screen which the phone can be moved in.
 #define POINTING_ANGLE_RANGE (M_PI / 4)
+
+#define GAMMA_CONST 6
 
 using namespace std;
 using namespace droidpad;
 using namespace droidpad::decode;
 
 Vec2 droidpad::decode::accelToAxes(float x, float y, float z) {
-	float ax = atan2(x, sqrt(y * y + z * z)) / M_PI * AXIS_CUTOFF_MULTIPLIER;
-	if(ax < -AXIS_SIZE) ax = -AXIS_SIZE;
-	if(ax > +AXIS_SIZE) ax = +AXIS_SIZE;
-	float ay = atan2(y, z) / M_PI * AXIS_CUTOFF_MULTIPLIER;
-	if(ay < -AXIS_SIZE) ay = -AXIS_SIZE;
-	if(ay > +AXIS_SIZE) ay = +AXIS_SIZE;
-	return Vec2(-ax, -ay);
+	// Here, we multiply each axis by a constant determined by the user.
+	// This effectively sets the range - the constant = 360 / (user range)
+	if(Data::tweaks.tilt[0].totalAngle == 0)
+		Data::tweaks.tilt[0].totalAngle = 120;
+	if(Data::tweaks.tilt[1].totalAngle == 0)
+		Data::tweaks.tilt[1].totalAngle = 120;
+	float rangex = (float)360 / (float)Data::tweaks.tilt[0].totalAngle;
+	float ax = atan2(x, sqrt(y * y + z * z)) / M_PI;
+	ax *= rangex;
+	trim(ax, -1, 1);
+	ax = applyGamma(ax, Data::tweaks.tilt[0].gamma);
+
+	float rangey = (float)360 / (float)Data::tweaks.tilt[1].totalAngle;
+	float ay = atan2(y, z) / M_PI;
+	ay *= rangey;
+	trim(ay, -1, 1);
+	ay = applyGamma(ay, Data::tweaks.tilt[1].gamma);
+	return Vec2(-ax * AXIS_SIZE, -ay * AXIS_SIZE);
+}
+
+float droidpad::decode::applyGamma(float value, float gamma) {
+	// Power applied to value must be in the range 1/n to n,
+	// where n is around 10.
+	float G = powf(GAMMA_CONST, gamma);
+	return sign(value) * pow(abs(value), G);
 }
 
 DPJSData::DPJSData() :

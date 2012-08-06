@@ -3,6 +3,7 @@
 #include <wx/xrc/xmlres.h>
 #include <wx/msgdlg.h>
 #include "log.hpp"
+#include "mathUtil.hpp"
 // #include <wx/msgdlg.h>
 
 using namespace droidpad;
@@ -17,12 +18,6 @@ using namespace std;
 
 #define LOADXRC(_xml, _name, _type) _name = XRCCTRL(*this, #_xml, _type); \
 					    if(_name == NULL) handleXMLError(wxT(#_xml));
-
-template <class T>
-inline void trim(T &num, T min, T max) {
-	if(num < min) num = min;
-	if(num > max) num = max;
-}
 
 BEGIN_EVENT_TABLE(AxisTweak, wxDialog)
 	EVT_BUTTON(XRCID("okButton"), AxisTweak::onDone)

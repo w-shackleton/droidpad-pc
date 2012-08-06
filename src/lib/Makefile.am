@@ -42,6 +42,7 @@ libdroidpad_la_SOURCES = \
 		   include/outputMgr.hpp	\
 		   include/platformSettings.hpp	\
 		   log.hpp		\
+		   mathUtil.hpp		\
 		   			\
 		   types.cpp			types.hpp			\
 		   proc.cpp			proc.hpp			\
