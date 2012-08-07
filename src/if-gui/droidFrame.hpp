@@ -44,7 +44,7 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 		wxPanel *panel;
 		wxMenuBar *menuBar;
 
-		wxButton *buttonStart, *buttonStop, *reorderButton;
+		wxButton *buttonStart, *buttonStop;
 		
 		wxListBox *devListBox;
 

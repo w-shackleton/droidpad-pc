@@ -207,7 +207,6 @@ wxString Data::encodeOrderConf(vector<int> input, int count) {
 }
 
 Tweaks Data::createDefaultTweaks() {
-	cout << "Size: " << sizeof(Tweaks) << endl;
 	Tweaks ret;
 	memset(&ret, 0, sizeof(Tweaks));
 	for(int i = 0; i < 2; i++) {
