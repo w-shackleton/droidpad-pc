@@ -41,6 +41,7 @@
 #define POINTING_ANGLE_RANGE (M_PI / 4)
 
 #define GAMMA_CONST 6
+#define GAMMA_RANGE ((float)100)
 
 using namespace std;
 using namespace droidpad;
@@ -53,17 +54,19 @@ Vec2 droidpad::decode::accelToAxes(float x, float y, float z) {
 		Data::tweaks.tilt[0].totalAngle = 120;
 	if(Data::tweaks.tilt[1].totalAngle == 0)
 		Data::tweaks.tilt[1].totalAngle = 120;
+
 	float rangex = (float)360 / (float)Data::tweaks.tilt[0].totalAngle;
 	float ax = atan2(x, sqrt(y * y + z * z)) / M_PI;
 	ax *= rangex;
 	trim(ax, -1, 1);
-	ax = applyGamma(ax, Data::tweaks.tilt[0].gamma);
+	ax = applyGamma(ax, (float)-Data::tweaks.tilt[0].gamma / GAMMA_RANGE);
 
 	float rangey = (float)360 / (float)Data::tweaks.tilt[1].totalAngle;
 	float ay = atan2(y, z) / M_PI;
 	ay *= rangey;
 	trim(ay, -1, 1);
-	ay = applyGamma(ay, Data::tweaks.tilt[1].gamma);
+	ay = applyGamma(ay, (float)-Data::tweaks.tilt[1].gamma / GAMMA_RANGE);
+
 	return Vec2(-ax * AXIS_SIZE, -ay * AXIS_SIZE);
 }
 
@@ -411,12 +414,16 @@ const DPJSData droidpad::decode::getBinaryData(const RawBinaryHeader header, std
 	}
 	// Gyro but no accel
 	if((header.flags & HEADER_FLAG_HAS_GYRO) && !(header.flags & HEADER_FLAG_HAS_ACCEL)) {
-		ret.axes.push_back(header.axis.gz / POINTING_ANGLE_RANGE * AXIS_SIZE); // Put z-component
+		// Range on each side of the centre
+		float pointingAngleRange = (float)Data::tweaks.rotation[0].totalAngle * DEG_TO_RAD / 2;
+		ret.axes.push_back(header.axis.gz / pointingAngleRange * AXIS_SIZE); // Put z-component
 		ret.containsGyro = true;
 	}
-	// Both
+	// Both - use the gyro which was normalised with the accelerometer
 	if((header.flags & HEADER_FLAG_HAS_GYRO) && (header.flags & HEADER_FLAG_HAS_ACCEL)) {
-		ret.axes.push_back(header.axis.gzn / POINTING_ANGLE_RANGE * AXIS_SIZE);
+		// Range on each side of the centre
+		float pointingAngleRange = (float)Data::tweaks.rotation[0].totalAngle * DEG_TO_RAD / 2;
+		ret.axes.push_back(header.axis.gzn / pointingAngleRange * AXIS_SIZE);
 		ret.containsGyro = true;
 		ret.containsAccel = true;
 	}
@@ -426,10 +433,22 @@ const DPJSData droidpad::decode::getBinaryData(const RawBinaryHeader header, std
 			ret.buttons.push_back(it->raw.data1);
 		}
 		if(it->flags & ITEM_FLAG_SLIDER) {
-			if(it->flags & ITEM_FLAG_HAS_X_AXIS)
-				ret.axes.push_back(it->integer.data1);
-			if(it->flags & ITEM_FLAG_HAS_Y_AXIS)
-				ret.axes.push_back(it->integer.data2);
+			if(it->flags & ITEM_FLAG_HAS_X_AXIS) {
+				// Rearrange axis between -1 and 1
+				float num = (float)it->integer.data1 / 16384;
+				int pos = ret.axes.size() - 1;
+				num = applyGamma(num, (float)-Data::tweaks.onScreen[pos].gamma / GAMMA_RANGE);
+				num *= AXIS_SIZE;
+				ret.axes.push_back(num);
+			}
+			if(it->flags & ITEM_FLAG_HAS_Y_AXIS) {
+				// Rearrange axis between -1 and 1
+				float num = (float)it->integer.data2 / 16384;
+				int pos = ret.axes.size() - 1;
+				num = applyGamma(num, (float)-Data::tweaks.onScreen[pos].gamma / GAMMA_RANGE);
+				num *= AXIS_SIZE;
+				ret.axes.push_back(num);
+			}
 		}
 		if(it->flags & ITEM_FLAG_TRACKPAD) {
 			if(it->flags & ITEM_FLAG_HAS_X_AXIS)

@@ -22,6 +22,9 @@
 
 #define NTOH(_x) _x = ntohl((_x))
 
+#define DEG_TO_RAD (M_PI / 180)
+#define RAD_TO_DEG (180 / M_PI)
+
 namespace droidpad {
 	template <class T>
 	inline void trim(T &num, T min, T max) {
