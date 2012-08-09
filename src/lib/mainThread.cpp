@@ -68,46 +68,49 @@ void* MainThread::Entry()
 			}
 		}
 
-		if(setupDone && !connectAgain) { // Skip this if fail - only run on first time.
-			try { // Setup outputmanager
-				LOGV("Setting up OutputManager");
-				const ModeSetting &mode = conn->GetMode();
+		if(setupDone) { // Skip this if fail - only run on first time.
+			const ModeSetting &mode = conn->GetMode();
+			if(mode.supportsBinary) conn->RequestBinary();
+			if(!connectAgain) {
+				try { // Setup outputmanager
+					LOGV("Setting up OutputManager");
 
-				switch(mode.type) {
-					case MODE_JS:
-					case MODE_SLIDE:
-						mgr = new OutputManager(mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
-						break;
-					case MODE_ABSMOUSE: {
-						deleteOutputManager = false;
-						OutputManager *innerMgr = new OutputManager(mode.type, 2 + mode.numAxes, mode.numButtons);
-						mgr = new OutputSmoothBuffer(innerMgr, mode.type, 2 + mode.numAxes, mode.numButtons);						break;
-							    }
-					case MODE_MOUSE:
-						deleteOutputManager = false;
-						OutputManager *innerMgr = new OutputManager(mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
-						mgr = new OutputSmoothBuffer(innerMgr, mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
-						break;
+					switch(mode.type) {
+						case MODE_JS:
+						case MODE_SLIDE:
+							mgr = new OutputManager(mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
+							break;
+						case MODE_ABSMOUSE: {
+							deleteOutputManager = false;
+							OutputManager *innerMgr = new OutputManager(mode.type, 2 + mode.numAxes, mode.numButtons);
+							mgr = new OutputSmoothBuffer(innerMgr, mode.type, 2 + mode.numAxes, mode.numButtons);
+							break;
+								    }
+						case MODE_MOUSE:
+							deleteOutputManager = false;
+							OutputManager *innerMgr = new OutputManager(mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
+							mgr = new OutputSmoothBuffer(innerMgr, mode.type, mode.numRawAxes * 2 + mode.numAxes, mode.numButtons);
+							break;
+					}
+				} catch(invalid_argument &e) {
+					LOGEwx(wxString::FromAscii(e.what()));
+					DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_NO_JS_DEVICE);
+					parent.AddPendingEvent(evt);
+
+					finish();
+					return NULL;
+				} catch(OutputException &e) {
+					LOGEwx(wxString::FromAscii(e.what()));
+					DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_NO_JS_DEVICE);
+					parent.AddPendingEvent(evt);
+
+					finish();
+					return NULL;
 				}
-				if(mode.supportsBinary) conn->RequestBinary();
-			} catch(invalid_argument &e) {
-				LOGEwx(wxString::FromAscii(e.what()));
-				DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_NO_JS_DEVICE);
-				parent.AddPendingEvent(evt);
 
-				finish();
-				return NULL;
-			} catch(OutputException &e) {
-				LOGEwx(wxString::FromAscii(e.what()));
-				DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_NO_JS_DEVICE);
+				DMEvent evt(dpTHREAD_STARTED, 0);
 				parent.AddPendingEvent(evt);
-
-				finish();
-				return NULL;
 			}
-
-			DMEvent evt(dpTHREAD_STARTED, 0);
-			parent.AddPendingEvent(evt);
 		}
 
 		LOGV("Setup done");
