@@ -41,6 +41,12 @@
 namespace droidpad {
 	namespace decode {
 		droidpad::Vec2 accelToAxes(float x, float y, float z);
+		// Applies a gamma function, to make the middle parts of this axis
+		// more sensitive to movement.
+		// value - Input value, in the range [-1,1]
+		// gamma - Input gamma, in the range [-1,1]
+		// return value - value in the range [-1,1]
+		float applyGamma(float value, float gamma);
 
 		/**
 		 * Raw data returned from connection. Is castable to the other data types,

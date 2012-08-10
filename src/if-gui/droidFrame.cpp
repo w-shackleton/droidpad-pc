@@ -27,6 +27,7 @@
 
 #include "customHost.hpp"
 #include "reorderDialog.hpp"
+#include "axisTweak.hpp"
 #include "about.hpp"
 #include "log.hpp"
 #ifdef OS_WIN32
@@ -36,12 +37,14 @@
 BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
 	EVT_BUTTON(XRCID("buttonStart"), DroidFrame::OnStart)
 	EVT_BUTTON(XRCID("buttonStop"), DroidFrame::OnStop)
-	EVT_BUTTON(XRCID("reorderButton"), DroidFrame::ReorderAxes)
 
 	EVT_MENU(XRCID("menuFileStart"), DroidFrame::OnStart)
 	EVT_MENU(XRCID("menuFileStop"), DroidFrame::OnStop)
 
 	EVT_MENU(XRCID("menuFileQuit"), DroidFrame::OnMenuClose)
+
+	EVT_MENU(XRCID("menuAdjustReorder"), DroidFrame::ReorderAxes)
+	EVT_MENU(XRCID("menuAdjustTweak"), DroidFrame::TweakAxes)
 
 	EVT_MENU(XRCID("menuHelpAbout"), DroidFrame::OnAbout)
 
@@ -91,7 +94,6 @@ void DroidFrame::init()
 
 	LOADXRC(buttonStart,	buttonStart,		wxButton);
 	LOADXRC(buttonStop,	buttonStop,		wxButton);
-	LOADXRC(reorderButton,	reorderButton,		wxButton);
 	LOADXRC(statusText,	statusText,	wxStaticText);
 	LOADXRC(devicesList,	devListBox,	wxListBox);
 
@@ -142,6 +144,13 @@ void DroidFrame::OnStop(wxCommandEvent& event)
 
 void DroidFrame::ReorderAxes(wxCommandEvent& event) {
 	ReorderDialog dlg(this);
+	dlg.ShowModal();
+}
+
+void DroidFrame::TweakAxes(wxCommandEvent& event) {
+	AxisTweak dlg(this);
+	int y = dlg.GetSize().GetHeight();
+	dlg.SetSizeHints(400, y);
 	dlg.ShowModal();
 }
 
@@ -203,7 +212,6 @@ void DroidFrame::threadStarted()
 {
 	buttonStop->Enable();
 	buttonStart->Disable();
-	reorderButton->Disable();
 }
 
 void DroidFrame::threadError(wxString failReason)
@@ -219,7 +227,6 @@ void DroidFrame::threadStopped()
 {
 	buttonStart->Enable();
 	buttonStop->Disable();
-	reorderButton->Enable();
 }
 
 

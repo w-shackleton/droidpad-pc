@@ -56,8 +56,8 @@ AC_ARG_ENABLE(debug, [  --enable-debug=[no/yes] turn on debugging
 	                             [default=$debug_default]],, enable_debug=$debug_default)
 
 if test "x$enable_debug" = "xyes"; then
-	CFLAGS="$CFLAGS -g -DDEBUG"
-	CXXFLAGS="$CXXFLAGS -g -DDEBUG"
+	CFLAGS="$CFLAGS -g -O0 -DDEBUG"
+	CXXFLAGS="$CXXFLAGS -O0 -g -DDEBUG"
 	AC_MSG_RESULT(yes)
 else
 	AC_MSG_RESULT(no)

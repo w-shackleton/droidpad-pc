@@ -32,6 +32,41 @@
 
 namespace droidpad
 {
+	// Describes the tweaks on an accelerometer
+	class TiltTweak {
+		public:
+			// The total sweep-angle, in DEGREES
+			int32_t totalAngle;
+			// The 'gamma' - controls how sensitive the device is in small amounts.
+			// Currently this is -100 to 100 because of wxSlider limitations
+			int32_t gamma;
+	};
+
+	class RotationTweak {
+		public:
+			// X Rotation (gyro)
+			int32_t totalAngle;
+	};
+
+	class OnScreenSliderTweak {
+		public:
+			// Gamma
+			int32_t gamma;
+	};
+
+	class Tweaks {
+		public:
+			// X and Y tilts
+			TiltTweak tilt[2];
+
+			// Rotation
+			RotationTweak rotation[1];
+
+			// On screen sliders
+			OnScreenSliderTweak onScreen[NUM_AXIS];
+	};
+
+	// General data storage - serialised to file for persistance
 	class Data
 	{
 		public:
@@ -51,10 +86,17 @@ namespace droidpad
 			static std::vector<int> buttonOrder;
 			static std::vector<int> axisOrder;
 
+			/**
+			 * Tweaks
+			 */
+			static Tweaks tweaks;
+
 			// static wxString serial;
 			static void savePreferences();
 		protected:
 			static wxString confLocation;
+
+			static Tweaks createDefaultTweaks();
 
 			// The count variables declare how many there *should* be. This will pad out if not enough present.
 			static std::vector<int> decodeOrderConf(wxString input, int count);

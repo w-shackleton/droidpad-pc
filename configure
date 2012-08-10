@@ -14997,8 +14997,8 @@ fi
 
 
 if test "x$enable_debug" = "xyes"; then
-	CFLAGS="$CFLAGS -g -DDEBUG"
-	CXXFLAGS="$CXXFLAGS -g -DDEBUG"
+	CFLAGS="$CFLAGS -g -O0 -DDEBUG"
+	CXXFLAGS="$CXXFLAGS -O0 -g -DDEBUG"
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
 else

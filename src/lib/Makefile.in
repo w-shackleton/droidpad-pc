@@ -94,8 +94,8 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 libdroidpad_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am__libdroidpad_la_SOURCES_DIST = include/adb.hpp \
 	include/outputMgr.hpp include/platformSettings.hpp log.hpp \
-	types.cpp types.hpp proc.cpp proc.hpp data.cpp data.hpp \
-	deviceManager.cpp deviceManager.hpp mainThread.cpp \
+	mathUtil.hpp types.cpp types.hpp proc.cpp proc.hpp data.cpp \
+	data.hpp deviceManager.cpp deviceManager.hpp mainThread.cpp \
 	mainThread.hpp deviceManagerThreads.cpp \
 	deviceManagerThreads.hpp events.cpp events.hpp \
 	droidpadCallbacks.cpp droidpadCallbacks.hpp usb/all/adb.cpp \
@@ -410,20 +410,21 @@ SRC_TESTMODE = \
 		msw/bootConf.cpp		msw/bootConf.hpp
 
 libdroidpad_la_SOURCES = include/adb.hpp include/outputMgr.hpp \
-	include/platformSettings.hpp log.hpp types.cpp types.hpp \
-	proc.cpp proc.hpp data.cpp data.hpp deviceManager.cpp \
-	deviceManager.hpp mainThread.cpp mainThread.hpp \
-	deviceManagerThreads.cpp deviceManagerThreads.hpp events.cpp \
-	events.hpp droidpadCallbacks.cpp droidpadCallbacks.hpp \
-	usb/all/adb.cpp usb/all/adb.hpp ext/1035.c ext/1035.h \
-	ext/mdnsd.c ext/mdnsd.h ext/md5/md5c.c ext/md5/md5.h \
-	ext/md5/global.h ext/b64/base64.cpp ext/b64/base64.hpp \
-	ext/hexdump.c ext/hexdump.h net/mdns.cpp net/mdns.hpp \
-	net/deviceDiscover.cpp net/deviceDiscover.hpp \
-	net/dataDecode.cpp net/dataDecode.hpp net/connection.cpp \
-	net/connection.hpp output/IOutputMgr.cpp output/IOutputMgr.hpp \
-	output/outputSmoothBuffer.cpp output/outputSmoothBuffer.hpp \
-	$(am__append_1) $(am__append_2) $(am__append_3)
+	include/platformSettings.hpp log.hpp mathUtil.hpp types.cpp \
+	types.hpp proc.cpp proc.hpp data.cpp data.hpp \
+	deviceManager.cpp deviceManager.hpp mainThread.cpp \
+	mainThread.hpp deviceManagerThreads.cpp \
+	deviceManagerThreads.hpp events.cpp events.hpp \
+	droidpadCallbacks.cpp droidpadCallbacks.hpp usb/all/adb.cpp \
+	usb/all/adb.hpp ext/1035.c ext/1035.h ext/mdnsd.c ext/mdnsd.h \
+	ext/md5/md5c.c ext/md5/md5.h ext/md5/global.h \
+	ext/b64/base64.cpp ext/b64/base64.hpp ext/hexdump.c \
+	ext/hexdump.h net/mdns.cpp net/mdns.hpp net/deviceDiscover.cpp \
+	net/deviceDiscover.hpp net/dataDecode.cpp net/dataDecode.hpp \
+	net/connection.cpp net/connection.hpp output/IOutputMgr.cpp \
+	output/IOutputMgr.hpp output/outputSmoothBuffer.cpp \
+	output/outputSmoothBuffer.hpp $(am__append_1) $(am__append_2) \
+	$(am__append_3)
 libdroidpad_la_LIBADD = @WXBASELIBS@ $(am__append_4)
 libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@ -I. -Iext $(am__append_5)
 libdroidpad_la_CFLAGS = @WXCPPFLAGS@ -I. -Iext $(am__append_6)

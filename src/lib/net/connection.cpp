@@ -149,8 +149,7 @@ const ModeSetting &DPConnection::GetMode() throw (runtime_error)
 	tkz.GetNextToken().ToLong(&numButtons);
 	mode.numButtons = numButtons;
 
-	if(line.Contains(wxT("<SUPPORTSBINARY>")))
-		mode.supportsBinary = true;
+	mode.supportsBinary = line.Contains(wxT("<SUPPORTSBINARY>"));
 
 	mode.initialised = true;
 	return mode;
@@ -175,6 +174,9 @@ const DPJSData DPConnection::GetData() throw (runtime_error)
 	char first = PeekChar();
 	switch(first) {
 		case '[': // Indicates text
+#ifdef DEBUG
+			LOGM("WARNING: still using old message format!");
+#endif
 			return getTextData(GetLine());
 		case 'D': { // Binary header begins "DPAD"
 			RawBinaryHeader header = getBinaryHeader(GetBytes(sizeof(RawBinaryHeader)).c_str());
@@ -189,6 +191,9 @@ const DPJSData DPConnection::GetData() throw (runtime_error)
 			}
 			return getBinaryData(header, elems);
 			  }
+		case '<': // Config settings. Parse line, then ignore.
+			GetLine();
+			break;
 		default:
 			LOGW("Unrecognised message recieved from phone");
 #ifdef DEBUG

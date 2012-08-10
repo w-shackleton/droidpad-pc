@@ -26,6 +26,8 @@
 #include <wx/textfile.h>
 #include <wx/tokenzr.h>
 
+#include "ext/b64/base64.hpp"
+
 #include "log.hpp"
 
 using namespace std;
@@ -34,6 +36,8 @@ using namespace droidpad;
 wxString Data::datadir = wxT("");
 wxString Data::confLocation = wxT("");
 wxString Data::host = wxT("");
+
+Tweaks Data::tweaks = Tweaks();
 
 wxString Data::version = wxT(VERSION);
 
@@ -79,6 +83,9 @@ bool Data::initialise()
 		return false;
 	}
 
+	// Initialise to default first
+	tweaks = createDefaultTweaks();
+
 	confLocation = wxStandardPaths::Get().GetUserDataDir();
 	if(!wxDirExists(confLocation)) wxMkdir(confLocation);
 
@@ -102,6 +109,11 @@ bool Data::initialise()
 				buttonOrder = decodeOrderConf(value, NUM_BUTTONS);
 			} else if(key.Cmp(wxT("axisOrder")) == 0) {
 				axisOrder = decodeOrderConf(value, NUM_AXIS);
+			} else if(key.Cmp(wxT("tweaks")) == 0) {
+				string buf = base64_decode((string)value.mb_str());
+				if(buf.size() == sizeof(Tweaks))
+					memcpy(&tweaks, buf.c_str(), sizeof(Tweaks));
+				else LOGV("Couldn't decode tweaks from config");
 			}
 		}
 		config.Close();
@@ -133,6 +145,12 @@ void Data::savePreferences()
 					wxT("buttonOrder"), encodeOrderConf(buttonOrder, NUM_BUTTONS).c_str()));
 		config.AddLine(wxString::Format(wxT("%s;%s"),
 					wxT("axisOrder"), encodeOrderConf(axisOrder, NUM_AXIS).c_str()));
+		// Currently serialising tweaks the very non-portable way. Should probably change this
+		char *buf = new char[sizeof(Tweaks)];
+		memcpy(buf, &tweaks, sizeof(Tweaks));
+		string tweakString = base64_encode((unsigned char* const)buf, sizeof(Tweaks));
+		delete[] buf;
+		config.AddLine(wxString::Format(wxT("%s;%s"), wxT("tweaks"), STD_TO_WX_STRING(tweakString).c_str()));
 
 		config.Write();
 	}
@@ -184,6 +202,22 @@ wxString Data::encodeOrderConf(vector<int> input, int count) {
 		} else { // Write default out
 			ret += wxString::Format(wxT("%d,"), i);
 		}
+	}
+	return ret;
+}
+
+Tweaks Data::createDefaultTweaks() {
+	Tweaks ret;
+	memset(&ret, 0, sizeof(Tweaks));
+	for(int i = 0; i < 2; i++) {
+		ret.tilt[i].totalAngle = 120;
+		ret.tilt[i].gamma = 0;
+	}
+
+	ret.rotation[0].totalAngle = 90;
+	
+	for(int i = 0; i < NUM_AXIS; i++) {
+		ret.onScreen[i].gamma = 0;
 	}
 	return ret;
 }
