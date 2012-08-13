@@ -28,6 +28,7 @@
 #include <newdev.h>
 #include <ks.h>
 #include <initguid.h>
+#include <cguid.h>
 
 #include <specstrings.h>
 
