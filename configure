@@ -2789,7 +2789,7 @@ am__tar='$${TAR-tar} chof - "$$tardir"' am__untar='$${TAR-tar} xf -'
 
 
 cat >>confdefs.h <<_ACEOF
-#define VERSION_CODE 191
+#define VERSION_CODE 193
 _ACEOF
 
 
@@ -2807,7 +2807,7 @@ _ACEOF
 
 
 cat >>confdefs.h <<_ACEOF
-#define V_REVISION 1
+#define V_REVISION 3
 _ACEOF
 
 

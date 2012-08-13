@@ -1,10 +1,19 @@
+droidpad (1.9.3) precise; urgency=low
+
+  * Added axis tweaking
+  * Improved reconnection code on connection loss
+  * Note that version numbers (for the time being) are synced with the Android
+    app version numbers
+
+ -- William Shackleton <w.shackleton@gmail.com>  Mon, 13 Aug 2012 21:05:27 +0100
+
 droidpad (1.9.1) quantal; urgency=low
 
   * Added absolute mouse mode using gyro to position.
   * Added binary data serialisation over network
   * Added ReactOS sponsor message on Windows builds
 
- -- William Shackleton <w.shackleton@gmail.com>  Tue, 05 Jun 2012 16:19:23 +0100
+ -- William Shackleton <w.shackleton@gmail.com>  Mon, 13 Aug 2012 21:05:02 +0100
 
 droidpad (1.9.0ubuntu3) oneiric; urgency=low
 
