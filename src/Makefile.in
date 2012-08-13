@@ -36,7 +36,7 @@ build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = droidpad$(EXEEXT)
 @IF_GUI_TRUE@am__append_1 = $(SRC_IF_GUI)
-@OS_WIN32_TRUE@am__append_2 = -lws2_32 lib/ext/win32/libjs.la
+@OS_WIN32_TRUE@am__append_2 = -lws2_32 lib/ext/win32/libjs.la -luuid
 @OS_WIN32_TRUE@am__append_3 = -Ilib/msw
 
 # Currently just update UI

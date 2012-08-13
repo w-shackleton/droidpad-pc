@@ -22,6 +22,7 @@
 
 #include <iostream>
 #include <vector>
+#include <stdint.h>
 #include "config.h"
 
 #include <wx/string.h>
