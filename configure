@@ -15002,6 +15002,8 @@ if test "x$enable_debug" = "xyes"; then
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
 else
+	CFLAGS="$CFLAGS -O2 -s"
+	CXXFLAGS="$CFLAGS -O2 -s"
 	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
 fi
