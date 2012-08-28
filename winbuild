@@ -2,6 +2,7 @@
 
 echo "This script will build and export DroidPad for Windows, creating an installer package"
 echo "Please set env MINGW32_PATH and MINGW64_PATH if necessary."
+echo "If $KEY_SPC and $KEY_PVK are set then the resulting files will be digitally signed."
 
 if [ "$MINGW32_PATH" = "" ]
 then
@@ -19,6 +20,15 @@ fi
 MINGW64_LOCATION=$MINGW64_PATH/x86_64-w64-mingw32
 
 export PATH="$MINGW64_PATH/bin:$MINGW32_PATH/bin:$PATH"
+
+if [ "$KEY_SPC" != "" ] && [ "$KEY_PVK" != "" ]
+then
+	SIGN=1
+	stty -echo
+	read -p "Key password: " KEYPASS
+	echo
+	stty echo
+fi
 
 BASEDIR=`pwd`
 BUILD=build
@@ -53,12 +63,41 @@ cleandirs()
 buildnsis()
 {
 	makensis droidpad.nsi
+	echo "$KEYPASS" > signcode -spc "$KEY_SPC" -v "$KEY_PVK" -a sha1 -$ commercial -t http://timestamp.verisign.com/scripts/timstamp.dll -tr 10 droidpad-setup.exe
 }
+
+signfiles()
+{
+	for f in `ls $1/*.dll`
+	do
+		echo "Signing $f"
+		echo "$KEYPASS" | signcode -spc "$KEY_SPC" -v "$KEY_PVK" -a sha1 -$ commercial -t http://timestamp.verisign.com/scripts/timstamp.dll -tr 10 "$f"
+	done
+	for f in `ls $1/*.exe`
+	do
+		echo "Signing $f"
+		echo "$KEYPASS" | signcode -spc "$KEY_SPC" -v "$KEY_PVK" -a sha1 -$ commercial -t http://timestamp.verisign.com/scripts/timstamp.dll -tr 10 "$f"
+	done
+}
+
+signbuild()
+{
+	if [ "$SIGN" = "1" ]
+	then
+		echo "Signing files"
+		signfiles "$BUILD/winexport32"
+		signfiles "$BUILD/winexport64"
+	fi
+}
+
 
 # Choose what to do
 case "$1" in
 	"B")
 		builddirs
+		;;
+	"S")
+		signbuild
 		;;
 	"M")
 		buildnsis
@@ -68,6 +107,7 @@ case "$1" in
 		;;
 	*)
 		builddirs
+		signbuild
 		buildnsis
 		cleandirs
 		;;
