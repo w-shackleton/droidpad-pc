@@ -9,7 +9,7 @@ fi
 export PATH="$MINGW32_PATH/bin:$PATH"
 MINGW32_LOCATION=$MINGW32_PATH/i586-mingw32msvc
 
-./configure --host=i586-mingw32msvc --disable-shared --with-wx-prefix=$MINGW32_LOCATION --prefix=$MINGW32_LOCATION --enable-sponsor-message "$@"
+./configure --host=i586-mingw32msvc --disable-shared --disable-debug --with-wx-prefix=$MINGW32_LOCATION --prefix=$MINGW32_LOCATION --enable-sponsor-message "$@"
 
 # echo ""
 # echo "Please run 'export PATH=$MINGW32_PATH/bin:\$PATH'"

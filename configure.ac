@@ -60,6 +60,8 @@ if test "x$enable_debug" = "xyes"; then
 	CXXFLAGS="$CXXFLAGS -O0 -g -DDEBUG"
 	AC_MSG_RESULT(yes)
 else
+	CFLAGS="$CFLAGS -O2 -s"
+	CXXFLAGS="$CFLAGS -O2 -s"
 	AC_MSG_RESULT(no)
 fi
 
