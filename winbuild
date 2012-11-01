@@ -2,7 +2,7 @@
 
 echo "This script will build and export DroidPad for Windows, creating an installer package"
 echo "Please set env MINGW32_PATH and MINGW64_PATH if necessary."
-echo "If $KEY_SPC and $KEY_PVK are set then the resulting files will be digitally signed."
+echo 'If $KEY_SPC and $KEY_PVK are set then the resulting files will be digitally signed.'
 
 if [ "$MINGW32_PATH" = "" ]
 then
