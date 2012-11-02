@@ -63,7 +63,7 @@ cleandirs()
 buildnsis()
 {
 	makensis droidpad.nsi
-	echo "$KEYPASS" > signcode -spc "$KEY_SPC" -v "$KEY_PVK" -a sha1 -$ commercial -t http://timestamp.verisign.com/scripts/timstamp.dll -tr 10 droidpad-setup.exe
+	echo "$KEYPASS" | signcode -spc "$KEY_SPC" -v "$KEY_PVK" -a sha1 -$ commercial -t http://timestamp.verisign.com/scripts/timstamp.dll -tr 10 droidpad-setup.exe
 }
 
 signfiles()
