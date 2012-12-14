@@ -46,7 +46,8 @@ BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
 	EVT_MENU(XRCID("menuAdjustReorder"), DroidFrame::ReorderAxes)
 	EVT_MENU(XRCID("menuAdjustTweak"), DroidFrame::TweakAxes)
 
-	EVT_MENU(XRCID("menuHelpAbout"), DroidFrame::OnAbout)
+	EVT_MENU(XRCID("menuHelpGettingStarted"), DroidFrame::OnAbout)
+	EVT_MENU(XRCID("menuHelpAbout"), DroidFrame::OnGettingStarted)
 
 	EVT_LISTBOX(XRCID("devicesList"), DroidFrame::OnListBox)
 	EVT_LISTBOX_DCLICK(XRCID("devicesList"), DroidFrame::OnStart)
@@ -247,6 +248,11 @@ bool DroidFrame::customiseDevice(AndroidDevice *device) {
 void DroidFrame::OnAbout(wxCommandEvent& event) {
 	About dlg(this);
 	dlg.ShowModal();
+}
+
+void DroidFrame::OnGettingStarted(wxCommandEvent& event) {
+	help = new Help;
+	help->Show(true);
 }
 
 // Update code

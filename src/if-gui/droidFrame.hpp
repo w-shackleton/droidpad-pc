@@ -29,6 +29,7 @@
 #include <map>
 
 #include "updateDisplay.hpp"
+#include "help.hpp"
 
 #include "lib/deviceManager.hpp"
 #include "lib/droidpadCallbacks.hpp"
@@ -50,6 +51,8 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 
 		wxStaticText *statusText;
 
+		Help *help;
+
 		UpdateDisplay *updater;
 	private:
 		void init();
@@ -69,6 +72,7 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 		void OnListBox(wxCommandEvent& event);
 
 		void OnAbout(wxCommandEvent& event);
+		void OnGettingStarted(wxCommandEvent& event);
 
 		droidpad::DeviceManager *devices;
 
