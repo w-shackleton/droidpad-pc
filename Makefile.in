@@ -50,7 +50,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@IF_GUI_TRUE@am__append_1 = data/layout.xrc data/iconlarge.xpm data/iconlarge.png
+@IF_GUI_TRUE@am__append_1 = data/layout.xrc data/iconlarge.xpm data/iconlarge.png data/docs/intro.zip
 @IF_GUI_TRUE@@OS_WIN32_TRUE@am__append_2 = data/icon.xpm
 @IF_GUI_TRUE@@OS_LINUX_TRUE@am__append_3 = data/iconlarge.xpm
 # if SPONSOR_MESSAGE
