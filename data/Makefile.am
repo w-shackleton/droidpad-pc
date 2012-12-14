@@ -29,6 +29,9 @@ if OS_WIN32
   dpdata_DATA += icon.xpm
 endif
 
+docsdir = $(datadir)/droidpad/docs
+docs_DATA = docs/intro.zip
+
   pixmapsdir = $(datadir)/pixmaps
   pixmaps_DATA = droidpad.png
 
@@ -52,4 +55,4 @@ endif
 # menu_DATA = $(menu_in_files:.desktop.in=.desktop)
 # {at}INTLTOOL_DESKTOP_RULE{at}
 
-EXTRA_DIST = $(dpdata_DATA) $(pixmaps_DATA) layout.xrc icon.ico icon.xpm iconlarge.xpm droidpad.png adb/adb adb/adb.exe adb/AdbWinApi.dll adb/AdbWinUsbApi.dll reactos-logo.png reactos-logo.svg
+EXTRA_DIST = $(dpdata_DATA) $(pixmaps_DATA) $(docs_DATA) layout.xrc icon.ico icon.xpm iconlarge.xpm droidpad.png adb/adb adb/adb.exe adb/AdbWinApi.dll adb/AdbWinUsbApi.dll reactos-logo.png reactos-logo.svg

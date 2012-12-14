@@ -114,9 +114,9 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(adbdir)" "$(DESTDIR)$(dpdatadir)" \
-	"$(DESTDIR)$(pixmapsdir)"
-DATA = $(adb_DATA) $(dpdata_DATA) $(pixmaps_DATA)
+am__installdirs = "$(DESTDIR)$(adbdir)" "$(DESTDIR)$(docsdir)" \
+	"$(DESTDIR)$(dpdatadir)" "$(DESTDIR)$(pixmapsdir)"
+DATA = $(adb_DATA) $(docs_DATA) $(dpdata_DATA) $(pixmaps_DATA)
 RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
   distclean-recursive maintainer-clean-recursive
 AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
@@ -312,6 +312,8 @@ SUBDIRS = adb
 @IF_GUI_TRUE@dpdatadir = $(datadir)/droidpad
 @IF_GUI_TRUE@dpdata_DATA = layout.xrc iconlarge.png $(am__append_1) \
 @IF_GUI_TRUE@	$(am__append_2) $(am__append_3)
+@IF_GUI_TRUE@docsdir = $(datadir)/droidpad/docs
+@IF_GUI_TRUE@docs_DATA = docs/intro.zip
 @IF_GUI_TRUE@pixmapsdir = $(datadir)/pixmaps
 @IF_GUI_TRUE@pixmaps_DATA = droidpad.png
 adbdir = $(datadir)/droidpad/adb
@@ -324,7 +326,7 @@ adbdir = $(datadir)/droidpad/adb
 # menu_in_files = droidpad.desktop.in
 # menu_DATA = $(menu_in_files:.desktop.in=.desktop)
 # {at}INTLTOOL_DESKTOP_RULE{at}
-EXTRA_DIST = $(dpdata_DATA) $(pixmaps_DATA) layout.xrc icon.ico icon.xpm iconlarge.xpm droidpad.png adb/adb adb/adb.exe adb/AdbWinApi.dll adb/AdbWinUsbApi.dll reactos-logo.png reactos-logo.svg
+EXTRA_DIST = $(dpdata_DATA) $(pixmaps_DATA) $(docs_DATA) layout.xrc icon.ico icon.xpm iconlarge.xpm droidpad.png adb/adb adb/adb.exe adb/AdbWinApi.dll adb/AdbWinUsbApi.dll reactos-logo.png reactos-logo.svg
 all: all-recursive
 
 .SUFFIXES:
@@ -385,6 +387,27 @@ uninstall-adbDATA:
 	@list='$(adb_DATA)'; test -n "$(adbdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(adbdir)'; $(am__uninstall_files_from_dir)
+install-docsDATA: $(docs_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(docs_DATA)'; test -n "$(docsdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(docsdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(docsdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(docsdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(docsdir)" || exit $$?; \
+	done
+
+uninstall-docsDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(docs_DATA)'; test -n "$(docsdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(docsdir)'; $(am__uninstall_files_from_dir)
 install-dpdataDATA: $(dpdata_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(dpdata_DATA)'; test -n "$(dpdatadir)" || list=; \
@@ -623,7 +646,7 @@ check: check-recursive
 all-am: Makefile $(DATA)
 installdirs: installdirs-recursive
 installdirs-am:
-	for dir in "$(DESTDIR)$(adbdir)" "$(DESTDIR)$(dpdatadir)" "$(DESTDIR)$(pixmapsdir)"; do \
+	for dir in "$(DESTDIR)$(adbdir)" "$(DESTDIR)$(docsdir)" "$(DESTDIR)$(dpdatadir)" "$(DESTDIR)$(pixmapsdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-recursive
@@ -676,7 +699,7 @@ info: info-recursive
 
 info-am:
 
-install-data-am: install-adbDATA install-dpdataDATA \
+install-data-am: install-adbDATA install-docsDATA install-dpdataDATA \
 	install-pixmapsDATA
 
 install-dvi: install-dvi-recursive
@@ -721,8 +744,8 @@ ps: ps-recursive
 
 ps-am:
 
-uninstall-am: uninstall-adbDATA uninstall-dpdataDATA \
-	uninstall-pixmapsDATA
+uninstall-am: uninstall-adbDATA uninstall-docsDATA \
+	uninstall-dpdataDATA uninstall-pixmapsDATA
 
 .MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) ctags-recursive \
 	install-am install-strip tags-recursive
@@ -732,16 +755,16 @@ uninstall-am: uninstall-adbDATA uninstall-dpdataDATA \
 	ctags ctags-recursive distclean distclean-generic \
 	distclean-libtool distclean-tags distdir dvi dvi-am html \
 	html-am info info-am install install-adbDATA install-am \
-	install-data install-data-am install-dpdataDATA install-dvi \
-	install-dvi-am install-exec install-exec-am install-html \
-	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-pixmapsDATA install-ps \
-	install-ps-am install-strip installcheck installcheck-am \
-	installdirs installdirs-am maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic \
-	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-recursive \
-	uninstall uninstall-adbDATA uninstall-am uninstall-dpdataDATA \
-	uninstall-pixmapsDATA
+	install-data install-data-am install-docsDATA \
+	install-dpdataDATA install-dvi install-dvi-am install-exec \
+	install-exec-am install-html install-html-am install-info \
+	install-info-am install-man install-pdf install-pdf-am \
+	install-pixmapsDATA install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs installdirs-am \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
+	tags tags-recursive uninstall uninstall-adbDATA uninstall-am \
+	uninstall-docsDATA uninstall-dpdataDATA uninstall-pixmapsDATA
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

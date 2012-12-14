@@ -94,7 +94,7 @@ am__droidpad_SOURCES_DIST = if-gui/droidFrame.cpp \
 	if-gui/pageSizer.cpp if-gui/pageSizer.hpp \
 	if-gui/wxImagePanel.cpp if-gui/wxImagePanel.hpp \
 	if-gui/reorderDialog.cpp if-gui/reorderDialog.hpp \
-	if-gui/setup.cpp if-gui/setup.h if-gui/help.cpp \
+	if-gui/setup.cpp if-gui/setup.hpp if-gui/help.cpp \
 	if-gui/help.hpp if-gui/updateDisplay.cpp \
 	if-gui/updateDisplay.hpp if-gui/driverChoice.cpp \
 	if-gui/driverChoice.hpp
@@ -380,7 +380,7 @@ SRC_IF_GUI = \
 		   if-gui/pageSizer.cpp		if-gui/pageSizer.hpp	\
 		   if-gui/wxImagePanel.cpp	if-gui/wxImagePanel.hpp	\
 		   if-gui/reorderDialog.cpp	if-gui/reorderDialog.hpp\
-		   if-gui/setup.cpp		if-gui/setup.h		\
+		   if-gui/setup.cpp		if-gui/setup.hpp	\
 		   if-gui/help.cpp		if-gui/help.hpp
 
 droidpad_SOURCES = $(am__append_1) $(am__append_4) $(am__append_5)
