@@ -2,9 +2,9 @@
 
 cd "$( dirname "$0" )"
 
-bzr export docs/intro lp:~w-shackleton/droidpad-android/2.0/assets/intro
+bzr export data/docs/intro lp:~w-shackleton/droidpad-android/2.0/assets/intro
 
-cd docs
+cd data/docs
 rm intro.zip
 zip -r intro.zip intro
 rm -r intro

@@ -24,6 +24,7 @@
 #include <wx/msgdlg.h>
 #include <wx/stdpaths.h>
 #include <wx/socket.h>
+#include <wx/fs_arc.h>
 
 #include <iostream>
 using namespace std;
@@ -33,6 +34,7 @@ using namespace std;
 #include "proc.hpp"
 #include "log.hpp"
 #include "setup.hpp"
+#include "help.hpp"
 
 #ifdef OS_LINUX
 #include "output/linux/dpinput.h"
@@ -83,6 +85,7 @@ bool DroidApp::OnInit()
 	SetAppName(_T("droidpad"));
 
 	wxInitAllImageHandlers();
+	wxFileSystem::AddHandler(new wxArchiveFSHandler);
 	wxSocketBase::Initialize();
 
 	if(!Data::initialise())
@@ -104,6 +107,12 @@ bool DroidApp::OnInit()
 	}
 	if(runRemove) {
 		return dpRemove(*this);
+	}
+	if(showGettingStarted) {
+		Help *help = new Help;
+		help->Show(true);
+		SetTopWindow(help);
+		return true;
 	}
 
 	DroidFrame *frame = new DroidFrame;
@@ -128,6 +137,7 @@ void DroidApp::OnInitCmdLine(wxCmdLineParser& parser) {
 bool DroidApp::OnCmdLineParsed(wxCmdLineParser& parser) {
 	wxApp::OnCmdLineParsed(parser);
 	runSetup = parser.Found(wxT("s"));
+	showGettingStarted = parser.Found(wxT("g"));
 	runRemove = parser.Found(wxT("u"));
 
 	if(!parser.Found(wxT("n"))) { // If user didn't request no root, check.

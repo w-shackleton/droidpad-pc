@@ -25,6 +25,20 @@
 #include <wx/panel.h>
 #include <wx/sizer.h>
 
+// Hack around constness of OnOpeningUrl
+class HelpWindow;
+extern HelpWindow *currentWindow;
+
+class HelpWindow : public wxHtmlWindow {
+	public:
+		inline HelpWindow(wxWindow *parent, wxWindowID id = -1, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize, long style = wxHW_DEFAULT_STYLE, const wxString& name = wxT("helpWindow")) :
+			wxHtmlWindow(parent, id, pos, size, style, name)
+		{
+			currentWindow = this;
+		}
+		virtual wxHtmlOpeningStatus OnOpeningURL(wxHtmlURLType type,const wxString& url, wxString *redirect) const;
+};
+
 class Help : public wxFrame {
 	public:
 		Help();
@@ -32,7 +46,7 @@ class Help : public wxFrame {
 		DECLARE_EVENT_TABLE()
 	public:
 	protected:
-		wxHtmlWindow *web;
+		HelpWindow *web;
 		void OnClose(wxCloseEvent& event);
 };
 

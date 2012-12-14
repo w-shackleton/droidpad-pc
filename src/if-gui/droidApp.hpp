@@ -38,6 +38,7 @@ class DroidApp : public wxApp
 
 		bool runSetup;
 		bool runRemove;
+		bool showGettingStarted;
 		/**
 		 * If set to false, the app will quit asap
 		 */
@@ -63,6 +64,8 @@ static const wxCmdLineEntryDesc dp_cmdLineDesc [] =
 	{ wxCMD_LINE_SWITCH, wxT("u"), wxT("remove"), wxT("removes DroidPad components"),
 		wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL  },
 	{ wxCMD_LINE_SWITCH, wxT("n"), wxT("no-root"), wxT("don't ask for root privileges"),
+		wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL  },
+	{ wxCMD_LINE_SWITCH, wxT("g"), wxT("getting-started"), wxT("view the getting started guide"),
 		wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL  },
 
 	{ wxCMD_LINE_NONE }

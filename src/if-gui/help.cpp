@@ -24,6 +24,8 @@ BEGIN_EVENT_TABLE(Help, wxFrame)
 END_EVENT_TABLE()
 
 #include "data.hpp"
+#include "proc.hpp"
+#include "log.hpp"
 
 #ifdef __WXMSW__
 #define _FRAME_ICON wxT("icon.xpm")
@@ -36,6 +38,9 @@ END_EVENT_TABLE()
 #include <wx/msgdlg.h>
 
 using namespace droidpad;
+using namespace std;
+
+HelpWindow *currentWindow;
 
 #define FRAME_TITLE "DroidPad - Getting Started"
 
@@ -47,13 +52,25 @@ Help::Help() :
 	wxBoxSizer *parentSizer = new wxBoxSizer(wxVERTICAL);
 	SetSizer(parentSizer);
 
-	web = new wxHtmlWindow(this);
-
+	web = new HelpWindow(this);
 	parentSizer->Add(web, 1, wxEXPAND | wxALL);
-
-	parentSizer->SetSizeHints(this);
+	web->LoadPage(Data::getFilePath(wxT("docs/intro.zip")) + wxT("#zip:intro/start.html"));
 }
 
 void Help::OnClose(wxCloseEvent& event) {
 	Destroy();
+}
+
+wxHtmlOpeningStatus HelpWindow::OnOpeningURL(wxHtmlURLType type,const wxString& url, wxString *redirect) const {
+	if(url == wxT("back:///")) {
+		LOGV("User clicked back");
+		currentWindow->HistoryBack();
+		return wxHTML_BLOCK;
+	} else if(url.StartsWith(wxT("http://")) || url.StartsWith(wxT("https://"))) {
+		LOGV("User clicked webpage");
+		openWebpage(string(url.mb_str()));
+		return wxHTML_BLOCK;
+	}
+	cout << "Opening " << url.mb_str() << endl;
+	return wxHTML_OPEN;
 }

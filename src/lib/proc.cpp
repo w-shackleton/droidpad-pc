@@ -186,10 +186,22 @@ bad2:
 #define BROWSER "x-www-browser"
 
 bool droidpad::openWebpage(string url) {
+	cout << "Webpage: " << url << endl;
 	// Good ol' fork and exec
 	int uid = getOriginalUserID();
-	if(!uid)
-		return false;
+	if(!uid) { // No need to sudo
+		if(fork() == 0) {
+			printf("Running %s %s\n",
+					BROWSER,
+					url.c_str());
+
+			// Run browser
+			execlp(BROWSER,
+					BROWSER,
+					url.c_str(),
+					(char *)0);
+		}
+	}
 	if(fork() == 0) {
 		stringstream userArg;
 		userArg << "-u#" << uid;
