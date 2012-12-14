@@ -37,7 +37,7 @@ END_EVENT_TABLE()
 
 using namespace droidpad;
 
-#define FRAME_TITLE "DroidPad"
+#define FRAME_TITLE "DroidPad - Getting Started"
 
 Help::Help() :
 	wxFrame(NULL, -1, _(FRAME_TITLE), wxDefaultPosition, wxSize(640, 480))
@@ -47,9 +47,13 @@ Help::Help() :
 	wxBoxSizer *parentSizer = new wxBoxSizer(wxVERTICAL);
 	SetSizer(parentSizer);
 
+	web = new wxHtmlWindow(this);
+
+	parentSizer->Add(web, 1, wxEXPAND | wxALL);
+
 	parentSizer->SetSizeHints(this);
 }
 
 void Help::OnClose(wxCloseEvent& event) {
-
+	Destroy();
 }

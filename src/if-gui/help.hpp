@@ -32,7 +32,7 @@ class Help : public wxFrame {
 		DECLARE_EVENT_TABLE()
 	public:
 	protected:
-		wxHtmlWindow *window;
+		wxHtmlWindow *web;
 		void OnClose(wxCloseEvent& event);
 };
 
