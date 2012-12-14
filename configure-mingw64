@@ -3,13 +3,13 @@
 # Set this variable beforehand if your mingw-w64 is somewhere else (which it almost certainly will be).
 if [ "$MINGW64_PATH" = "" ]
 then
-MINGW64_PATH=/home/william/Dev/toolchains/mingw-w64
+MINGW64_PATH=/usr
 fi
 
 export PATH="$MINGW64_PATH/bin:$PATH"
 MINGW64_LOCATION=$MINGW64_PATH/x86_64-w64-mingw32
 
-./configure --host=x86_64-w64-mingw32 --disable-shared --with-wx-prefix=$MINGW64_LOCATION --prefix=$MINGW64_LOCATION --enable-sponsor-message "$@"
+./configure --host=x86_64-w64-mingw32 --disable-shared --disable-debug --with-wx-prefix=$MINGW64_LOCATION --prefix=$MINGW64_LOCATION --enable-sponsor-message "$@"
 
-echo ""
-echo "Please run 'export PATH=$MINGW64_PATH/bin:\$PATH'"
+# echo ""
+# echo "Please run 'export PATH=$MINGW64_PATH/bin:\$PATH'"

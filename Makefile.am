@@ -64,9 +64,10 @@ MINGW_FILES =	\
 		$(MINGW_FOLDER)/lib/wxmsw28u_xrc_gcc_custom.dll
 
 if OS_64BIT
+# TODO: Find a more permanent solution to this
 MINGW_FILES +=	\
-		$(MINGW_FOLDER)/lib/libstdc++-6.dll			\
-		$(MINGW_FOLDER)/lib/libgcc_s_sjlj-1.dll
+		/usr/lib/gcc/x86_64-w64-mingw32/4.6/libstdc++-6.dll			\
+		/usr/lib/gcc/x86_64-w64-mingw32/4.6/libgcc_s_sjlj-1.dll
 else
 MINGW_FILES +=	\
 		$(MINGW_FOLDER)/bin/mingwm10.dll

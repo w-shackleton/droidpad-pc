@@ -393,7 +393,8 @@ droidpad_SOURCES = $(am__append_1) $(am__append_4) $(am__append_5)
 @IF_GUI_TRUE@droidpad_CXXFLAGS = @WXCPPFLAGS@ -Ilib $(am__append_3)
 AM_CPPFLAGS = -DPREFIX='"$(prefix)"' $(am__append_7) $(am__append_8) \
 	$(am__append_9) $(am__append_10)
-@OS_WIN32_TRUE@droidpad_LDFLAGS = -Wl,--enable-auto-import --enable-stdcall-fixup
+@OS_64BIT_FALSE@@OS_WIN32_TRUE@droidpad_LDFLAGS = -Wl,--enable-auto-import --enable-stdcall-fixup
+@OS_64BIT_TRUE@@OS_WIN32_TRUE@droidpad_LDFLAGS = -Wl,--enable-auto-import
 
 # http://www.gnu.org/software/hello/manual/automake/Options.html
 @IF_GUI_TRUE@@OS_WIN32_TRUE@pkg_verbose = $(pkg_verbose_$(V))

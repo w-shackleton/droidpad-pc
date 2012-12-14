@@ -49,7 +49,11 @@ droidpad_LDADD += lib/libdroidpad.la
 AM_CPPFLAGS = -DPREFIX='"$(prefix)"'
 
 if OS_WIN32
+if OS_64BIT
+droidpad_LDFLAGS = -Wl,--enable-auto-import
+else
 droidpad_LDFLAGS = -Wl,--enable-auto-import --enable-stdcall-fixup
+endif
 droidpad_LDADD += -lws2_32 lib/ext/win32/libjs.la -luuid
 droidpad_CXXFLAGS += -Ilib/msw
 

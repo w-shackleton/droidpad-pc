@@ -21,6 +21,7 @@
 
 #include <string>
 #include <iostream>
+#include <cstdio>
 #include <sstream>
 
 #ifdef OS_UNIX

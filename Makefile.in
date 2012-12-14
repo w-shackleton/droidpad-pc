@@ -56,9 +56,11 @@ host_triplet = @host@
 @IF_GUI_TRUE@@OS_LINUX_TRUE@am__append_4 = data/iconlarge.xpm
 # if SPONSOR_MESSAGE
 @IF_GUI_TRUE@am__append_5 = data/reactos-logo.png
+
+# TODO: Find a more permanent solution to this
 @OS_64BIT_TRUE@am__append_6 = \
-@OS_64BIT_TRUE@		$(MINGW_FOLDER)/lib/libstdc++-6.dll			\
-@OS_64BIT_TRUE@		$(MINGW_FOLDER)/lib/libgcc_s_sjlj-1.dll
+@OS_64BIT_TRUE@		/usr/lib/gcc/x86_64-w64-mingw32/4.6/libstdc++-6.dll			\
+@OS_64BIT_TRUE@		/usr/lib/gcc/x86_64-w64-mingw32/4.6/libgcc_s_sjlj-1.dll
 
 @OS_64BIT_FALSE@am__append_7 = \
 @OS_64BIT_FALSE@		$(MINGW_FOLDER)/bin/mingwm10.dll
