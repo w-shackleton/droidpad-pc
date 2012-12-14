@@ -51,15 +51,16 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 @IF_GUI_TRUE@am__append_1 = data/layout.xrc data/iconlarge.xpm data/iconlarge.png
-@IF_GUI_TRUE@@OS_WIN32_TRUE@am__append_2 = data/icon.xpm
-@IF_GUI_TRUE@@OS_LINUX_TRUE@am__append_3 = data/iconlarge.xpm
+@IF_GUI_TRUE@am__append_2 = data/docs/intro.zip
+@IF_GUI_TRUE@@OS_WIN32_TRUE@am__append_3 = data/icon.xpm
+@IF_GUI_TRUE@@OS_LINUX_TRUE@am__append_4 = data/iconlarge.xpm
 # if SPONSOR_MESSAGE
-@IF_GUI_TRUE@am__append_4 = data/reactos-logo.png
-@OS_64BIT_TRUE@am__append_5 = \
+@IF_GUI_TRUE@am__append_5 = data/reactos-logo.png
+@OS_64BIT_TRUE@am__append_6 = \
 @OS_64BIT_TRUE@		$(MINGW_FOLDER)/lib/libstdc++-6.dll			\
 @OS_64BIT_TRUE@		$(MINGW_FOLDER)/lib/libgcc_s_sjlj-1.dll
 
-@OS_64BIT_FALSE@am__append_6 = \
+@OS_64BIT_FALSE@am__append_7 = \
 @OS_64BIT_FALSE@		$(MINGW_FOLDER)/bin/mingwm10.dll
 
 subdir = .
@@ -309,8 +310,9 @@ AM_MAKEFLAGS = --no-print-directory
 SUBDIRS = data src
 ACLOCAL_AMFLAGS = -I m4
 EXTRA_DIST = configure-mingw configure-mingw64 configure-debug updateIcons.sh
-DPDATA = $(am__append_1) $(am__append_2) $(am__append_3) \
-	$(am__append_4)
+DPDATA = $(am__append_1) $(am__append_3) $(am__append_4) \
+	$(am__append_5)
+DPDOCS = $(am__append_2)
 @OS_LINUX_TRUE@ADB = data/adb/adb
 # endif
 @OS_WIN32_TRUE@ADB = data/adb/adb.exe data/adb/AdbWinApi.dll data/adb/AdbWinUsbApi.dll
@@ -324,7 +326,7 @@ MINGW_FILES = $(MINGW_FOLDER)/lib/wxbase28u_gcc_custom.dll \
 	$(MINGW_FOLDER)/lib/wxmsw28u_core_gcc_custom.dll \
 	$(MINGW_FOLDER)/lib/wxmsw28u_html_gcc_custom.dll \
 	$(MINGW_FOLDER)/lib/wxmsw28u_xrc_gcc_custom.dll \
-	$(am__append_5) $(am__append_6)
+	$(am__append_6) $(am__append_7)
 DRVDIR_x86 = data/drv/objfre_wxp_x86/i386
 DRVDIR_amd64 = data/drv/objfre_wlh_amd64/amd64
 DRVS_x86 = \
@@ -867,12 +869,14 @@ winexport: all
 	test -d "$(OUTDIR)" || mkdir $(OUTDIR)
 	test -d "$(OUTDIR)/data" || mkdir $(OUTDIR)/data
 	test -d "$(OUTDIR)/data/adb" || mkdir $(OUTDIR)/data/adb
+	test -d "$(OUTDIR)/data/docs" || mkdir $(OUTDIR)/data/docs
 	test -d "$(OUTDIR)/data/driver" || mkdir $(OUTDIR)/data/driver
 	test -d "$(OUTDIR)/data/driver/x86" || mkdir $(OUTDIR)/data/driver/x86
 	test -d "$(OUTDIR)/data/driver/amd64" || mkdir $(OUTDIR)/data/driver/amd64
 	cp src/droidpad.exe $(OUTDIR)/
 	cp $(MANIFEST) $(OUTDIR)/droidpad.exe.manifest
 	cp $(DPDATA) $(OUTDIR)/data
+	cp $(DPDOCS) $(OUTDIR)/data/docs
 	cp $(ADB) $(OUTDIR)/data/adb
 	cp $(MINGW_FILES) $(OUTDIR)/
 	cp $(DRVS_x86) $(OUTDIR)/data/driver/x86
