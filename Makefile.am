@@ -29,8 +29,10 @@ clean-local:
 	rm -rf winexport64/
 
 DPDATA =
+DPDOCS =
 if IF_GUI
-DPDATA += data/layout.xrc data/iconlarge.xpm data/iconlarge.png data/docs/intro.zip
+DPDATA += data/layout.xrc data/iconlarge.xpm data/iconlarge.png
+DPDOCS += data/docs/intro.zip
 
 if OS_WIN32
 DPDATA += data/icon.xpm
@@ -100,12 +102,14 @@ winexport: all
 	test -d "$(OUTDIR)" || mkdir $(OUTDIR)
 	test -d "$(OUTDIR)/data" || mkdir $(OUTDIR)/data
 	test -d "$(OUTDIR)/data/adb" || mkdir $(OUTDIR)/data/adb
+	test -d "$(OUTDIR)/data/docs" || mkdir $(OUTDIR)/data/docs
 	test -d "$(OUTDIR)/data/driver" || mkdir $(OUTDIR)/data/driver
 	test -d "$(OUTDIR)/data/driver/x86" || mkdir $(OUTDIR)/data/driver/x86
 	test -d "$(OUTDIR)/data/driver/amd64" || mkdir $(OUTDIR)/data/driver/amd64
 	cp src/droidpad.exe $(OUTDIR)/
 	cp $(MANIFEST) $(OUTDIR)/droidpad.exe.manifest
 	cp $(DPDATA) $(OUTDIR)/data
+	cp $(DPDOCS) $(OUTDIR)/data/docs
 	cp $(ADB) $(OUTDIR)/data/adb
 	cp $(MINGW_FILES) $(OUTDIR)/
 	cp $(DRVS_x86) $(OUTDIR)/data/driver/x86
