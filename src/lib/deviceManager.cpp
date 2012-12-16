@@ -56,7 +56,8 @@ DeviceManager::DeviceManager(DroidPadCallbacks &callbacks) :
 	callbacks(callbacks),
 	finishing(false),
 	state(DP_STATE_STOPPED),
-	mainThread(NULL)
+	mainThread(NULL),
+	deviceFinder(NULL)
 {
 	adb = new AdbManager;
 	initThread = new DMInitialise(*this, *adb);
@@ -72,7 +73,7 @@ DeviceManager::~DeviceManager()
 void DeviceManager::Close()
 {
 	finishing = true;
-	deviceFinder->stop();
+	if(deviceFinder) deviceFinder->stop();
 	LOGV("Closing DeviceManager");
 
 	Stop();
@@ -82,6 +83,8 @@ void DeviceManager::OnInitialised(DMEvent &event)
 {
 	LOGV("DeviceManager Initialised");
 	callbacks.dpInitComplete(event.getStatus() == DM_SUCCESS);
+
+	if(finishing) return;
 
 	deviceFinder = new DeviceFinder(*this, *adb); // These threads delete themselves once started
 	deviceFinder->Create();
