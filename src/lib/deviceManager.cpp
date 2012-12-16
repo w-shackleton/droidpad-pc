@@ -84,7 +84,12 @@ void DeviceManager::OnInitialised(DMEvent &event)
 	LOGV("DeviceManager Initialised");
 	callbacks.dpInitComplete(event.getStatus() == DM_SUCCESS);
 
-	if(finishing) return;
+	if(finishing) {
+		LOGV("Starting to close (1)");
+		closeThread = new DMClose(*this, &adb);
+		closeThread->Create();
+		closeThread->Run();
+	}
 
 	deviceFinder = new DeviceFinder(*this, *adb); // These threads delete themselves once started
 	deviceFinder->Create();
@@ -127,7 +132,7 @@ void DeviceManager::Start(int device)
 	state = DP_STATE_STARTING;
 }
 
-void DeviceManager::Stop(bool wait)
+void DeviceManager::Stop()
 {
 	if(state == DP_STATE_STARTED || state == DP_STATE_STARTING) {
 		mainThread->stop();
@@ -204,7 +209,7 @@ void DeviceManager::OnMainThreadError(DMEvent &event)
 			LOGE("Other error from thread");
 			callbacks.threadError(wxString::Format(_("Unknown Error - %d."), event.getStatus()));
 	}
-	Stop(false);
+	Stop();
 }
 
 void DeviceManager::OnMainThreadNotification(DMEvent &event)
@@ -217,7 +222,7 @@ void DeviceManager::OnMainThreadNotification(DMEvent &event)
 		case THREAD_INFO_FINISHED:
 			LOGV("Finished.");
 			callbacks.setStatusText(_("Done."));
-			Stop(false);
+			Stop();
 			break;
 		case THREAD_INFO_CONNECTED:
 			LOGV("Connected.");

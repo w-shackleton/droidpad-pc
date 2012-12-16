@@ -37,7 +37,7 @@ namespace droidpad {
 			void SendTouchData(const decode::DPTouchData& data, bool firstIteration = true);
 			void SendSlideData(const decode::DPSlideData& data, bool firstIteration = true);
 		private:
-			droidpad::win32::VJoyOutputs *joystick;
+			droidpad::win32::JSOutputs *joystick;
 	};
 }
 

@@ -36,6 +36,7 @@ Function .onInit
     ${If} ${RunningX64}
         ${DisableX64FSRedirection}
         SetRegView 64
+	StrCpy $INSTDIR "$PROGRAMFILES64\DroidPad"
     ${EndIf}
 FunctionEnd
 
@@ -133,6 +134,7 @@ Section "DroidPad" DESC_DPInstall
 	File "build\winexport32\data\driver\x86\WUDFUpdate_01009.dll"
 	${EndIf}
 
+	DetailPrint "Installing Driver"
 	nsExec::Exec "$\"$INSTDIR\droidpad.exe$\" -s"
   
   ;Store installation folder
@@ -145,8 +147,11 @@ Section "DroidPad" DESC_DPInstall
     
     ;Create shortcuts
     CreateDirectory "$SMPROGRAMS\$StartMenuFolder"
-    CreateShortCut "$SMPROGRAMS\$StartMenuFolder\DroidPad.lnk" "$INSTDIR\DroidPad.exe"
+    CreateShortCut "$SMPROGRAMS\$StartMenuFolder\DroidPad.lnk" "$INSTDIR\droidpad.exe"
     CreateShortCut "$SMPROGRAMS\$StartMenuFolder\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
+    CreateDirectory "$SMPROGRAMS\$StartMenuFolder\Advanced"
+    CreateShortCut "$SMPROGRAMS\$StartMenuFolder\Advanced\Install Driver.lnk" "$INSTDIR\droidpad.exe" "-s"
+    CreateShortCut "$SMPROGRAMS\$StartMenuFolder\Advanced\Remove Driver.lnk" "$INSTDIR\droidpad.exe" "-u"
   
   !insertmacro MUI_STARTMENU_WRITE_END
 
@@ -170,6 +175,7 @@ Section "Uninstall"
 
 	SetOutPath "$INSTDIR"
   
+	DetailPrint "Removing Driver"
   nsExec::Exec "$\"$INSTDIR\droidpad.exe$\" -u"
   
 	Delete "$INSTDIR\droidpad.exe"
@@ -218,6 +224,9 @@ Section "Uninstall"
   
   !insertmacro MUI_STARTMENU_GETFOLDER Application $StartMenuFolder
     
+  Delete "$SMPROGRAMS\$StartMenuFolder\Advanced\Install Driver.lnk"
+  Delete "$SMPROGRAMS\$StartMenuFolder\Advanced\Remove Driver.lnk"
+  RMDir "$SMPROGRAMS\$StartMenuFolder\Advanced"
   Delete "$SMPROGRAMS\$StartMenuFolder\Uninstall.lnk"
   Delete "$SMPROGRAMS\$StartMenuFolder\DroidPad.lnk"
   RMDir "$SMPROGRAMS\$StartMenuFolder"

@@ -38,12 +38,13 @@
 
 namespace droidpad {
 	namespace win32 {
-		class VJoyOutputs {
+		extern INPUT_DATA neutralInputData;
+		class JSOutputs {
 			public:
 				// Opens the joystick.
 				// returns true on success.
 				int OpenJoystick();
-				virtual ~VJoyOutputs();
+				virtual ~JSOutputs();
 
 				int SendPositions(INPUT_DATA &data);
 

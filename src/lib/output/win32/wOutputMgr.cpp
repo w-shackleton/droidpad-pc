@@ -39,7 +39,7 @@ OutputManager::OutputManager(const int type, const int numAxes, const int numBut
 {
 	switch(type) {
 		case MODE_JS:
-			joystick = new VJoyOutputs;
+			joystick = new JSOutputs;
 			break;
 		default:
 			joystick = NULL;
@@ -69,17 +69,14 @@ OutputManager::~OutputManager() {
 	if(joystick) delete joystick;
 }
 
-// Sort of hack.
-#define JS_OFFSET 16384
-
 void OutputManager::SendJSData(const DPJSData& data, bool firstIteration) {
 	INPUT_DATA pos;
-	if(data.axes.size() >= 1) pos.axisX = data.axes[0] + JS_OFFSET;
-	if(data.axes.size() >= 2) pos.axisY = data.axes[1] + JS_OFFSET;
-	if(data.axes.size() >= 3) pos.axisZ = data.axes[2] + JS_OFFSET;
-	if(data.axes.size() >= 4) pos.axisRX = data.axes[3] + JS_OFFSET;
-	if(data.axes.size() >= 5) pos.axisRY = data.axes[4] + JS_OFFSET;
-	if(data.axes.size() >= 6) pos.axisRZ = data.axes[5] + JS_OFFSET;
+	pos.axisX = data.axes.size() >= 1 ? data.axes[0] + JS_OFFSET : JS_OFFSET;
+	pos.axisY = data.axes.size() >= 2 ? data.axes[1] + JS_OFFSET : JS_OFFSET;
+	pos.axisZ = data.axes.size() >= 3 ? data.axes[2] + JS_OFFSET : JS_OFFSET;
+	pos.axisRX = data.axes.size() >= 4 ? data.axes[3] + JS_OFFSET : JS_OFFSET;
+	pos.axisRY = data.axes.size() >= 5 ? data.axes[4] + JS_OFFSET : JS_OFFSET;
+	pos.axisRZ = data.axes.size() >= 6 ? data.axes[5] + JS_OFFSET : JS_OFFSET;
 	pos.buttons = 0;
 	for(int i = 0; i < data.buttons.size(); i++) {
 		pos.buttons += data.buttons[i] ? 0x1 << i : 0;

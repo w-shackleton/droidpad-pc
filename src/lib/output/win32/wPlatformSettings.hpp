@@ -25,4 +25,7 @@
 // For analogue axes, the 3 means that the axis rotates around a third of the axis.
 #define AXIS_CUTOFF_MULTIPLIER (AXIS_SIZE * 3)
 
+// Sort of hack.
+#define JS_OFFSET 16384
+
 #endif

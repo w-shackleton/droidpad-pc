@@ -48,7 +48,7 @@ namespace droidpad {
 			void Close();
 
 			void Start(int device);
-			void Stop(bool wait = false);
+			void Stop();
 
 			void RequestUpdates(bool userRequest = false);
 			void StartUpdate(UpdateInfo update);

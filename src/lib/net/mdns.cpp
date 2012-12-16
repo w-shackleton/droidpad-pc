@@ -120,10 +120,6 @@ void MDNS::start()
 
 	mdnsd_free(d);
 
-#ifdef DEBUG
-	// cerr << "scanthread querying " << w.char_str() << " Entry() end.";
-#endif
-
 #ifdef OS_WIN32
 	closesocket(s);
 #else
@@ -323,9 +319,6 @@ int DeviceFinder::processResult(mdnsda a)
 	string b64 = charFullName.substr(beginPos + 1, endPos - beginPos - 1);
 
 	device.deviceDescription = wxString(base64_decode(b64).c_str(), wxConvUTF8);
-#ifdef DEBUG
-	// cout << "Device found: " << device.deviceDescription.mb_str() << endl;
-#endif
 
 	struct in_addr ip;
 	ip.s_addr =  ntohl(ipFinder.result);

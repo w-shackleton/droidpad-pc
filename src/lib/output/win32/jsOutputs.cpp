@@ -20,13 +20,24 @@
 #include "jsOutputs.hpp"
 
 #include "log.hpp"
+#include "wPlatformSettings.hpp"
 #include <wx/string.h>
 
 #include <winioctl.h>
 
 using namespace droidpad::win32;
 
-int VJoyOutputs::OpenJoystick() {
+INPUT_DATA droidpad::win32::neutralInputData = {
+	JS_OFFSET,
+	JS_OFFSET,
+	JS_OFFSET,
+	JS_OFFSET,
+	JS_OFFSET,
+	JS_OFFSET,
+	0
+};
+
+int JSOutputs::OpenJoystick() {
 	dosDeviceHandle = CreateFile(TEXT(DOS_FILE_NAME), GENERIC_WRITE | GENERIC_READ, FILE_SHARE_WRITE | FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 	if(dosDeviceHandle == INVALID_HANDLE_VALUE) {
 		return GetLastError();
@@ -34,11 +45,12 @@ int VJoyOutputs::OpenJoystick() {
 	return 0;
 }
 
-VJoyOutputs::~VJoyOutputs() {
+JSOutputs::~JSOutputs() {
+	SendPositions(neutralInputData);
 	CloseHandle(dosDeviceHandle);
 }
 
-int VJoyOutputs::SendPositions(INPUT_DATA &data) {
+int JSOutputs::SendPositions(INPUT_DATA &data) {
 	unsigned int ioCode = IOCTL_DP_SEND_INPUT_DATA;
 	unsigned int ioSize = sizeof(INPUT_DATA);
 
