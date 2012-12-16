@@ -61,7 +61,8 @@ void* OutputSmoothBuffer::Entry()
 				Vec2 newPos = touchCurrentSmoothed2 + touchVelocity * ((float)SLEEP_TIME / 1000);
 				// touchCurrentSmoothed2.x = newPos.x;
 				// touchCurrentSmoothed2.y = newPos.y;
-				mgr->SendTouchData(touchCurrentSmoothed2, false);
+				mgr->SendTouchData(touchCurrentSmoothed2, firstIteration);
+				firstIteration = false;
 				break;
 		}
 	}
@@ -90,6 +91,9 @@ void OutputSmoothBuffer::SendMouseData(const DPMouseData& data, bool firstIterat
 
 void OutputSmoothBuffer::SendTouchData(const decode::DPTouchData& data, bool firstIteration) {
 	wxMutexLocker lock(callMutex);
+
+	// For this method we don't call the actual method directly, so must prompt the thread to do so.
+	this->firstIteration = true;
 
 	touchDataQueue.push_back(data);
 	while(touchDataQueue.size() > TOUCHSCREEN_MOVING_AVG_NUM)

@@ -55,6 +55,7 @@ namespace droidpad {
 			std::deque<decode::DPTouchData> touchDataQueue;
 			decode::DPTouchData touchCurrentSmoothed, touchCurrentSmoothed2, touchPrevSmoothed;
 			Vec2 touchVelocity;
+			bool firstIteration;
 			wxStopWatch touchTimer;
 
 			template<typename T> static T getMovingAverage(std::deque<T> values);

@@ -185,6 +185,7 @@ DPTouchData::DPTouchData() :
 DPTouchData::DPTouchData(const DPTouchData& old) :
 	Vec2(old),
 	scrollDelta(old.scrollDelta),
+	incrementalScrollDelta(old.incrementalScrollDelta),
 	bLeft(old.bLeft),
 	bMiddle(old.bMiddle),
 	bRight(old.bRight),

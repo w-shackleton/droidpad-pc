@@ -99,7 +99,7 @@ void OutputManager::SendMouseData(const DPMouseData& data, bool firstIteration) 
 
 void OutputManager::SendTouchData(const decode::DPTouchData& data, bool firstIteration) {
 	dpinput_send2Pos(dpinput, data.x, -data.y);
-	dpinput_sendPos(dpinput, REL_WHEEL, firstIteration ? (data.incrementalScrollDelta / 120) : 0);
+	dpinput_sendPos(dpinput, ABS_WHEEL, firstIteration ? (data.incrementalScrollDelta / 120) : 0);
 	dpinput_sendButton(dpinput, BTN_LEFT, data.bLeft);
 	dpinput_sendButton(dpinput, BTN_MIDDLE, data.bMiddle);
 	dpinput_sendButton(dpinput, BTN_RIGHT, data.bRight);
