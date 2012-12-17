@@ -44,7 +44,7 @@ bool WinOutputs::SendMouseEvent(int dx, int dy, bool left, bool middle, bool rig
 	event[0].mi.dwFlags |= right	? (!prevRight	? MOUSEEVENTF_RIGHTDOWN	: 0) : (prevRight	? MOUSEEVENTF_RIGHTUP	: 0);
 
 	event[1].type = INPUT_MOUSE;
-	int wheelClicks = -scrollDelta / 120;
+	int wheelClicks = scrollDelta / 120;
 	event[1].mi.mouseData = wheelClicks * 120;
 	event[1].mi.dwFlags = MOUSEEVENTF_WHEEL;
 
@@ -69,7 +69,7 @@ bool WinOutputs::SendAbsMouseEvent(int x, int y, bool left, bool middle, bool ri
 	event[0].mi.dwFlags |= right	? (!prevRight	? MOUSEEVENTF_RIGHTDOWN	: 0) : (prevRight	? MOUSEEVENTF_RIGHTUP	: 0);
 
 	event[1].type = INPUT_MOUSE;
-	int wheelClicks = -scrollDelta / 120;
+	int wheelClicks = scrollDelta / 120;
 	event[1].mi.mouseData = wheelClicks * 120;
 	event[1].mi.dwFlags = MOUSEEVENTF_WHEEL;
 

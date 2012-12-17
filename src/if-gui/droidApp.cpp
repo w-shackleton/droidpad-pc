@@ -176,7 +176,7 @@ void DroidApp::requestNecessaryPermissions() {
 		if(argc > 1) {
 			args += argv[1];
 			for(int i = 2; i < argc; i++) {
-				args += wxT("");
+				args += wxT(" ");
 				args += argv[i];
 			}
 		}
