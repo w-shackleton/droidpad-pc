@@ -38,6 +38,18 @@ Function .onInit
         SetRegView 64
 	StrCpy $INSTDIR "$PROGRAMFILES64\DroidPad"
     ${EndIf}
+  ; Remove old DroidPad version
+  ; Check to see if already installed
+  ReadRegStr $R0 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{046B525C-FEC6-42A2-A637-53CC2F58100E}_is1" "UninstallString"
+  ${If} ${FileExists} $R0
+    ${OrIf} ${FileExists} "C:\Program Files\DroidPad\unins000.exe"
+    ${OrIf} ${FileExists} "C:\Program Files (x86)\DroidPad\unins000.exe"
+      ${If} ${Cmd} 'MessageBox MB_YESNO "You currently have a previous version of DroidPad installed; would you like to remove it first?$\nThis is recommended as it is no longer needed.$\nThis will also remove the old joystick software used by DroidPad from this computer,$\nwhich is also no longer needed. When prompted, please uninstall the old joystick driver, PPJoy." IDYES'
+  
+        nsExec::Exec $R0
+    ${EndIf}
+  ${EndIf}
+  
 FunctionEnd
 
 
@@ -76,7 +88,6 @@ Section "DroidPad" DESC_DPInstall
 
 ;64-bit stuff
 	SetOutPath "$INSTDIR"
-  
   
     ${If} ${RunningX64}
 	File "build\winexport64\droidpad.exe"
@@ -142,6 +153,8 @@ Section "DroidPad" DESC_DPInstall
   
   ;Create uninstaller
   WriteUninstaller "$INSTDIR\Uninstall.exe"
+
+  MessageBox MB_OK "Thank you for installing DroidPad.$\nTo access the complete set of features available,$\nplease make sure to update the Android application in Google Play."
   
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
     
