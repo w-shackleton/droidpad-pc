@@ -62,6 +62,9 @@ About::About(wxWindow *parent) :
 	title->SetFont(largeFont);
 	panelSizer->Add(title, 0, wxALIGN_CENTRE | wxALL, 5);
 
+	wxStaticText *ver = new wxStaticText(this, -1, wxString::Format(_("Version %d.%d.%d"), V_MAJOR, V_MINOR, V_REVISION));
+	panelSizer->Add(ver, 0, wxALIGN_CENTRE | wxALL, 3);
+
 	wxStaticText *desc = new wxStaticText(this, -1, _("Use an Android phone as a computer joystick"));
 	panelSizer->Add(desc, 0, wxALIGN_CENTRE | wxALL, 3);
 

@@ -18,22 +18,22 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #
 AC_PREREQ([2.64])
-AC_INIT([droidpad], [1.9-beta], [w.shackleton+droidpad@gmail.com])
+AC_INIT([droidpad], [2.0], [w.shackleton+droidpad@gmail.com])
 AC_CONFIG_SRCDIR([src/if-gui/droidApp.cpp])
 AC_CONFIG_HEADERS([config.h])
 AM_INIT_AUTOMAKE
 
 AH_TEMPLATE(VERSION_CODE, "Version code")
-AC_DEFINE_UNQUOTED(VERSION_CODE, 193)
+AC_DEFINE_UNQUOTED(VERSION_CODE, 200)
 
 AH_TEMPLATE(V_MAJOR, "Major number")
-AC_DEFINE_UNQUOTED(V_MAJOR, 1)
+AC_DEFINE_UNQUOTED(V_MAJOR, 2)
 
 AH_TEMPLATE(V_MINOR, "Minor number")
-AC_DEFINE_UNQUOTED(V_MINOR, 9)
+AC_DEFINE_UNQUOTED(V_MINOR, 0)
 
 AH_TEMPLATE(V_REVISION, "Revision")
-AC_DEFINE_UNQUOTED(V_REVISION, 3)
+AC_DEFINE_UNQUOTED(V_REVISION, 0)
 
 # AC_CONFIG_MACRO_DIR([m4])
 AC_CANONICAL_HOST
