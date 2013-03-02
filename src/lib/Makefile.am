@@ -62,6 +62,7 @@ libdroidpad_la_SOURCES = \
 		   net/deviceDiscover.cpp	net/deviceDiscover.hpp		\
 		   net/dataDecode.cpp		net/dataDecode.hpp		\
 		   net/connection.cpp		net/connection.hpp		\
+		   net/secureConnection.cpp	net/secureConnection.hpp	\
 		   output/IOutputMgr.cpp	output/IOutputMgr.hpp		\
 		   output/outputSmoothBuffer.cpp output/outputSmoothBuffer.hpp
 
@@ -75,13 +76,14 @@ if MSW_TESTMODE
 endif
 endif
 
-libdroidpad_la_LIBADD = @WXBASELIBS@
-libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@ -I. -Iext
+libdroidpad_la_LIBADD = @WXBASELIBS@ @OPENSSL_LIBS@
+libdroidpad_la_LDFLAGS = @OPENSSL_LDFLAGS@
+libdroidpad_la_CXXFLAGS = @WXCPPFLAGS@ -I. -Iext @OPENSSL_INCLUDES@
 libdroidpad_la_CFLAGS = @WXCPPFLAGS@ -I. -Iext
 
 if OS_WIN32
 libdroidpad_la_LIBADD += -lws2_32 ext/win32/libjs.la
-libdroidpad_la_LDFLAGS = -Wl,--enable-auto-import
+libdroidpad_la_LDFLAGS += -Wl,--enable-auto-import
 libdroidpad_la_CXXFLAGS += -Imsw
 libdroidpad_la_CFLAGS += -Imsw
 
