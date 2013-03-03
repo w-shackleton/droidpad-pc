@@ -122,7 +122,8 @@ am__libdroidpad_la_SOURCES_DIST = include/adb.hpp \
 	ext/b64/base64.cpp ext/b64/base64.hpp ext/hexdump.c \
 	ext/hexdump.h net/mdns.cpp net/mdns.hpp net/deviceDiscover.cpp \
 	net/deviceDiscover.hpp net/dataDecode.cpp net/dataDecode.hpp \
-	net/connection.cpp net/connection.hpp output/IOutputMgr.cpp \
+	net/connection.cpp net/connection.hpp net/secureConnection.cpp \
+	net/secureConnection.hpp output/IOutputMgr.cpp \
 	output/IOutputMgr.hpp output/outputSmoothBuffer.cpp \
 	output/outputSmoothBuffer.hpp output/linux/outputMgr.cpp \
 	output/linux/outputMgr.hpp output/linux/dpinput.c \
@@ -153,6 +154,7 @@ am_libdroidpad_la_OBJECTS = libdroidpad_la-types.lo \
 	libdroidpad_la-base64.lo libdroidpad_la-hexdump.lo \
 	libdroidpad_la-mdns.lo libdroidpad_la-deviceDiscover.lo \
 	libdroidpad_la-dataDecode.lo libdroidpad_la-connection.lo \
+	libdroidpad_la-secureConnection.lo \
 	libdroidpad_la-IOutputMgr.lo \
 	libdroidpad_la-outputSmoothBuffer.lo $(am__objects_2) \
 	$(am__objects_4) $(am__objects_6)
@@ -448,7 +450,8 @@ libdroidpad_la_SOURCES = include/adb.hpp include/outputMgr.hpp \
 	ext/b64/base64.cpp ext/b64/base64.hpp ext/hexdump.c \
 	ext/hexdump.h net/mdns.cpp net/mdns.hpp net/deviceDiscover.cpp \
 	net/deviceDiscover.hpp net/dataDecode.cpp net/dataDecode.hpp \
-	net/connection.cpp net/connection.hpp output/IOutputMgr.cpp \
+	net/connection.cpp net/connection.hpp net/secureConnection.cpp \
+	net/secureConnection.hpp output/IOutputMgr.cpp \
 	output/IOutputMgr.hpp output/outputSmoothBuffer.cpp \
 	output/outputSmoothBuffer.hpp $(am__append_1) $(am__append_2) \
 	$(am__append_3)
@@ -558,6 +561,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-outputMgr.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-outputSmoothBuffer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-proc.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-secureConnection.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-types.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-updater.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libdroidpad_la-wOutputMgr.Plo@am__quote@
@@ -745,6 +749,13 @@ libdroidpad_la-connection.lo: net/connection.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='net/connection.cpp' object='libdroidpad_la-connection.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-connection.lo `test -f 'net/connection.cpp' || echo '$(srcdir)/'`net/connection.cpp
+
+libdroidpad_la-secureConnection.lo: net/secureConnection.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -MT libdroidpad_la-secureConnection.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-secureConnection.Tpo -c -o libdroidpad_la-secureConnection.lo `test -f 'net/secureConnection.cpp' || echo '$(srcdir)/'`net/secureConnection.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libdroidpad_la-secureConnection.Tpo $(DEPDIR)/libdroidpad_la-secureConnection.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='net/secureConnection.cpp' object='libdroidpad_la-secureConnection.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -c -o libdroidpad_la-secureConnection.lo `test -f 'net/secureConnection.cpp' || echo '$(srcdir)/'`net/secureConnection.cpp
 
 libdroidpad_la-IOutputMgr.lo: output/IOutputMgr.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libdroidpad_la_CXXFLAGS) $(CXXFLAGS) -MT libdroidpad_la-IOutputMgr.lo -MD -MP -MF $(DEPDIR)/libdroidpad_la-IOutputMgr.Tpo -c -o libdroidpad_la-IOutputMgr.lo `test -f 'output/IOutputMgr.cpp' || echo '$(srcdir)/'`output/IOutputMgr.cpp

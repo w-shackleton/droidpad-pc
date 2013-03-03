@@ -18,7 +18,7 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #
 SUBDIRS = lib
-bin_PROGRAMS = droidpad
+bin_PROGRAMS = droidpad tlstest
 
 SRC_IF_GUI = \
 		   if-gui/droidFrame.cpp	if-gui/droidFrame.hpp	\
@@ -36,10 +36,10 @@ droidpad_SOURCES =
 if IF_GUI
   droidpad_SOURCES += $(SRC_IF_GUI)
   droidpad_LDADD = @WXLIBS@ @OPENSSL_LIBS@
-  droidpad_CXXFLAGS = @WXCPPFLAGS@
+  droidpad_CXXFLAGS = @WXCPPFLAGS@ @OPENSSL_INCLUDES@
 else
   droidpad_LDADD = @WXBASELIBS@ @OPENSSL_LIBS@
-  droidpad_CXXFLAGS = @WXBASECPPFLAGS@
+  droidpad_CXXFLAGS = @WXBASECPPFLAGS@ @OPENSSL_INCLUDES@
 endif
 
 droidpad_CXXFLAGS += -Ilib
@@ -104,3 +104,7 @@ endif
 if OS_WIN32
 AM_CPPFLAGS += -DOS_WIN32
 endif
+
+# TLS test
+tlstest_SOURCES = tlsTest.c	tlsTest.h
+tlstest_LDADD = @OPENSSL_LIBS@

@@ -17,30 +17,9 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef DP_SECURE_CONNECTION_H
-#define DP_SECURE_CONNECTION_H
 
-#include <wx/string.h>
 #include <openssl/ssl.h>
-#include <stdint.h>
-#include <stdexcept>
 
-namespace droidpad {
-	class SecureConnection {
-		public:
-			SecureConnection(wxString host, uint16_t port) throw (std::runtime_error);
-			virtual ~SecureConnection();
+int main(int argc, char **argv);
 
-			bool Start() throw (std::runtime_error);
-
-		private:
-			wxString host, port;
-
-			// SSL stuff
-			const SSL_METHOD *tlsMethod;
-			SSL_CTX *ctx;
-
-	};
-}
-
-#endif
+unsigned int checkPsk(SSL *ssl, const char *identity, unsigned char *psk, unsigned int max_psk_len);

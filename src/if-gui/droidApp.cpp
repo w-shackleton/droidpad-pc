@@ -25,6 +25,7 @@
 #include <wx/stdpaths.h>
 #include <wx/socket.h>
 #include <wx/fs_arc.h>
+#include <openssl/ssl.h>
 
 #include <iostream>
 using namespace std;
@@ -93,6 +94,11 @@ bool DroidApp::OnInit()
 		wxMessageDialog(NULL, _("Could not find application data,\npossibly because application was installed incorrectly?"), _("Error finding data"), wxOK | wxICON_EXCLAMATION).ShowModal();
 		return false;
 	}
+
+	// Initialise SSL
+	SSL_library_init();
+	SSL_load_error_strings();
+
 
 	wxString layoutPath = Data::getFilePath(wxT("layout.xrc"));
 	wxXmlResource::Get()->InitAllHandlers();

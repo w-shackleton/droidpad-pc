@@ -18,3 +18,29 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 #include "secureConnection.hpp"
+
+using namespace droidpad;
+using namespace std;
+
+#include <iostream>
+#include <cmath>
+#include <openssl/err.h>
+
+#define SSL_NULL(x) if ((x)==NULL) ERR_print_errors_fp(stderr);
+#define SSL_ERROR(err) if ((err)==-1) { ERR_print_errors_fp(stderr); }
+
+SecureConnection::SecureConnection(wxString host, uint16_t port) throw (runtime_error) :
+	host(host),
+	port(wxString::Format(wxT("%d"), port))
+{
+	tlsMethod = TLSv1_server_method();
+	ctx = SSL_CTX_new(tlsMethod);
+	SSL_NULL(ctx);
+	if(ctx == NULL) throw runtime_error("Couldn't initialise SSL");
+}
+
+SecureConnection::~SecureConnection() {
+}
+
+bool SecureConnection::Start() throw (runtime_error) {
+}
