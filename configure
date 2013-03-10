@@ -15683,6 +15683,8 @@ else
 fi
 
 
+# TODO: Check for boost uuid library
+
 # TODO: Change this to a variable, to change the interface
 iface="gui"
  if test $iface = "gui"; then

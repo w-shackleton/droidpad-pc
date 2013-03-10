@@ -167,6 +167,8 @@ AM_CONDITIONAL([OS_UNIX], [test $os = "linux"])
 AM_CONDITIONAL([OS_64BIT], [test $bits = "64bit"])
 AM_CONDITIONAL([MSW_TESTMODE], [test $enable_testmode = "yes"])
 
+# TODO: Check for boost uuid library
+
 # TODO: Change this to a variable, to change the interface
 iface="gui"
 AM_CONDITIONAL([IF_GUI], [test $iface = "gui"])
