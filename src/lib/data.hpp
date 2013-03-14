@@ -26,6 +26,7 @@
 #include "config.h"
 
 #include <wx/string.h>
+#include <wx/config.h>
 
 #define STD_TO_WX_STRING(_str) wxString(_str.c_str(), wxConvUTF8)
 #define NUM_AXIS 6
@@ -92,12 +93,15 @@ namespace droidpad
 			 */
 			static Tweaks tweaks;
 
-			// static wxString serial;
 			static void savePreferences();
 		protected:
 			static wxString confLocation;
 
+			static wxConfig *config;
+
 			static Tweaks createDefaultTweaks();
+
+			static void loadPreferences();
 
 			// The count variables declare how many there *should* be. This will pad out if not enough present.
 			static std::vector<int> decodeOrderConf(wxString input, int count);
