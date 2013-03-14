@@ -63,6 +63,8 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 		void OnStart(wxCommandEvent& event);
 		void OnStop(wxCommandEvent& event);
 
+		void OnPairDevice(wxCommandEvent& event);
+
 		void ReorderAxes(wxCommandEvent& event);
 		void TweakAxes(wxCommandEvent& event);
 

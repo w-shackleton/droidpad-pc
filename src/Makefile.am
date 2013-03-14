@@ -37,7 +37,7 @@ droidpad_SOURCES =
 
 if IF_GUI
   droidpad_SOURCES += $(SRC_IF_GUI)
-  droidpad_LDADD = @WXLIBS@
+  droidpad_LDADD = @WXLIBS@ -lqrencode
   droidpad_CXXFLAGS = @WXCPPFLAGS@
 else
   droidpad_LDADD = @WXBASELIBS@

@@ -390,7 +390,7 @@ SRC_IF_GUI = \
 droidpad_SOURCES = $(am__append_1) $(am__append_4) $(am__append_5)
 @IF_GUI_FALSE@droidpad_LDADD = @WXBASELIBS@ lib/libdroidpad.la \
 @IF_GUI_FALSE@	$(am__append_2) $(am__append_6)
-@IF_GUI_TRUE@droidpad_LDADD = @WXLIBS@ lib/libdroidpad.la \
+@IF_GUI_TRUE@droidpad_LDADD = @WXLIBS@ -lqrencode lib/libdroidpad.la \
 @IF_GUI_TRUE@	$(am__append_2) $(am__append_6)
 @IF_GUI_FALSE@droidpad_CXXFLAGS = @WXBASECPPFLAGS@ -Ilib \
 @IF_GUI_FALSE@	$(am__append_3)
