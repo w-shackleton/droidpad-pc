@@ -27,6 +27,7 @@
 
 #include "customHost.hpp"
 #include "reorderDialog.hpp"
+#include "devicePair.hpp"
 #include "axisTweak.hpp"
 #include "about.hpp"
 #include "log.hpp"
@@ -41,6 +42,7 @@ BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
 	EVT_MENU(XRCID("menuFileStart"), DroidFrame::OnStart)
 	EVT_MENU(XRCID("menuFileStop"), DroidFrame::OnStop)
 
+	EVT_MENU(XRCID("menuFilePair"), DroidFrame::OnPairDevice)
 	EVT_MENU(XRCID("menuFileQuit"), DroidFrame::OnMenuClose)
 
 	EVT_MENU(XRCID("menuAdjustReorder"), DroidFrame::ReorderAxes)
@@ -253,6 +255,14 @@ void DroidFrame::OnAbout(wxCommandEvent& event) {
 void DroidFrame::OnGettingStarted(wxCommandEvent& event) {
 	help = new Help;
 	help->Show(true);
+}
+
+void DroidFrame::OnPairDevice(wxCommandEvent& event) {
+	// TODO: Store, then get unique ID for this device.
+	// DUMMY IMPL
+	boost::uuids::uuid deviceId;
+	DevicePair pair(this, deviceId);
+	pair.ShowModal();
 }
 
 // Update code
