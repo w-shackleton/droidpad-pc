@@ -34,6 +34,9 @@ class qrPanel : public wxPanel
 		qrPanel(wxWindow *parent, wxString text);
 		virtual ~qrPanel();
 
+		void setContent(wxString text);
+
+	protected:
 		void paintEvent(wxPaintEvent & evt);
 		void paintNow();
 
@@ -41,8 +44,9 @@ class qrPanel : public wxPanel
 
 		QRcode *createQrData(wxString text);
 
-		DECLARE_EVENT_TABLE()
-	protected:
+	private:
 		QRcode *code;
+
+		DECLARE_EVENT_TABLE()
 };
 #endif

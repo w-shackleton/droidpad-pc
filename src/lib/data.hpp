@@ -25,6 +25,8 @@
 #include <stdint.h>
 #include "config.h"
 
+#include <boost/uuid/uuid.hpp>
+
 #include <wx/string.h>
 
 #define STD_TO_WX_STRING(_str) wxString(_str.c_str(), wxConvUTF8)
@@ -81,6 +83,9 @@ namespace droidpad
 			static wxString host;
 			static int port;
 
+			// Name of this computer (for user to ID against)
+			static wxString computerName;
+
 			/**
 			 * Maps buttons and axes to where the user wants them.
 			 */
@@ -105,6 +110,19 @@ namespace droidpad
 		private:
 			Data(); // To stop initialising static class
 
+	};
+	class Credentials {
+		boost::uuids::uuid deviceId;
+		wxString deviceName;
+		char *psk;
+	};
+	class CredentialStore {
+		private:
+			std::vector<Credentials> credentials;
+		public:
+			// Creates a new set of credentials (without a name)
+			// and stores them into the preferences.
+			Credentials createNewSet();
 	};
 
 	wxString stringToUpper(wxString strToConvert);

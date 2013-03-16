@@ -22,8 +22,11 @@
 
 #include <wx/dialog.h>
 #include <wx/panel.h>
+#include <wx/textctrl.h>
 
 #include <boost/uuid/uuid.hpp>
+
+#include "qrPanel.hpp"
 
 class DevicePair : public wxDialog {
 	public:
@@ -32,6 +35,17 @@ class DevicePair : public wxDialog {
 	public:
 	protected:
 		wxPanel *panel;
+
+		qrPanel *qrCode;
+
+		enum {
+			ID_COMP_NAME = wxID_HIGHEST,
+		};
+
+		wxTextCtrl *compName;
+
+		void OnComputerNameChanged(wxCommandEvent &evt);
+		wxString createContent();
 };
 
 #endif

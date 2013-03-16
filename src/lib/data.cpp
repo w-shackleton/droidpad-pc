@@ -36,6 +36,7 @@ using namespace droidpad;
 wxString Data::datadir = wxT("");
 wxString Data::confLocation = wxT("");
 wxString Data::host = wxT("");
+wxString Data::computerName = wxT("");
 
 Tweaks Data::tweaks = Tweaks();
 

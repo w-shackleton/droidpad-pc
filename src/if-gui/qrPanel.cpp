@@ -36,9 +36,8 @@ qrPanel::qrPanel(wxWindow *parent, wxString text) :
 	wxPanel(parent)
 {
 	code = createQrData(text);
-	LOGV("Successfully created qr data");
-	hexdump(code->data, code->width * code->width);
 	if(!code) return;
+	LOGV("Successfully created qr data");
 	wxSize size(
 			code->width * SIZE_PER_DOT + 2 * PADDING,
 			code->width * SIZE_PER_DOT + 2 * PADDING);
@@ -83,4 +82,19 @@ void qrPanel::render(wxDC& dc)
 
 QRcode *qrPanel::createQrData(wxString text) {
 	return QRcode_encodeString(text.mb_str(), 0, QR_ECLEVEL_M, QR_MODE_8, 1);
+}
+
+void qrPanel::setContent(wxString text) {
+	if(code) QRcode_free(code);
+
+	code = createQrData(text);
+	if(!code) return;
+	LOGV("Successfully created qr data (2)");
+	wxSize size(
+			code->width * SIZE_PER_DOT + 2 * PADDING,
+			code->width * SIZE_PER_DOT + 2 * PADDING);
+	SetMaxSize(size);
+	SetMinSize(size);
+	SetSize(size);
+	paintNow();
 }

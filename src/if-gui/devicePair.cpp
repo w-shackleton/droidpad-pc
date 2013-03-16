@@ -21,15 +21,17 @@
 #include "devicePair.hpp"
 
 #include "data.hpp"
-#include "qrPanel.hpp"
 
 #include <wx/icon.h>
 #include <wx/sizer.h>
+#include <wx/button.h>
+#include <wx/stattext.h>
 
 using namespace boost::uuids;
 using namespace droidpad;
 
 BEGIN_EVENT_TABLE(DevicePair, wxDialog)
+	EVT_TEXT(ID_COMP_NAME, DevicePair::OnComputerNameChanged)
 END_EVENT_TABLE()
 
 #ifdef __WXMSW__
@@ -48,10 +50,38 @@ DevicePair::DevicePair(wxWindow *parent, uuid id) :
 	wxBoxSizer *panelSizer = new wxBoxSizer(wxVERTICAL);
 	SetSizer(panelSizer);
 
+	wxStaticText *title = new wxStaticText(this, -1, _("Pair new device"));
+	wxFont largeFont = title->GetFont();
+	largeFont.SetPointSize(18);
+	title->SetFont(largeFont);
+	panelSizer->Add(title, 0, wxALIGN_CENTRE | wxALL, 5);
+
+	wxStaticText *desc = new wxStaticText(this, -1, _("From DroidPad, select 'Pair' on your device"));
+	panelSizer->Add(desc, 0, wxALL, 5);
+
+	wxBoxSizer *compNameSizer = new wxBoxSizer(wxHORIZONTAL);
+
+	compNameSizer->Add(new wxStaticText(this, -1, _("Computer name:")), 0, wxALL, 5);
+	// Using computer name from settings
+	compName = new wxTextCtrl(this, ID_COMP_NAME, Data::computerName);
+	compName->SetMaxLength(40);
+	compNameSizer->Add(compName, 1, wxALL | wxEXPAND, 5);
+
+	panelSizer->Add(compNameSizer, 0, wxALL | wxEXPAND, 5);
+
 	// Set up QR code part
-	qrPanel *qrCode = new qrPanel(this, wxT("QR CONTENT TEXT TEST"));
-	panelSizer->Add(qrCode, 0, wxALIGN_CENTRE);
+	qrCode = new qrPanel(this, createContent());
+	panelSizer->Add(qrCode, 0, wxALIGN_CENTRE | wxTOP, 5);
 
 	panelSizer->SetSizeHints(this);
 	Fit();
+}
+
+void DevicePair::OnComputerNameChanged(wxCommandEvent &evt) {
+	qrCode->setContent(createContent());
+	Fit();
+}
+
+wxString DevicePair::createContent() {
+	return wxT("QR encoded data");
 }
