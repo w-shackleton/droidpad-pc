@@ -28,6 +28,8 @@
 
 #include "qrPanel.hpp"
 
+#include "data.hpp"
+
 class DevicePair : public wxDialog {
 	public:
 		DevicePair(wxWindow *parent, boost::uuids::uuid id);
@@ -43,6 +45,9 @@ class DevicePair : public wxDialog {
 		};
 
 		wxTextCtrl *compName;
+
+		droidpad::Credentials newCredentials;
+		boost::uuids::uuid computerId;
 
 		void OnComputerNameChanged(wxCommandEvent &evt);
 		wxString createContent();

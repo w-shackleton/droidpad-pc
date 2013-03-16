@@ -167,8 +167,15 @@ AM_CONDITIONAL([OS_UNIX], [test $os = "linux"])
 AM_CONDITIONAL([OS_64BIT], [test $bits = "64bit"])
 AM_CONDITIONAL([MSW_TESTMODE], [test $enable_testmode = "yes"])
 
+# BOOST_RANDOM()
+# ------------
+# Look for Boost.Random
+BOOST_DEFUN([Random],
+[BOOST_FIND_HEADER([boost/random/random_device.hpp])])
+
 BOOST_REQUIRE
 BOOST_UUID
+BOOST_RANDOM
 
 # Check for qrencode
 AC_SEARCH_LIBS([QRinput_new], [qrencode], [], [

@@ -20,15 +20,20 @@
 
 #include "devicePair.hpp"
 
-#include "data.hpp"
-
 #include <wx/icon.h>
 #include <wx/sizer.h>
 #include <wx/button.h>
 #include <wx/stattext.h>
 
+#include <boost/uuid/uuid_io.hpp>
+
+#include <sstream>
+
+#include "log.hpp"
+
 using namespace boost::uuids;
 using namespace droidpad;
+using namespace std;
 
 BEGIN_EVENT_TABLE(DevicePair, wxDialog)
 	EVT_TEXT(ID_COMP_NAME, DevicePair::OnComputerNameChanged)
@@ -43,7 +48,9 @@ END_EVENT_TABLE()
 #define FRAME_TITLE "Pair new device"
 
 DevicePair::DevicePair(wxWindow *parent, uuid id) :
-	wxDialog(parent, -1, _(FRAME_TITLE), wxDefaultPosition)
+	wxDialog(parent, -1, _(FRAME_TITLE), wxDefaultPosition),
+	newCredentials(CredentialStore::createNewSet()),
+	computerId(id)
 {
 	SetIcon(wxIcon(Data::getFilePath(_FRAME_ICON), wxBITMAP_TYPE_XPM));
 
@@ -83,5 +90,17 @@ void DevicePair::OnComputerNameChanged(wxCommandEvent &evt) {
 }
 
 wxString DevicePair::createContent() {
-	return wxT("QR encoded data");
+	// Order of things
+	// * Computer uuid
+	// * Computer name (b64)
+	// * Device uuid
+	// * PSK (b64)
+	LOGVwx(base64_encode(compName->GetValue()));
+	stringstream result;
+	result << boost::uuids::to_string(computerId) << "\n";
+	result << base64_encode2(compName->GetValue()) << "\n";
+	result << boost::uuids::to_string(newCredentials.deviceId) << "\n";
+	result << newCredentials.psk64_std();
+	return wxString(result.str().c_str(), wxConvUTF8);
+
 }

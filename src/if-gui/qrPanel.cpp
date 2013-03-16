@@ -29,20 +29,19 @@ END_EVENT_TABLE()
 #include "log.hpp"
 #include "ext/hexdump.h"
 
-#define SIZE_PER_DOT 10
-#define PADDING 10
-
 qrPanel::qrPanel(wxWindow *parent, wxString text) :
 	wxPanel(parent)
 {
 	code = createQrData(text);
 	if(!code) return;
 	LOGV("Successfully created qr data");
-	wxSize size(
-			code->width * SIZE_PER_DOT + 2 * PADDING,
-			code->width * SIZE_PER_DOT + 2 * PADDING);
+//	wxSize size(
+//			code->width * SIZE_PER_DOT + 2 * PADDING,
+//			code->width * SIZE_PER_DOT + 2 * PADDING);
+	wxSize size(400, 400);
 	SetMaxSize(size);
 	SetMinSize(size);
+	SetSize(size);
 }
 
 qrPanel::~qrPanel() {
@@ -64,18 +63,26 @@ void qrPanel::paintNow()
 
 void qrPanel::render(wxDC& dc)
 {
-	if(!code) return;
 	dc.SetBackground(*wxWHITE_BRUSH);
 	dc.Clear();
 	dc.SetBrush(*wxBLACK_BRUSH);
+
+	if(!code) return;
+
+	// Calculate size per dot
+	int points = code->width + 2;
+	int pixels = std::min(GetSize().GetWidth(), GetSize().GetHeight());
+	int sizePerDot = pixels / points;
+	int padding = (pixels - sizePerDot * points) / 2;
+
 	for(int x = 0; x < code->width; x++) {
 		for(int y = 0; y < code->width; y++) {
 			if(code->data[y*code->width+x] & 0x1)
 				dc.DrawRectangle(
-						x * SIZE_PER_DOT + PADDING,
-						y * SIZE_PER_DOT + PADDING,
-						SIZE_PER_DOT,
-						SIZE_PER_DOT);
+						x * sizePerDot + padding,
+						y * sizePerDot + padding,
+						sizePerDot,
+						sizePerDot);
 		}
 	}
 }
@@ -90,11 +97,5 @@ void qrPanel::setContent(wxString text) {
 	code = createQrData(text);
 	if(!code) return;
 	LOGV("Successfully created qr data (2)");
-	wxSize size(
-			code->width * SIZE_PER_DOT + 2 * PADDING,
-			code->width * SIZE_PER_DOT + 2 * PADDING);
-	SetMaxSize(size);
-	SetMinSize(size);
-	SetSize(size);
 	paintNow();
 }

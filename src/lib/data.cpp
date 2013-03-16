@@ -21,12 +21,15 @@
 
 #include <fstream>
 #include <vector>
+#include <sstream>
 
 #include <wx/stdpaths.h>
 #include <wx/textfile.h>
 #include <wx/tokenzr.h>
 
-#include "ext/b64/base64.hpp"
+#include <boost/uuid/uuid_io.hpp>
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int_distribution.hpp>
 
 #include "log.hpp"
 
@@ -43,6 +46,10 @@ wxConfig *Data::config = NULL;
 Tweaks Data::tweaks = Tweaks();
 
 wxString Data::version = wxT(VERSION);
+
+vector<Credentials> CredentialStore::credentials;
+boost::random::mt19937 CredentialStore::gen;
+boost::uuids::random_generator CredentialStore::uuidGen(gen);
 
 // This class now uses wxConfig. Any other code is simply for compatibility
 
@@ -167,6 +174,34 @@ void Data::loadPreferences() {
 			memcpy(&tweaks, buf.c_str(), sizeof(Tweaks));
 		else LOGV("Couldn't decode tweaks from config");
 	}
+
+	// credentials
+	config->SetPath(wxT("/credentials"));
+
+	long numCredentials = 0;
+	config->Read(wxT("number"), &numCredentials, 0);
+	for(int i = 0; i < numCredentials; i++) {
+		wxString deviceId, deviceName, psk64;
+		if(
+				config->Read(
+					wxString::Format(wxT("%ddeviceid"), i),
+					deviceId) &&
+				config->Read(
+					wxString::Format(wxT("%ddevicename"), i),
+					deviceName) &&
+				config->Read(
+					wxString::Format(wxT("%ddevicepsk"), i),
+					psk64)) {
+			// Successfully read
+			stringstream idStream((string)deviceId.mb_str());
+			boost::uuids::uuid uuid;
+			idStream >> uuid;
+			Credentials cred(uuid, deviceName, psk64);
+			CredentialStore::credentials.push_back(cred);
+		}
+	}
+
+	config->SetPath(wxT("/"));
 }
 
 void Data::savePreferences() {
@@ -182,6 +217,27 @@ void Data::savePreferences() {
 	string tweakString = base64_encode((unsigned char* const)buf, sizeof(Tweaks));
 	delete[] buf;
 	config->Write(wxT("tweaks"), STD_TO_WX_STRING(tweakString));
+
+	// Write credentials
+	config->SetPath(wxT("/credentials"));
+	config->Write(wxT("number"), (long)CredentialStore::size());
+	int i = 0;
+	for(vector<Credentials>::iterator it = CredentialStore::credentials.begin();
+			it != CredentialStore::credentials.end(); ++it) {
+		config->Write(
+				wxString::Format(wxT("%ddeviceid"), i),
+				wxString(boost::uuids::to_string(it->deviceId).c_str(), wxConvUTF8));
+		config->Write(
+				wxString::Format(wxT("%ddevicename"), i),
+				it->deviceName);
+		config->Write(
+				wxString::Format(wxT("%ddevicepsk"), i),
+				it->psk64());
+		i++;
+	}
+	
+	config->SetPath(wxT("/"));
+
 	config->Flush();
 }
 
@@ -234,4 +290,20 @@ Tweaks Data::createDefaultTweaks() {
 		ret.onScreen[i].gamma = 0;
 	}
 	return ret;
+}
+
+Credentials CredentialStore::createNewSet() {
+	boost::uuids::uuid id = uuidGen();
+	wxString name = wxT("New device");
+	
+	// Generate new PSK
+	boost::random::uniform_int_distribution<> dist(0, 0xFF);
+	string psk;
+	for(int i = 0; i < PSK_LEN; i++) {
+		psk += (char) dist(gen);
+	}
+	Credentials cred(id, name, psk);
+	credentials.push_back(cred);
+	Data::savePreferences();
+	return cred;
 }

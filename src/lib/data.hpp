@@ -26,13 +26,18 @@
 #include "config.h"
 
 #include <boost/uuid/uuid.hpp>
+#include <boost/uuid/random_generator.hpp>
 
 #include <wx/string.h>
 #include <wx/config.h>
 
+#include "ext/b64/base64.hpp"
+
 #define STD_TO_WX_STRING(_str) wxString(_str.c_str(), wxConvUTF8)
 #define NUM_AXIS 6
 #define NUM_BUTTONS 12
+
+#define PSK_LEN 32
 
 namespace droidpad
 {
@@ -117,17 +122,42 @@ namespace droidpad
 	};
 	
 	class Credentials {
-		boost::uuids::uuid deviceId;
-		wxString deviceName;
-		char *psk;
+		public:
+			boost::uuids::uuid deviceId;
+			wxString deviceName;
+			std::string psk;
+
+			inline wxString psk64() {
+				return STD_TO_WX_STRING(base64_encode((unsigned char * const)psk.c_str(), psk.length()));
+			}
+			inline std::string psk64_std() {
+				return base64_encode((unsigned char * const)psk.c_str(), psk.length());
+			}
+
+			inline Credentials(boost::uuids::uuid deviceId, wxString deviceName, std::string psk) :
+				deviceId(deviceId),
+				deviceName(deviceName),
+				psk(psk) { }
+			inline Credentials(boost::uuids::uuid deviceId, wxString deviceName, wxString psk64) :
+				deviceId(deviceId),
+				deviceName(deviceName),
+				psk(base64_decode((std::string)psk64.mb_str())) { }
 	};
 	class CredentialStore {
+		friend class Data;
 		private:
-			std::vector<Credentials> credentials;
+			static std::vector<Credentials> credentials;
+
+			static boost::random::mt19937 gen;
+			static boost::uuids::random_generator uuidGen;
 		public:
 			// Creates a new set of credentials (without a name)
 			// and stores them into the preferences.
-			Credentials createNewSet();
+			static Credentials createNewSet();
+
+			inline static size_t size() {
+				return credentials.size();
+			}
 	};
 }
 
