@@ -110,9 +110,6 @@ namespace droidpad
 			Data(); // To stop initialising static class
 
 	};
-
-	wxString stringToUpper(wxString strToConvert);
-	wxString stringToLower(wxString strToConvert);
 }
 
 #endif

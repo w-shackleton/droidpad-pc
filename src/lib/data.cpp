@@ -95,13 +95,14 @@ bool Data::initialise()
 	wxString tmp;
 	if(config->Read(wxT("initialised"), &tmp)) {
 		// Read from wxConfig
+		LOGV("Reading new preferences format");
 		loadPreferences();
 		return true;
 	}
+	LOGV("Reading old preferences format and converting");
 	// Else, continue to read from old format
 
 	confLocation = wxStandardPaths::Get().GetUserDataDir();
-	if(!wxDirExists(confLocation)) wxMkdir(confLocation);
 
 	wxTextFile config(wxString(confLocation.c_str(), wxConvUTF8) + wxT("/") + wxT(CONF_FILE));
 
@@ -133,9 +134,14 @@ bool Data::initialise()
 		}
 		config.Close();
 
+		// Remove old file
+		wxRemoveFile(wxString(confLocation.c_str(), wxConvUTF8) + wxT("/") + wxT(CONF_FILE));
+		wxRmdir(confLocation);
+
 		// Now, save to new system
 		savePreferences();
-		// TODO Delete old file
+	} else { // Old prefs not found. Neither exist, so create new.
+		savePreferences();
 	}
 
 	return true;
@@ -163,29 +169,24 @@ void Data::loadPreferences() {
 }
 
 void Data::savePreferences() {
+	config->Write(wxT("initialised"), true);
+	config->Write(wxT("host"), host);
+	config->Write(wxT("port"), port);
+	config->Write(wxT("buttonOrder"), encodeOrderConf(buttonOrder, NUM_BUTTONS));
+	config->Write(wxT("axisOrder"), encodeOrderConf(axisOrder, NUM_AXIS));
+
+	// Currently serialising tweaks the very non-portable way. Should probably change this
+	char *buf = new char[sizeof(Tweaks)];
+	memcpy(buf, &tweaks, sizeof(Tweaks));
+	string tweakString = base64_encode((unsigned char* const)buf, sizeof(Tweaks));
+	delete[] buf;
+	config->Write(wxT("tweaks"), STD_TO_WX_STRING(tweakString));
+	config->Flush();
 }
 
 wxString Data::getFilePath(wxString file)
 {
 	return datadir + wxT("/") + file;
-}
-
-wxString stringToUpper(wxString strToConvert)
-{
-	for(unsigned int i=0;i<strToConvert.length();i++)
-	{
-		strToConvert[i] = toupper(strToConvert[i]);
-	}
-	return strToConvert;
-}
-
-wxString stringToLower(wxString strToConvert)
-{
-	for(unsigned int i=0;i<strToConvert.length();i++)
-	{
-		strToConvert[i] = tolower(strToConvert[i]);
-	}
-	return strToConvert;
 }
 
 vector<int> Data::decodeOrderConf(wxString input, int count) {
