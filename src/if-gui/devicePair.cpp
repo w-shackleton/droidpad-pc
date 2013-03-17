@@ -91,7 +91,8 @@ DevicePair::DevicePair(wxWindow *parent, uuid id) :
 
 void DevicePair::OnComputerNameChanged(wxCommandEvent &evt) {
 	qrCode->setContent(createContent());
-	Fit();
+	Data::computerName = compName->GetValue();
+	Data::savePreferences();
 }
 
 wxString DevicePair::createContent() {

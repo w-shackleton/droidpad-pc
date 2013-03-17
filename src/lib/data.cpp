@@ -26,6 +26,8 @@
 #include <wx/stdpaths.h>
 #include <wx/textfile.h>
 #include <wx/tokenzr.h>
+#include <wx/intl.h>
+#include <wx/utils.h>
 
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/random/mersenne_twister.hpp>
@@ -100,6 +102,7 @@ bool Data::initialise()
 
 	// Initialise to default first
 	tweaks = createDefaultTweaks();
+	computerName = wxString::Format(_("%s's Computer"), wxGetUserName().c_str()).Mid(0, 40);
 
 	// Attempt to open new wxConfig format
 	config = new wxConfig(wxT("droidpad"), wxT("digitalsquid"));
@@ -178,6 +181,10 @@ void Data::loadPreferences() {
 		else LOGV("Couldn't decode tweaks from config");
 	}
 
+	// computerName
+	config->Read(wxT("computerName"), &computerName);
+	computerName = computerName.Mid(0, 40);
+
 	// credentials
 	config->SetPath(wxT("/credentials"));
 
@@ -214,6 +221,7 @@ void Data::savePreferences() {
 	config->Write(wxT("port"), port);
 	config->Write(wxT("buttonOrder"), encodeOrderConf(buttonOrder, NUM_BUTTONS));
 	config->Write(wxT("axisOrder"), encodeOrderConf(axisOrder, NUM_AXIS));
+	config->Write(wxT("computerName"), computerName);
 
 	// Currently serialising tweaks the very non-portable way. Should probably change this
 	char *buf = new char[sizeof(Tweaks)];
