@@ -65,6 +65,9 @@ int Data::port = 3141;
 
 bool Data::initialise()
 {
+	// Seed random gen. Currently using time, need to find a better source of entropy.
+	CredentialStore::gen.seed(std::time(0));
+
 	std::vector<wxString> datadirs;
 	wxString testFile = wxT("layout.xrc");
 
@@ -185,19 +188,20 @@ void Data::loadPreferences() {
 		if(
 				config->Read(
 					wxString::Format(wxT("%ddeviceid"), i),
-					deviceId) &&
+					&deviceId, wxT("")) &&
 				config->Read(
 					wxString::Format(wxT("%ddevicename"), i),
-					deviceName) &&
+					&deviceName, wxT("")) &&
 				config->Read(
 					wxString::Format(wxT("%ddevicepsk"), i),
-					psk64)) {
+					&psk64, wxT(""))) {
 			// Successfully read
 			stringstream idStream((string)deviceId.mb_str());
 			boost::uuids::uuid uuid;
 			idStream >> uuid;
 			Credentials cred(uuid, deviceName, psk64);
 			CredentialStore::credentials.push_back(cred);
+			cout << "Read " << cred.deviceId << ", " << cred.deviceName.mb_str() << ", " << cred.psk64_std() << endl;
 		}
 	}
 
@@ -305,5 +309,6 @@ Credentials CredentialStore::createNewSet() {
 	Credentials cred(id, name, psk);
 	credentials.push_back(cred);
 	Data::savePreferences();
+	cout << "Creating " << cred.deviceId << ", " << cred.deviceName.mb_str() << ", " << cred.psk64_std() << endl;
 	return cred;
 }
