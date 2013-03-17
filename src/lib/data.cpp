@@ -26,6 +26,8 @@
 #include <wx/stdpaths.h>
 #include <wx/textfile.h>
 #include <wx/tokenzr.h>
+#include <wx/intl.h>
+#include <wx/utils.h>
 
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/random/mersenne_twister.hpp>
@@ -65,6 +67,9 @@ int Data::port = 3141;
 
 bool Data::initialise()
 {
+	// Seed random gen. Currently using time, need to find a better source of entropy.
+	CredentialStore::gen.seed(std::time(0));
+
 	std::vector<wxString> datadirs;
 	wxString testFile = wxT("layout.xrc");
 
@@ -97,6 +102,7 @@ bool Data::initialise()
 
 	// Initialise to default first
 	tweaks = createDefaultTweaks();
+	computerName = wxString::Format(_("%s's Computer"), wxGetUserName().c_str()).Mid(0, 40);
 
 	// Attempt to open new wxConfig format
 	config = new wxConfig(wxT("droidpad"), wxT("digitalsquid"));
@@ -175,6 +181,10 @@ void Data::loadPreferences() {
 		else LOGV("Couldn't decode tweaks from config");
 	}
 
+	// computerName
+	config->Read(wxT("computerName"), &computerName);
+	computerName = computerName.Mid(0, 40);
+
 	// credentials
 	config->SetPath(wxT("/credentials"));
 
@@ -185,19 +195,20 @@ void Data::loadPreferences() {
 		if(
 				config->Read(
 					wxString::Format(wxT("%ddeviceid"), i),
-					deviceId) &&
+					&deviceId, wxT("")) &&
 				config->Read(
 					wxString::Format(wxT("%ddevicename"), i),
-					deviceName) &&
+					&deviceName, wxT("")) &&
 				config->Read(
 					wxString::Format(wxT("%ddevicepsk"), i),
-					psk64)) {
+					&psk64, wxT(""))) {
 			// Successfully read
 			stringstream idStream((string)deviceId.mb_str());
 			boost::uuids::uuid uuid;
 			idStream >> uuid;
 			Credentials cred(uuid, deviceName, psk64);
 			CredentialStore::credentials.push_back(cred);
+			cout << "Read " << cred.deviceId << ", " << cred.deviceName.mb_str() << ", " << cred.psk64_std() << endl;
 		}
 	}
 
@@ -210,6 +221,7 @@ void Data::savePreferences() {
 	config->Write(wxT("port"), port);
 	config->Write(wxT("buttonOrder"), encodeOrderConf(buttonOrder, NUM_BUTTONS));
 	config->Write(wxT("axisOrder"), encodeOrderConf(axisOrder, NUM_AXIS));
+	config->Write(wxT("computerName"), computerName);
 
 	// Currently serialising tweaks the very non-portable way. Should probably change this
 	char *buf = new char[sizeof(Tweaks)];
@@ -305,5 +317,6 @@ Credentials CredentialStore::createNewSet() {
 	Credentials cred(id, name, psk);
 	credentials.push_back(cred);
 	Data::savePreferences();
+	cout << "Creating " << cred.deviceId << ", " << cred.deviceName.mb_str() << ", " << cred.psk64_std() << endl;
 	return cred;
 }

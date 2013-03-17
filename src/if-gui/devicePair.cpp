@@ -80,25 +80,30 @@ DevicePair::DevicePair(wxWindow *parent, uuid id) :
 	qrCode = new qrPanel(this, createContent());
 	panelSizer->Add(qrCode, 0, wxALIGN_CENTRE | wxTOP, 5);
 
+	// Bottom button panel
+	wxBoxSizer *buttons = new wxBoxSizer(wxHORIZONTAL);
+
+	panelSizer->Add(buttons, 0, wxEXPAND);
+
 	panelSizer->SetSizeHints(this);
 	Fit();
 }
 
 void DevicePair::OnComputerNameChanged(wxCommandEvent &evt) {
 	qrCode->setContent(createContent());
-	Fit();
+	Data::computerName = compName->GetValue();
+	Data::savePreferences();
 }
 
 wxString DevicePair::createContent() {
 	// Order of things
 	// * Computer uuid
-	// * Computer name (b64)
+	// * Computer name
 	// * Device uuid
 	// * PSK (b64)
-	LOGVwx(base64_encode(compName->GetValue()));
 	stringstream result;
 	result << boost::uuids::to_string(computerId) << "\n";
-	result << base64_encode2(compName->GetValue()) << "\n";
+	result << compName->GetValue().mb_str() << "\n";
 	result << boost::uuids::to_string(newCredentials.deviceId) << "\n";
 	result << newCredentials.psk64_std();
 	return wxString(result.str().c_str(), wxConvUTF8);
