@@ -18,37 +18,35 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "wxImagePanel.hpp"
+// Based on http://wiki.wxwidgets.org/An_image_panel
 
-#include <wx/dcclient.h>
+#ifndef WX_QR_PANEL_H
+#define WX_QR_PANEL_H
 
-BEGIN_EVENT_TABLE(wxImagePanel, wxPanel)
-	EVT_PAINT(wxImagePanel::paintEvent)
-END_EVENT_TABLE()
+#include <wx/panel.h>
+#include <wx/bitmap.h>
 
-wxImagePanel::wxImagePanel(wxWindow *parent, wxString file, wxBitmapType format) :
-	wxPanel(parent)
+#include <qrencode.h>
+
+class qrPanel : public wxPanel
 {
-	image.LoadFile(file, format);
+	public:
+		qrPanel(wxWindow *parent, wxString text);
+		virtual ~qrPanel();
 
-	SetMaxSize(wxSize(image.GetWidth(), image.GetHeight()));
-	SetMinSize(wxSize(image.GetWidth(), image.GetHeight()));
-}
+		void setContent(wxString text);
 
-void wxImagePanel::paintEvent(wxPaintEvent & evt)
-{
-	// depending on your system you may need to look at double-buffered dcs
-	wxPaintDC dc(this);
-	render(dc);
-}
+	protected:
+		void paintEvent(wxPaintEvent & evt);
+		void paintNow();
 
-void wxImagePanel::paintNow()
-{
-	wxClientDC dc(this);
-	render(dc);
-}
+		void render(wxDC& dc);
 
-void wxImagePanel::render(wxDC&  dc)
-{
-	dc.DrawBitmap(image, 0, 0, true);
-}
+		QRcode *createQrData(wxString text);
+
+	private:
+		QRcode *code;
+
+		DECLARE_EVENT_TABLE()
+};
+#endif

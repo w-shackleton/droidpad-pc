@@ -75,10 +75,11 @@ bin_PROGRAMS = droidpad$(EXEEXT) tlstest$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
-	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
-	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
-	$(top_srcdir)/m4/openssl.m4 $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/boost.m4 \
+	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \
+	$(top_srcdir)/m4/ltsugar.m4 $(top_srcdir)/m4/ltversion.m4 \
+	$(top_srcdir)/m4/lt~obsolete.m4 $(top_srcdir)/m4/openssl.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
@@ -93,16 +94,18 @@ am__droidpad_SOURCES_DIST = if-gui/droidFrame.cpp \
 	if-gui/about.hpp if-gui/axisTweak.cpp if-gui/axisTweak.hpp \
 	if-gui/pageSizer.cpp if-gui/pageSizer.hpp \
 	if-gui/wxImagePanel.cpp if-gui/wxImagePanel.hpp \
-	if-gui/reorderDialog.cpp if-gui/reorderDialog.hpp \
-	if-gui/setup.cpp if-gui/setup.hpp if-gui/help.cpp \
-	if-gui/help.hpp if-gui/updateDisplay.cpp \
+	if-gui/qrPanel.cpp if-gui/qrPanel.hpp if-gui/reorderDialog.cpp \
+	if-gui/reorderDialog.hpp if-gui/devicePair.cpp \
+	if-gui/devicePair.hpp if-gui/setup.cpp if-gui/setup.hpp \
+	if-gui/help.cpp if-gui/help.hpp if-gui/updateDisplay.cpp \
 	if-gui/updateDisplay.hpp if-gui/driverChoice.cpp \
 	if-gui/driverChoice.hpp
 am__objects_1 = droidpad-droidFrame.$(OBJEXT) \
 	droidpad-droidApp.$(OBJEXT) droidpad-customHost.$(OBJEXT) \
 	droidpad-about.$(OBJEXT) droidpad-axisTweak.$(OBJEXT) \
 	droidpad-pageSizer.$(OBJEXT) droidpad-wxImagePanel.$(OBJEXT) \
-	droidpad-reorderDialog.$(OBJEXT) droidpad-setup.$(OBJEXT) \
+	droidpad-qrPanel.$(OBJEXT) droidpad-reorderDialog.$(OBJEXT) \
+	droidpad-devicePair.$(OBJEXT) droidpad-setup.$(OBJEXT) \
 	droidpad-help.$(OBJEXT)
 @IF_GUI_TRUE@am__objects_2 = $(am__objects_1)
 @OS_WIN32_TRUE@am__objects_3 = droidpad-updateDisplay.$(OBJEXT)
@@ -224,6 +227,8 @@ AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
 AWK = @AWK@
+BOOST_CPPFLAGS = @BOOST_CPPFLAGS@
+BOOST_ROOT = @BOOST_ROOT@
 CC = @CC@
 CCDEPMODE = @CCDEPMODE@
 CFLAGS = @CFLAGS@
@@ -236,6 +241,7 @@ CXXFLAGS = @CXXFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DISTCHECK_CONFIGURE_FLAGS = @DISTCHECK_CONFIGURE_FLAGS@
 DLLTOOL = @DLLTOOL@
 DSYMUTIL = @DSYMUTIL@
 DUMPBIN = @DUMPBIN@
@@ -386,7 +392,9 @@ SRC_IF_GUI = \
 		   if-gui/axisTweak.cpp		if-gui/axisTweak.hpp	\
 		   if-gui/pageSizer.cpp		if-gui/pageSizer.hpp	\
 		   if-gui/wxImagePanel.cpp	if-gui/wxImagePanel.hpp	\
+		   if-gui/qrPanel.cpp		if-gui/qrPanel.hpp	\
 		   if-gui/reorderDialog.cpp	if-gui/reorderDialog.hpp\
+		   if-gui/devicePair.cpp	if-gui/devicePair.hpp	\
 		   if-gui/setup.cpp		if-gui/setup.hpp	\
 		   if-gui/help.cpp		if-gui/help.hpp
 
@@ -394,7 +402,7 @@ droidpad_SOURCES = $(am__append_1) $(am__append_4) $(am__append_5)
 @IF_GUI_FALSE@droidpad_LDADD = @WXBASELIBS@ @OPENSSL_LIBS@ \
 @IF_GUI_FALSE@	lib/libdroidpad.la $(am__append_2) \
 @IF_GUI_FALSE@	$(am__append_6)
-@IF_GUI_TRUE@droidpad_LDADD = @WXLIBS@ @OPENSSL_LIBS@ \
+@IF_GUI_TRUE@droidpad_LDADD = @WXLIBS@ @OPENSSL_LIBS@ -lqrencode \
 @IF_GUI_TRUE@	lib/libdroidpad.la $(am__append_2) \
 @IF_GUI_TRUE@	$(am__append_6)
 @IF_GUI_FALSE@droidpad_CXXFLAGS = @WXBASECPPFLAGS@ @OPENSSL_INCLUDES@ \
@@ -513,11 +521,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-about.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-axisTweak.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-customHost.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-devicePair.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-driverChoice.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-droidApp.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-droidFrame.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-help.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-pageSizer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-qrPanel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-reorderDialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-setup.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-updateDisplay.Po@am__quote@
@@ -664,6 +674,20 @@ droidpad-wxImagePanel.obj: if-gui/wxImagePanel.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-wxImagePanel.obj `if test -f 'if-gui/wxImagePanel.cpp'; then $(CYGPATH_W) 'if-gui/wxImagePanel.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/wxImagePanel.cpp'; fi`
 
+droidpad-qrPanel.o: if-gui/qrPanel.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -MT droidpad-qrPanel.o -MD -MP -MF $(DEPDIR)/droidpad-qrPanel.Tpo -c -o droidpad-qrPanel.o `test -f 'if-gui/qrPanel.cpp' || echo '$(srcdir)/'`if-gui/qrPanel.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/droidpad-qrPanel.Tpo $(DEPDIR)/droidpad-qrPanel.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='if-gui/qrPanel.cpp' object='droidpad-qrPanel.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-qrPanel.o `test -f 'if-gui/qrPanel.cpp' || echo '$(srcdir)/'`if-gui/qrPanel.cpp
+
+droidpad-qrPanel.obj: if-gui/qrPanel.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -MT droidpad-qrPanel.obj -MD -MP -MF $(DEPDIR)/droidpad-qrPanel.Tpo -c -o droidpad-qrPanel.obj `if test -f 'if-gui/qrPanel.cpp'; then $(CYGPATH_W) 'if-gui/qrPanel.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/qrPanel.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/droidpad-qrPanel.Tpo $(DEPDIR)/droidpad-qrPanel.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='if-gui/qrPanel.cpp' object='droidpad-qrPanel.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-qrPanel.obj `if test -f 'if-gui/qrPanel.cpp'; then $(CYGPATH_W) 'if-gui/qrPanel.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/qrPanel.cpp'; fi`
+
 droidpad-reorderDialog.o: if-gui/reorderDialog.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -MT droidpad-reorderDialog.o -MD -MP -MF $(DEPDIR)/droidpad-reorderDialog.Tpo -c -o droidpad-reorderDialog.o `test -f 'if-gui/reorderDialog.cpp' || echo '$(srcdir)/'`if-gui/reorderDialog.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/droidpad-reorderDialog.Tpo $(DEPDIR)/droidpad-reorderDialog.Po
@@ -677,6 +701,20 @@ droidpad-reorderDialog.obj: if-gui/reorderDialog.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='if-gui/reorderDialog.cpp' object='droidpad-reorderDialog.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-reorderDialog.obj `if test -f 'if-gui/reorderDialog.cpp'; then $(CYGPATH_W) 'if-gui/reorderDialog.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/reorderDialog.cpp'; fi`
+
+droidpad-devicePair.o: if-gui/devicePair.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -MT droidpad-devicePair.o -MD -MP -MF $(DEPDIR)/droidpad-devicePair.Tpo -c -o droidpad-devicePair.o `test -f 'if-gui/devicePair.cpp' || echo '$(srcdir)/'`if-gui/devicePair.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/droidpad-devicePair.Tpo $(DEPDIR)/droidpad-devicePair.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='if-gui/devicePair.cpp' object='droidpad-devicePair.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-devicePair.o `test -f 'if-gui/devicePair.cpp' || echo '$(srcdir)/'`if-gui/devicePair.cpp
+
+droidpad-devicePair.obj: if-gui/devicePair.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -MT droidpad-devicePair.obj -MD -MP -MF $(DEPDIR)/droidpad-devicePair.Tpo -c -o droidpad-devicePair.obj `if test -f 'if-gui/devicePair.cpp'; then $(CYGPATH_W) 'if-gui/devicePair.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/devicePair.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/droidpad-devicePair.Tpo $(DEPDIR)/droidpad-devicePair.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='if-gui/devicePair.cpp' object='droidpad-devicePair.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-devicePair.obj `if test -f 'if-gui/devicePair.cpp'; then $(CYGPATH_W) 'if-gui/devicePair.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/devicePair.cpp'; fi`
 
 droidpad-setup.o: if-gui/setup.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -MT droidpad-setup.o -MD -MP -MF $(DEPDIR)/droidpad-setup.Tpo -c -o droidpad-setup.o `test -f 'if-gui/setup.cpp' || echo '$(srcdir)/'`if-gui/setup.cpp

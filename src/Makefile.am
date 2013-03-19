@@ -28,14 +28,16 @@ SRC_IF_GUI = \
 		   if-gui/axisTweak.cpp		if-gui/axisTweak.hpp	\
 		   if-gui/pageSizer.cpp		if-gui/pageSizer.hpp	\
 		   if-gui/wxImagePanel.cpp	if-gui/wxImagePanel.hpp	\
+		   if-gui/qrPanel.cpp		if-gui/qrPanel.hpp	\
 		   if-gui/reorderDialog.cpp	if-gui/reorderDialog.hpp\
+		   if-gui/devicePair.cpp	if-gui/devicePair.hpp	\
 		   if-gui/setup.cpp		if-gui/setup.hpp	\
 		   if-gui/help.cpp		if-gui/help.hpp
 droidpad_SOURCES =
 
 if IF_GUI
   droidpad_SOURCES += $(SRC_IF_GUI)
-  droidpad_LDADD = @WXLIBS@ @OPENSSL_LIBS@
+  droidpad_LDADD = @WXLIBS@ @OPENSSL_LIBS@ -lqrencode
   droidpad_CXXFLAGS = @WXCPPFLAGS@ @OPENSSL_INCLUDES@
 else
   droidpad_LDADD = @WXBASELIBS@ @OPENSSL_LIBS@

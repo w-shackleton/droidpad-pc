@@ -17,38 +17,40 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
+#ifndef DEVICE_PAIR_H
+#define DEVICE_PAIR_H
 
-#include "wxImagePanel.hpp"
+#include <wx/dialog.h>
+#include <wx/panel.h>
+#include <wx/textctrl.h>
 
-#include <wx/dcclient.h>
+#include <boost/uuid/uuid.hpp>
 
-BEGIN_EVENT_TABLE(wxImagePanel, wxPanel)
-	EVT_PAINT(wxImagePanel::paintEvent)
-END_EVENT_TABLE()
+#include "qrPanel.hpp"
 
-wxImagePanel::wxImagePanel(wxWindow *parent, wxString file, wxBitmapType format) :
-	wxPanel(parent)
-{
-	image.LoadFile(file, format);
+#include "data.hpp"
 
-	SetMaxSize(wxSize(image.GetWidth(), image.GetHeight()));
-	SetMinSize(wxSize(image.GetWidth(), image.GetHeight()));
-}
+class DevicePair : public wxDialog {
+	public:
+		DevicePair(wxWindow *parent, boost::uuids::uuid id);
+		DECLARE_EVENT_TABLE()
+	public:
+	protected:
+		wxPanel *panel;
 
-void wxImagePanel::paintEvent(wxPaintEvent & evt)
-{
-	// depending on your system you may need to look at double-buffered dcs
-	wxPaintDC dc(this);
-	render(dc);
-}
+		qrPanel *qrCode;
 
-void wxImagePanel::paintNow()
-{
-	wxClientDC dc(this);
-	render(dc);
-}
+		enum {
+			ID_COMP_NAME = wxID_HIGHEST,
+		};
 
-void wxImagePanel::render(wxDC&  dc)
-{
-	dc.DrawBitmap(image, 0, 0, true);
-}
+		wxTextCtrl *compName;
+
+		droidpad::Credentials newCredentials;
+		boost::uuids::uuid computerId;
+
+		void OnComputerNameChanged(wxCommandEvent &evt);
+		wxString createContent();
+};
+
+#endif
