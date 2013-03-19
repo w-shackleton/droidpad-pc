@@ -258,8 +258,6 @@ void DroidFrame::OnGettingStarted(wxCommandEvent& event) {
 }
 
 void DroidFrame::OnPairDevice(wxCommandEvent& event) {
-	// TODO: Store, then get unique ID for this device.
-	// DUMMY IMPL
 	DevicePair pair(this, Data::computerUuid);
 	pair.ShowModal();
 }

@@ -88,6 +88,8 @@ namespace droidpad {
 				wxString deviceDescription;
 				wxString ip;
 				uint16_t port;
+				uint16_t securePort;
+				bool secureSupported;
 		};
 
 		class DeviceFinder : public MDNS

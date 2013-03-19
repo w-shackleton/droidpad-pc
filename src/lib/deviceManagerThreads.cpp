@@ -115,6 +115,7 @@ void* DeviceFinder::Entry()
 			dev.usbId = it->second.ip;
 			dev.ip = it->second.ip;
 			dev.port = it->second.port;
+			dev.securePort = it->second.securePort;
 			dev.name = it->second.deviceDescription;
 
 			devs.push_back(dev);

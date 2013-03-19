@@ -97,6 +97,8 @@ namespace droidpad
 				return boost::uuids::to_string(computerUuid);
 			}
 
+			static bool secureSupported;
+
 			/**
 			 * Maps buttons and axes to where the user wants them.
 			 */
@@ -132,6 +134,10 @@ namespace droidpad
 			wxString deviceName;
 			std::string psk;
 
+			inline std::string deviceIdString() {
+				return boost::uuids::to_string(deviceId);
+			}
+
 			inline wxString psk64() {
 				return STD_TO_WX_STRING(base64_encode((unsigned char * const)psk.c_str(), psk.length()));
 			}
@@ -159,6 +165,13 @@ namespace droidpad
 			// Creates a new set of credentials (without a name)
 			// and stores them into the preferences.
 			static Credentials createNewSet();
+
+			static inline std::vector<Credentials>::iterator begin() {
+				return credentials.begin();
+			}
+			static inline std::vector<Credentials>::iterator end() {
+				return credentials.end();
+			}
 
 			inline static size_t size() {
 				return credentials.size();

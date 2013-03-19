@@ -25,14 +25,23 @@
 #include <stdint.h>
 #include <stdexcept>
 
+#include "net/connection.hpp"
+
 namespace droidpad {
-	class SecureConnection {
+	class SecureConnection : public Connection {
 		public:
 			SecureConnection(wxString host, uint16_t port) throw (std::runtime_error);
 			virtual ~SecureConnection();
 
-			bool Start() throw (std::runtime_error);
+			int Start() throw (std::runtime_error);
 			void Stop() throw (std::runtime_error);
+
+			virtual const ModeSetting &GetMode() throw (std::runtime_error);
+			virtual const decode::DPJSData GetData() throw (std::runtime_error);
+
+			// In this mode, binary comms is used all the time, so
+			// no need to request it.
+			inline virtual void RequestBinary() throw (std::runtime_error) { }
 
 		private:
 			wxString host, port;

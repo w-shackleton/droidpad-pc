@@ -319,11 +319,19 @@ int DeviceFinder::processResult(mdnsda a)
 	string b64 = charFullName.substr(beginPos + 1, endPos - beginPos - 1);
 
 	device.deviceDescription = wxString(base64_decode(b64).c_str(), wxConvUTF8);
+	size_t pos;
+	if((pos = device.deviceDescription.find(wxT("secure:"))) == string::npos) {
+		device.secureSupported = true;
+		device.deviceDescription.Remove(pos, 7);
+	}
 
 	struct in_addr ip;
 	ip.s_addr =  ntohl(ipFinder.result);
 	device.ip = wxString(inet_ntoa(ip), wxConvUTF8); 
 	device.port = infoFinder.port;
+	// For the time being use the next port along.
+	// TODO: Perhaps change once worked out how to receive mDNS properties
+	device.securePort = device.port + 1;
 
 	devices[fullName] = device;
 	if(callbacks != NULL) callbacks->onData();

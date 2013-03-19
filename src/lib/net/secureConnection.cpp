@@ -46,7 +46,6 @@ SecureConnection::SecureConnection(wxString host, uint16_t port) throw (runtime_
 	THROW_NULL(ctx, "Couldn't initialise SSL");
 
 	// Set up identity and PSK auth
-	// TODO: Change to get this from settings. Using temp name.
 	SSL_CTX_use_psk_identity_hint(ctx, Data::computerUuidString().c_str());
 	SSL_CTX_set_psk_server_callback(ctx, &SecureConnection::checkPsk);
 
@@ -61,17 +60,17 @@ SecureConnection::~SecureConnection() {
 	SSL_CTX_free(ctx);
 }
 
-bool SecureConnection::Start() throw (runtime_error) {
+int SecureConnection::Start() throw (runtime_error) {
 	int err;
 	if(BIO_do_connect(netBio) != 1) {
 		// Could not connect
 		ERR_print_errors_fp(stderr);
-		return false;
+		return START_NETERROR;
 	}
 
 	// Initialise SSL connection
 	ssl = SSL_new(ctx);
-	RETURN_NULL(ssl, false);
+	RETURN_NULL(ssl, START_INITERROR);
 	SSL_set_bio(ssl, netBio, netBio);
 	
 	err = SSL_accept(ssl);
@@ -80,7 +79,7 @@ bool SecureConnection::Start() throw (runtime_error) {
 		SSL_free(ssl);
 		ssl = NULL;
 	}
-	RETURN_SSL(err, false);
+	RETURN_SSL(err, START_AUTHERROR);
 
 	LOGV("SSL connection created");
 }
@@ -96,6 +95,20 @@ void SecureConnection::Stop() throw (std::runtime_error) {
 	}
 }
 
+const ModeSetting &SecureConnection::GetMode() throw (std::runtime_error) {
+}
+const decode::DPJSData SecureConnection::GetData() throw (std::runtime_error) {
+}
+
+// Checks to see if a set of creds exists, and sends the PSK to SSL if it does.
+// Sends a fake PSK if not.
 unsigned int SecureConnection::checkPsk(SSL *ssl, const char *identity, unsigned char *psk, unsigned int max_psk_len) {
-	// TODO: Implement
+	for(vector<Credentials>::iterator it = CredentialStore::begin();
+			it != CredentialStore::end(); ++it) {
+		if((string) identity == it->deviceIdString()) {
+			// Known connection found
+			memcpy(psk, it->psk.c_str(), std::min(max_psk_len, it->psk.size()));
+		}
+	}
+	return 0; // Indicates failure
 }

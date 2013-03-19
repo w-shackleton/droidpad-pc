@@ -45,12 +45,31 @@ namespace droidpad {
 			ModeSetting();
 	};
 
-	class DPConnection : private wxSocketClient {
+	// Interface for a connection of some type
+	class Connection {
+		public:
+			virtual int Start() = 0;
+			inline virtual ~Connection() { }
+
+			virtual const ModeSetting &GetMode() throw (std::runtime_error) = 0;
+			virtual const decode::DPJSData GetData() throw (std::runtime_error) = 0;
+
+			virtual void RequestBinary() throw (std::runtime_error) = 0;
+
+			enum {
+				START_SUCCESS = 0,
+				START_NETERROR,
+				START_INITERROR,
+				START_AUTHERROR,
+			};
+	};
+
+	class DPConnection : private wxSocketClient, public Connection {
 		public:
 			DPConnection(wxString host, uint16_t port);
 			virtual ~DPConnection();
 
-			bool Start();
+			virtual int Start();
 
 		private:
 			wxIPV4address addr;
@@ -75,10 +94,10 @@ namespace droidpad {
 
 			ModeSetting mode;
 		public:
-			const ModeSetting &GetMode() throw (std::runtime_error);
-			const decode::DPJSData GetData() throw (std::runtime_error);
+			virtual const ModeSetting &GetMode() throw (std::runtime_error);
+			virtual const decode::DPJSData GetData() throw (std::runtime_error);
 
-			void RequestBinary() throw (std::runtime_error);
+			virtual void RequestBinary() throw (std::runtime_error);
 	};
 };
 

@@ -42,6 +42,7 @@ wxString Data::confLocation = wxT("");
 wxString Data::host = wxT("");
 wxString Data::computerName = wxT("");
 boost::uuids::uuid Data::computerUuid;
+bool Data::secureSupported = false;
 
 wxConfig *Data::config = NULL;
 
@@ -182,6 +183,9 @@ void Data::loadPreferences() {
 		else LOGV("Couldn't decode tweaks from config");
 	}
 
+	// secureSupported
+	config->Read(wxT("secureSupported"), &secureSupported, false);
+
 	// computerName
 	config->Read(wxT("computerName"), &computerName);
 	computerName = computerName.Mid(0, 40);
@@ -231,6 +235,7 @@ void Data::savePreferences() {
 	config->Write(wxT("computerName"), computerName);
 	config->Write(wxT("computerUuid"),
 			wxString(computerUuidString().c_str(), wxConvUTF8));
+	config->Write(wxT("secureSupported"), secureSupported);
 
 	// Currently serialising tweaks the very non-portable way. Should probably change this
 	char *buf = new char[sizeof(Tweaks)];

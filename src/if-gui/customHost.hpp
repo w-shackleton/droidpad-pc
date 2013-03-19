@@ -24,6 +24,7 @@
 #include <wx/panel.h>
 #include <wx/sizer.h>
 #include <wx/textctrl.h>
+#include <wx/checkbox.h>
 #include "droidpadCallbacks.hpp"
 
 class CustomHost : public wxDialog {
@@ -36,13 +37,10 @@ class CustomHost : public wxDialog {
 
 		void onDone(wxCommandEvent &evt);
 	private:
-		enum {
-			_ID_HOST = wxID_HIGHEST,
-			_ID_PORT,
-		};
 		wxPanel *parent;
 
-		wxTextCtrl *host, *port;
+		wxTextCtrl *host, *port, *securePort;
+		wxCheckBox *secureSupported;
 };
 
 #endif

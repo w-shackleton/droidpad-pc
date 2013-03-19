@@ -55,16 +55,16 @@ DPConnection::~DPConnection() {
 	Close();
 }
 
-bool DPConnection::Start()
+int DPConnection::Start()
 {
-	if(!Connect(addr, true)) return false;
+	if(!Connect(addr, true)) return START_NETERROR;
 	try {
 		GetMode();
 	} catch (runtime_error err) {
 		LOGEwx(wxT("Error getting mode info: ") + wxString(err.what(), wxConvUTF8));
-		return false;
+		return START_INITERROR;
 	}
-	return true;
+	return START_SUCCESS;
 }
 
 void DPConnection::SendMessage(string message) {

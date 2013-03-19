@@ -48,7 +48,7 @@ namespace droidpad {
 			IOutputManager *mgr;
 			bool deleteOutputManager;
 
-			DPConnection *conn;
+			Connection *conn;
 
 			decode::DPJSData prevData;
 			decode::DPTouchData prevAbsData;
