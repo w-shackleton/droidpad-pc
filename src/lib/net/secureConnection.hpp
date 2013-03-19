@@ -32,6 +32,7 @@ namespace droidpad {
 			virtual ~SecureConnection();
 
 			bool Start() throw (std::runtime_error);
+			void Stop() throw (std::runtime_error);
 
 		private:
 			wxString host, port;
@@ -39,7 +40,10 @@ namespace droidpad {
 			// SSL stuff
 			const SSL_METHOD *tlsMethod;
 			SSL_CTX *ctx;
+			SSL *ssl;
+			BIO *netBio;
 
+			static unsigned int checkPsk(SSL *ssl, const char *identity, unsigned char *psk, unsigned int max_psk_len);
 	};
 }
 
