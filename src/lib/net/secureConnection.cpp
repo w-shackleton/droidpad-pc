@@ -26,6 +26,7 @@ using namespace std;
 #include <cmath>
 #include <openssl/err.h>
 #include "log.hpp"
+#include "data.hpp"
 
 #define THROW_NULL(x, msg) if ((x)==NULL) throw runtime_error(msg);
 #define THROW_ERR(err,s, msg) if ((err)==-1) { perror(s); throw runtime_error(msg); }
@@ -46,7 +47,7 @@ SecureConnection::SecureConnection(wxString host, uint16_t port) throw (runtime_
 
 	// Set up identity and PSK auth
 	// TODO: Change to get this from settings. Using temp name.
-	SSL_CTX_use_psk_identity_hint(ctx, "Server identity");
+	SSL_CTX_use_psk_identity_hint(ctx, Data::computerUuidString().c_str());
 	SSL_CTX_set_psk_server_callback(ctx, &SecureConnection::checkPsk);
 
 	// Connection setup
@@ -82,8 +83,6 @@ bool SecureConnection::Start() throw (runtime_error) {
 	RETURN_SSL(err, false);
 
 	LOGV("SSL connection created");
-
-
 }
 
 // Stops the connection, whatever stage it is at. If the connection is currently open, will send a stop message, then disconnect.

@@ -29,7 +29,6 @@
 #include <wx/intl.h>
 #include <wx/utils.h>
 
-#include <boost/uuid/uuid_io.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int_distribution.hpp>
 
@@ -42,6 +41,7 @@ wxString Data::datadir = wxT("");
 wxString Data::confLocation = wxT("");
 wxString Data::host = wxT("");
 wxString Data::computerName = wxT("");
+boost::uuids::uuid Data::computerUuid;
 
 wxConfig *Data::config = NULL;
 
@@ -103,6 +103,7 @@ bool Data::initialise()
 	// Initialise to default first
 	tweaks = createDefaultTweaks();
 	computerName = wxString::Format(_("%s's Computer"), wxGetUserName().c_str()).Mid(0, 40);
+	computerUuid = CredentialStore::uuidGen();
 
 	// Attempt to open new wxConfig format
 	config = new wxConfig(wxT("droidpad"), wxT("digitalsquid"));
@@ -185,6 +186,12 @@ void Data::loadPreferences() {
 	config->Read(wxT("computerName"), &computerName);
 	computerName = computerName.Mid(0, 40);
 
+	// computerUuid
+	wxString tmpUuid;
+	config->Read(wxT("computerUuid"), &tmpUuid);
+	stringstream uuidStream((string)tmpUuid.mb_str());
+	uuidStream >> computerUuid;
+
 	// credentials
 	config->SetPath(wxT("/credentials"));
 
@@ -222,6 +229,8 @@ void Data::savePreferences() {
 	config->Write(wxT("buttonOrder"), encodeOrderConf(buttonOrder, NUM_BUTTONS));
 	config->Write(wxT("axisOrder"), encodeOrderConf(axisOrder, NUM_AXIS));
 	config->Write(wxT("computerName"), computerName);
+	config->Write(wxT("computerUuid"),
+			wxString(computerUuidString().c_str(), wxConvUTF8));
 
 	// Currently serialising tweaks the very non-portable way. Should probably change this
 	char *buf = new char[sizeof(Tweaks)];

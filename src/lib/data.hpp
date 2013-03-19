@@ -27,6 +27,7 @@
 
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/random_generator.hpp>
+#include <boost/uuid/uuid_io.hpp>
 
 #include <wx/string.h>
 #include <wx/config.h>
@@ -91,6 +92,10 @@ namespace droidpad
 
 			// Name of this computer (for user to ID against)
 			static wxString computerName;
+			static boost::uuids::uuid computerUuid;
+			static inline std::string computerUuidString() {
+				return boost::uuids::to_string(computerUuid);
+			}
 
 			/**
 			 * Maps buttons and axes to where the user wants them.
