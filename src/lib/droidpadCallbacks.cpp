@@ -50,6 +50,7 @@ AndroidDevice::AndroidDevice(const AndroidDevice& dev) :
 	usbId(dev.usbId),
 	ip(dev.ip),
 	port(dev.port),
-	name(dev.name)
-{
-}
+	securePort(dev.securePort),
+	name(dev.name),
+	secureSupported(dev.secureSupported)
+{ }

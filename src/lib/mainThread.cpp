@@ -42,10 +42,13 @@ MainThread::MainThread(DeviceManager &parent, AndroidDevice &device) :
 	mgr(NULL),
 	deleteOutputManager(true)
 {
-	if(device.secureSupported)
+	if(device.secureSupported) {
+		LOGV("Starting a secure communication with the device");
 		conn = new SecureConnection(device.ip, device.port);
-	else
+	} else {
+		LOGV("Starting an INSECURE communication with the device");
 		conn = new DPConnection(device.ip, device.port);
+	}
 }
 
 MainThread::~MainThread() {
