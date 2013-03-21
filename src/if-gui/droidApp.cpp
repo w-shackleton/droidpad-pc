@@ -145,6 +145,9 @@ bool DroidApp::OnCmdLineParsed(wxCmdLineParser& parser) {
 	runSetup = parser.Found(wxT("s"));
 	showGettingStarted = parser.Found(wxT("g"));
 	runRemove = parser.Found(wxT("u"));
+#ifdef DEBUG
+	Data::noAdb = parser.Found(wxT("a"));
+#endif
 
 	if(!parser.Found(wxT("n"))) { // If user didn't request no root, check.
 		requestNecessaryPermissions();

@@ -67,6 +67,10 @@ static const wxCmdLineEntryDesc dp_cmdLineDesc [] =
 		wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL  },
 	{ wxCMD_LINE_SWITCH, wxT("g"), wxT("getting-started"), wxT("view the getting started guide"),
 		wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL  },
+#ifdef DEBUG
+	{ wxCMD_LINE_SWITCH, wxT("a"), wxT("no-adb"), wxT("don't run adb at all (for debugging)"),
+		wxCMD_LINE_VAL_NONE, wxCMD_LINE_PARAM_OPTIONAL  },
+#endif
 
 	{ wxCMD_LINE_NONE }
 };

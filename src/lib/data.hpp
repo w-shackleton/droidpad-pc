@@ -111,6 +111,13 @@ namespace droidpad
 			static Tweaks tweaks;
 
 			static void savePreferences();
+
+#ifdef DEBUG
+			/**
+			 * Runtime debug options
+			 */
+			static bool noAdb;
+#endif
 		protected:
 			static wxString confLocation;
 

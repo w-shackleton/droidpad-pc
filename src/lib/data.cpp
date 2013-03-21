@@ -43,6 +43,9 @@ wxString Data::host = wxT("");
 wxString Data::computerName = wxT("");
 boost::uuids::uuid Data::computerUuid;
 bool Data::secureSupported = false;
+#ifdef DEBUG
+bool Data::noAdb = false;
+#endif
 
 wxConfig *Data::config = NULL;
 
