@@ -107,7 +107,7 @@ unsigned int SecureConnection::checkPsk(SSL *ssl, const char *identity, unsigned
 			it != CredentialStore::end(); ++it) {
 		if((string) identity == it->deviceIdString()) {
 			// Known connection found
-			memcpy(psk, it->psk.c_str(), std::min(max_psk_len, it->psk.size()));
+			memcpy(psk, it->psk.c_str(), std::min((int)max_psk_len, (int)it->psk.size()));
 		}
 	}
 	return 0; // Indicates failure
