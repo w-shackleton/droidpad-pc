@@ -19,6 +19,8 @@
  */
 #include "droidpadCallbacks.hpp"
 
+#include <wx/intl.h>
+
 using namespace droidpad;
 
 DroidPadCallbacks::~DroidPadCallbacks()
@@ -34,11 +36,11 @@ bool AndroidDevice::operator ==(const AndroidDevice& b)
 AndroidDevice::operator wxString() const {
 	switch(type) {
 		case DEVICE_USB:
-			return wxString(wxT("USB ")) + usbId;
+			return wxString(_("USB: ")) + usbId;
 		case DEVICE_NET:
-			return wxString::Format(wxT("Wifi %s (%s:%d) %s"), name.c_str(), ip.c_str(), port, secureSupported ? wxT("(Secure connection supported") : wxT(""));
+			return wxString::Format(_("Wifi: %s (%s:%d) %s"), name.c_str(), ip.c_str(), port, secureSupported ? _("(Secure)") : _("(Insecure)"));
 		case DEVICE_CUSTOMHOST:
-			return wxString(wxT("(Custom device)"));
+			return wxString(_("Custom device"));
 	}
 }
 

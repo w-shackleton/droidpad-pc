@@ -178,6 +178,7 @@ void DroidFrame::dpCloseComplete()
 void DroidFrame::dpNewDeviceList(AndroidDeviceList &list)
 {
 	for(int i = 0; i < list.size(); i++) {
+		/*
 		wxString label;
 		switch(list[i].type) {
 			case DEVICE_CUSTOMHOST:
@@ -187,6 +188,8 @@ void DroidFrame::dpNewDeviceList(AndroidDeviceList &list)
 				label = list[i].usbId + wxT(": ") + list[i].name;
 				break;
 		}
+		*/
+		wxString label = list[i];
 		if(devListBox->FindString(label) == wxNOT_FOUND) {
 			AndroidDevice *clientData = new AndroidDevice(list[i]);
 			int listPos = devListBox->Append(label, clientData); // Does wx take ownership here? Hope so.

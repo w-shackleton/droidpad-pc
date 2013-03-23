@@ -26,6 +26,7 @@ using namespace std;
 #include <cmath>
 #include <openssl/err.h>
 #include "log.hpp"
+#include <wx/intl.h>
 #include "data.hpp"
 
 #define THROW_NULL(x, msg) if ((x)==NULL) throw runtime_error(msg);
@@ -40,6 +41,7 @@ SecureConnection::SecureConnection(wxString host, uint16_t port) throw (runtime_
 	host(host),
 	port(wxString::Format(wxT("%d"), port))
 {
+	LOGVwx(wxString::Format(_("Connecting on %s:%d"), host.c_str(), port));
 	// SSL_library_init called in droidApp
 	tlsMethod = TLSv1_server_method();
 	ctx = SSL_CTX_new(tlsMethod);
@@ -62,17 +64,23 @@ SecureConnection::~SecureConnection() {
 
 int SecureConnection::Start() throw (runtime_error) {
 	int err;
+	LOGV("SSL: Connecting");
 	if(BIO_do_connect(netBio) != 1) {
 		// Could not connect
 		ERR_print_errors_fp(stderr);
 		return START_NETERROR;
 	}
+	LOGV("SSL: Connected");
+
+	// Connect to BIO socket
 
 	// Initialise SSL connection
+	LOGV("SSL: Initialising");
 	ssl = SSL_new(ctx);
 	RETURN_NULL(ssl, START_INITERROR);
 	SSL_set_bio(ssl, netBio, netBio);
 	
+	LOGV("SSL: Accepting");
 	err = SSL_accept(ssl);
 	if(err == -1) { 
 		SSL_shutdown(ssl);
@@ -81,7 +89,7 @@ int SecureConnection::Start() throw (runtime_error) {
 	}
 	RETURN_SSL(err, START_AUTHERROR);
 
-	LOGV("SSL connection created");
+	LOGV("SSL: Connection created");
 }
 
 // Stops the connection, whatever stage it is at. If the connection is currently open, will send a stop message, then disconnect.
