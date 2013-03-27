@@ -321,7 +321,6 @@ int DeviceFinder::processResult(mdnsda a)
 	device.deviceDescription = wxString(base64_decode(b64).c_str(), wxConvUTF8);
 	size_t pos;
 	if((pos = device.deviceDescription.find(wxT("secure:"))) != string::npos) {
-		LOGV("Secure device found");
 		device.secureSupported = true;
 		device.deviceDescription.Remove(pos, 7);
 	} else device.secureSupported = false;

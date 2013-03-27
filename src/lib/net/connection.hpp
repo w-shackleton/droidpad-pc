@@ -61,7 +61,11 @@ namespace droidpad {
 				START_NETERROR,
 				START_INITERROR,
 				START_AUTHERROR,
+				START_HANDSHAKEERROR,
 			};
+		protected:
+
+			ModeSetting mode;
 	};
 
 	class DPConnection : private wxSocketClient, public Connection {
@@ -91,8 +95,6 @@ namespace droidpad {
 			 * Returns a string containing n bytes of data from the network
 			 */
 			std::string GetBytes(size_t n);
-
-			ModeSetting mode;
 		public:
 			virtual const ModeSetting &GetMode() throw (std::runtime_error);
 			virtual const decode::DPJSData GetData() throw (std::runtime_error);

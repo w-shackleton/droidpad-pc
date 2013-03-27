@@ -363,6 +363,16 @@ const DPJSData droidpad::decode::getTextData(wxString line) {
 	return data;
 }
 
+const BinaryConnectionInfo droidpad::decode::getBinaryConnectionInfo(const char *binaryInfo) {
+	BinaryConnectionInfo info;
+	memcpy(&info, binaryInfo, sizeof(BinaryConnectionInfo));
+	NTOH(info.modeType);
+	NTOH(info.rawDevices);
+	NTOH(info.axes);
+	NTOH(info.buttons);
+	return info;
+}
+
 const RawBinaryHeader droidpad::decode::getBinaryHeader(const char *binaryHeader) {
 	RawBinaryHeader header;
 	memcpy(&header, binaryHeader, sizeof(RawBinaryHeader));

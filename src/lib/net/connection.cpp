@@ -62,7 +62,7 @@ int DPConnection::Start()
 		GetMode();
 	} catch (runtime_error err) {
 		LOGEwx(wxT("Error getting mode info: ") + wxString(err.what(), wxConvUTF8));
-		return START_INITERROR;
+		return START_HANDSHAKEERROR;
 	}
 	return START_SUCCESS;
 }

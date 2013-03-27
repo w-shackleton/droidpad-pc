@@ -20,22 +20,30 @@
 #include "secureConnection.hpp"
 
 using namespace droidpad;
+using namespace droidpad::decode;
 using namespace std;
 
 #include <iostream>
 #include <cmath>
 #include <openssl/err.h>
 #include "log.hpp"
+#include "hexdump.h"
 #include <wx/intl.h>
 #include "data.hpp"
 
+#ifdef DEBUG
+#define SSL_PRINT_ERRORS() { if(ERR_peek_error()) fprintf(stderr, "SSL Error at %s:%d:\n", __FILE__, __LINE__); ERR_print_errors_fp(stderr); }
+#else
+#define SSL_PRINT_ERRORS() { ERR_print_errors_fp(stderr); }
+#endif
+
 #define THROW_NULL(x, msg) if ((x)==NULL) throw runtime_error(msg);
 #define THROW_ERR(err,s, msg) if ((err)==-1) { perror(s); throw runtime_error(msg); }
-#define THROW_SSL(err, msg) if ((err)==-1) { ERR_print_errors_fp(stderr); throw runtime_error(msg); }
+#define THROW_SSL(err, msg) if ((err)==-1) { SSL_PRINT_ERRORS(); throw runtime_error(msg); }
 
 #define RETURN_NULL(x, val) if ((x)==NULL) return (val);
 #define RETURN_ERR(err,s, val) if ((err)==-1) { perror(s); return (val); }
-#define RETURN_SSL(err, val) if ((err)==-1) { ERR_print_errors_fp(stderr); return (val); }
+#define RETURN_SSL(err, val) if ((err)==-1) { SSL_PRINT_ERRORS(); return (val); }
 
 SecureConnection::SecureConnection(wxString host, uint16_t port) throw (runtime_error) :
 	host(host),
@@ -58,7 +66,7 @@ SecureConnection::SecureConnection(wxString host, uint16_t port) throw (runtime_
 }
 
 SecureConnection::~SecureConnection() {
-	if(netBio) BIO_free(netBio);
+	Stop();
 	SSL_CTX_free(ctx);
 }
 
@@ -67,7 +75,7 @@ int SecureConnection::Start() throw (runtime_error) {
 	LOGV("SSL: Connecting");
 	if(BIO_do_connect(netBio) != 1) {
 		// Could not connect
-		ERR_print_errors_fp(stderr);
+		SSL_PRINT_ERRORS();
 		return START_NETERROR;
 	}
 	LOGV("SSL: Connected");
@@ -86,10 +94,18 @@ int SecureConnection::Start() throw (runtime_error) {
 		SSL_shutdown(ssl);
 		SSL_free(ssl);
 		ssl = NULL;
+		RETURN_SSL(err, START_AUTHERROR);
 	}
-	RETURN_SSL(err, START_AUTHERROR);
 
 	LOGV("SSL: Connection created");
+
+	try {
+		StartCommunication();
+	} catch (runtime_error e) {
+		cout << e.what() << endl;
+		Stop();
+		return START_HANDSHAKEERROR;
+	}
 }
 
 // Stops the connection, whatever stage it is at. If the connection is currently open, will send a stop message, then disconnect.
@@ -99,13 +115,85 @@ void SecureConnection::Stop() throw (std::runtime_error) {
 		SSL_shutdown(ssl);
 		SSL_free(ssl);
 		ssl = NULL;
-		ERR_print_errors_fp(stderr);
+		SSL_PRINT_ERRORS();
+	}
+	if(netBio) {
+		// BIO is closed by SSL_free
+		netBio = NULL;
 	}
 }
 
+void SecureConnection::StartCommunication() throw(std::runtime_error) {
+	GetMode();
+}
+
 const ModeSetting &SecureConnection::GetMode() throw (std::runtime_error) {
+	if(mode.initialised) return mode;
+	decode::BinarySignature sig = getSignature();
+	if(!sig.isConnectionInfo())
+		throw runtime_error("Received a mode which didn't start with DINF header");
+	// Read header, reconstructing from two pieces
+	if(!ssl) throw runtime_error("SSL connection lost");
+	const size_t amt = sizeof(decode::BinaryConnectionInfo);
+	char buf[amt];
+	memcpy(buf, &sig, sizeof(decode::BinarySignature));
+	if(SSL_read(ssl, buf + sizeof(decode::BinarySignature), amt - sizeof(BinarySignature)) < 1)
+		throw runtime_error("Failed to read full info from stream");
+
+	const decode::BinaryConnectionInfo info = decode::getBinaryConnectionInfo(buf);
+
+	// Set mode
+	mode.type = info.modeType;
+	mode.numRawAxes = info.rawDevices;
+	mode.numAxes = info.axes;
+	mode.numButtons = info.buttons;
+	mode.supportsBinary = true;
+	mode.initialised = true;
+	return mode;
 }
 const decode::DPJSData SecureConnection::GetData() throw (std::runtime_error) {
+	decode::BinarySignature sig = getSignature();
+	if(!sig.isBinaryHeader())
+		return DPJSData();
+	char *headerBuf = (char*)malloc(sizeof(RawBinaryHeader));
+	// Copy header in place
+	memcpy(headerBuf, &sig, sizeof(BinarySignature));
+
+	// Read rest of header
+	if(!ssl) throw runtime_error("SSL connection lost");
+	if(SSL_read(ssl, headerBuf + sizeof(BinarySignature),
+				sizeof(RawBinaryHeader) - sizeof(BinarySignature)) < 1)
+		throw runtime_error("Failed to read full header from stream");
+
+	RawBinaryHeader header = getBinaryHeader(headerBuf);
+	free(headerBuf);
+
+	size_t elementsSize = sizeof(RawBinaryElement) * header.numElements;
+	char *elementsBuf = (char*)malloc(elementsSize);
+	if(SSL_read(ssl, elementsBuf, elementsSize) < 1)
+		throw runtime_error("Failed to read elements from stream");
+
+	vector<RawBinaryElement> elems;
+	for(const char *elem = elementsBuf; elem < elementsBuf + elementsSize; elem += sizeof(RawBinaryElement)) {
+		elems.push_back(getBinaryElement(elem));
+	}
+
+	free(elementsBuf);
+
+	return getBinaryData(header, elems);
+}
+
+decode::BinarySignature SecureConnection::getSignature() {
+	decode::BinarySignature sig;
+	if(ssl) { // Read header
+		int read;
+		if((read = SSL_read(ssl, &sig, sizeof(decode::BinarySignature))) < 1) {
+			LOGW("WARNING: Signature not read from stream");
+			// TODO: Should I stop here?
+			Stop();
+		}
+	} else LOGW("SSL not open!");
+	return sig;
 }
 
 // Checks to see if a set of creds exists, and sends the PSK to SSL if it does.
@@ -113,10 +201,12 @@ const decode::DPJSData SecureConnection::GetData() throw (std::runtime_error) {
 unsigned int SecureConnection::checkPsk(SSL *ssl, const char *identity, unsigned char *psk, unsigned int max_psk_len) {
 	for(vector<Credentials>::iterator it = CredentialStore::begin();
 			it != CredentialStore::end(); ++it) {
-		if((string) identity == it->deviceIdString()) {
+		if(it->deviceIdString().compare((string) identity) == 0) {
 			// Known connection found
 			memcpy(psk, it->psk.c_str(), std::min((int)max_psk_len, (int)it->psk.size()));
+			return it->psk.size();
 		}
 	}
+	LOGV("Failed to authenticate PSK");
 	return 0; // Indicates failure
 }

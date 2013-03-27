@@ -24,10 +24,10 @@
 
 namespace droidpad {
 	enum {
-		MODE_JS,
+		MODE_JS = 1,
+		MODE_ABSMOUSE,
 		MODE_MOUSE,
 		MODE_SLIDE,
-		MODE_ABSMOUSE,
 	};
 
 	/**

@@ -166,12 +166,16 @@ bool MainThread::setup()
 {
 	// TODO: Only this on first time round?
 	if(device.type == DEVICE_USB) parent.adb->forwardDevice(string(device.usbId.mb_str()), device.port);
+	// TODO: Display more fitting errors. Perhaps LOGE displays errors to user in some cases?
 	switch(conn->Start()) {
 		case Connection::START_AUTHERROR:
 			LOGE("Error authenticating with device");
 			return false;
 		case Connection::START_INITERROR:
 			LOGE("Error while initialising connection with phone");
+			return false;
+		case Connection::START_HANDSHAKEERROR:
+			LOGE("Error while communicating settings with phone");
 			return false;
 		case Connection::START_NETERROR:
 			LOGE("Couldn't connect to phone");

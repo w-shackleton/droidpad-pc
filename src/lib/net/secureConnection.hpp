@@ -33,6 +33,9 @@ namespace droidpad {
 			SecureConnection(wxString host, uint16_t port) throw (std::runtime_error);
 			virtual ~SecureConnection();
 
+			/**
+			 * Starts the full handshake process, including TLS
+			 */
 			int Start() throw (std::runtime_error);
 			void Stop() throw (std::runtime_error);
 
@@ -45,6 +48,17 @@ namespace droidpad {
 
 		private:
 			wxString host, port;
+
+			/**
+			 * Once a TLS connection has been made,
+			 * start the DroidPad loop etc.
+			 */
+			void StartCommunication() throw(std::runtime_error);
+
+			/**
+			 * Reads the signature from the input stream
+			 */
+			decode::BinarySignature getSignature();
 
 			// SSL stuff
 			const SSL_METHOD *tlsMethod;
