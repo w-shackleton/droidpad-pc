@@ -111,7 +111,13 @@ int SecureConnection::Start() throw (runtime_error) {
 // Stops the connection, whatever stage it is at. If the connection is currently open, will send a stop message, then disconnect.
 void SecureConnection::Stop() throw (std::runtime_error) {
 	if(ssl) {
-		// TODO: Send STOP message
+		LOGV("Sending stop message");
+		BinaryServerMessage stop;
+		stop.sig.setCmd();
+		stop.msg = CMD_STOP;
+		SSL_write(ssl, &stop, sizeof(BinaryServerMessage));
+		LOGV("Stop message sent");
+
 		SSL_shutdown(ssl);
 		SSL_free(ssl);
 		ssl = NULL;

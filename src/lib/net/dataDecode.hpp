@@ -30,6 +30,8 @@
 #define HEADER_FLAG_HAS_GYRO 0x2
 #define HEADER_FLAG_STOP 0x4
 
+#define CMD_STOP 0x1
+
 #define ITEM_FLAG_BUTTON 0x1
 #define ITEM_FLAG_TOGGLE_BUTTON (0x2 | ITEM_FLAG_BUTTON)
 #define ITEM_FLAG_SLIDER 0x4
@@ -135,6 +137,16 @@ namespace droidpad {
 //						h[0], h[1], h[2], h[3], "DPAD");
 				return memcmp(h, "DPAD", 4) == 0;
 			}
+
+			/**
+			 * Sets this as a command message
+			 */
+			inline void setCmd() {
+				h[0] = 'D';
+				h[1] = 'C';
+				h[2] = 'M';
+				h[3] = 'D';
+			}
 		} BinarySignature;
 
 		typedef struct {
@@ -200,6 +212,12 @@ namespace droidpad {
 				} integer;
 			};
 		} RawBinaryElement;
+
+		// A message from the server to the phone.
+		typedef struct {
+			BinarySignature sig;
+			int32_t msg;
+		} BinaryServerMessage;
 
 		/**
 		 * Converts an input line to a DPJSData
