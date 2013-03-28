@@ -110,3 +110,6 @@ endif
 # TLS test
 tlstest_SOURCES = tlsTest.c	tlsTest.h
 tlstest_LDADD = @OPENSSL_LIBS@
+if OS_WIN32
+tlstest_LDADD += -lsetupapi -lws2_32 -lgdi32
+endif

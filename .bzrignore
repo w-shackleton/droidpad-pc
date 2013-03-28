@@ -26,3 +26,4 @@ build
 droidpad-setup*.exe
 droidpad-setup.exe.bak
 src/tlstest
+src/tlstest.exe
