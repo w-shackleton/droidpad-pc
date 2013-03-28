@@ -25,6 +25,7 @@
 #include <wx/stdpaths.h>
 #include <wx/socket.h>
 #include <wx/fs_arc.h>
+#include <openssl/ssl.h>
 
 #include <iostream>
 using namespace std;
@@ -94,6 +95,11 @@ bool DroidApp::OnInit()
 		return false;
 	}
 
+	// Initialise SSL
+	SSL_library_init();
+	SSL_load_error_strings();
+
+
 	wxString layoutPath = Data::getFilePath(wxT("layout.xrc"));
 	wxXmlResource::Get()->InitAllHandlers();
 	if(!wxXmlResource::Get()->Load(layoutPath))
@@ -139,6 +145,9 @@ bool DroidApp::OnCmdLineParsed(wxCmdLineParser& parser) {
 	runSetup = parser.Found(wxT("s"));
 	showGettingStarted = parser.Found(wxT("g"));
 	runRemove = parser.Found(wxT("u"));
+#ifdef DEBUG
+	Data::noAdb = parser.Found(wxT("a"));
+#endif
 
 	if(!parser.Found(wxT("n"))) { // If user didn't request no root, check.
 		requestNecessaryPermissions();

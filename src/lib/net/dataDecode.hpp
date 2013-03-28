@@ -30,6 +30,8 @@
 #define HEADER_FLAG_HAS_GYRO 0x2
 #define HEADER_FLAG_STOP 0x4
 
+#define CMD_STOP 0x1
+
 #define ITEM_FLAG_BUTTON 0x1
 #define ITEM_FLAG_TOGGLE_BUTTON (0x2 | ITEM_FLAG_BUTTON)
 #define ITEM_FLAG_SLIDER 0x4
@@ -118,9 +120,55 @@ namespace droidpad {
 				bool next, prev, start, finish, white, black, beginning, end;
 		};
 		
+		/**
+		 * Each binary packet begins with four bytes,
+		 * identifying the type of message.
+		 */
+		typedef struct {
+			char h[4];
+			
+			inline bool isConnectionInfo() {
+//				printf("isConnectionInfo: %02x%02x%02x%02x == %s?\n",
+//						h[0], h[1], h[2], h[3], "DINF");
+				return memcmp(h, "DINF", 4) == 0;
+			}
+			inline bool isBinaryHeader() {
+//				printf("isBinaryHeader: %02x%02x%02x%02x == %s?\n",
+//						h[0], h[1], h[2], h[3], "DPAD");
+				return memcmp(h, "DPAD", 4) == 0;
+			}
+
+			/**
+			 * Sets this as a command message
+			 */
+			inline void setCmd() {
+				h[0] = 'D';
+				h[1] = 'C';
+				h[2] = 'M';
+				h[3] = 'D';
+			}
+		} BinarySignature;
 
 		typedef struct {
-			char headerBytes[4];
+			// In this case, "DINF"
+			BinarySignature sig;
+
+			// One of:
+			// * MODE_MOUSE
+			// * MODE_SLIDE
+			// * MODE_ABSMOUSE
+			// * MODE_JS
+			int32_t modeType;
+
+			int32_t rawDevices;
+			int32_t axes;
+			int32_t buttons;
+			char reserved[32];
+		} BinaryConnectionInfo;
+
+		typedef struct {
+			// In this case, "DPAD"
+			BinarySignature sig;
 			int32_t numElements;
 			int32_t flags;
 
@@ -165,11 +213,18 @@ namespace droidpad {
 			};
 		} RawBinaryElement;
 
+		// A message from the server to the phone.
+		typedef struct {
+			BinarySignature sig;
+			int32_t msg;
+		} BinaryServerMessage;
+
 		/**
 		 * Converts an input line to a DPJSData
 		 */
 		const DPJSData getTextData(wxString line);
 
+		const BinaryConnectionInfo getBinaryConnectionInfo(const char *binaryInfo);
 		const RawBinaryHeader getBinaryHeader(const char *binaryHeader);
 		const RawBinaryElement getBinaryElement(const char *binaryElement);
 

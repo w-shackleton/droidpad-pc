@@ -17,30 +17,36 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _CUSTOMHOST_H
-#define _CUSTOMHOST_H
 
-#include <wx/dialog.h>
+// Based on http://wiki.wxwidgets.org/An_image_panel
+
+#ifndef WX_QR_PANEL_H
+#define WX_QR_PANEL_H
+
 #include <wx/panel.h>
-#include <wx/sizer.h>
-#include <wx/textctrl.h>
-#include <wx/checkbox.h>
-#include "droidpadCallbacks.hpp"
+#include <wx/bitmap.h>
 
-class CustomHost : public wxDialog {
+#include <qrencode.h>
+
+class qrPanel : public wxPanel
+{
 	public:
-		CustomHost(wxWindow *parent, droidpad::AndroidDevice *device);
+		qrPanel(wxWindow *parent, wxString text);
+		virtual ~qrPanel();
+
+		void setContent(wxString text);
+
+	protected:
+		void paintEvent(wxPaintEvent & evt);
+		void paintNow();
+
+		void render(wxDC& dc);
+
+		QRcode *createQrData(wxString text);
+
+	private:
+		QRcode *code;
 
 		DECLARE_EVENT_TABLE()
-	protected:
-		droidpad::AndroidDevice *device;
-
-		void onDone(wxCommandEvent &evt);
-	private:
-		wxPanel *parent;
-
-		wxTextCtrl *host, *port, *securePort;
-		wxCheckBox *secureSupported;
 };
-
 #endif

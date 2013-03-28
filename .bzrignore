@@ -25,3 +25,4 @@ src/if-gui/droidpad.res
 build
 droidpad-setup*.exe
 droidpad-setup.exe.bak
+src/tlstest

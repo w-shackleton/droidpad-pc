@@ -17,30 +17,9 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _CUSTOMHOST_H
-#define _CUSTOMHOST_H
 
-#include <wx/dialog.h>
-#include <wx/panel.h>
-#include <wx/sizer.h>
-#include <wx/textctrl.h>
-#include <wx/checkbox.h>
-#include "droidpadCallbacks.hpp"
+#include <openssl/ssl.h>
 
-class CustomHost : public wxDialog {
-	public:
-		CustomHost(wxWindow *parent, droidpad::AndroidDevice *device);
+int main(int argc, char **argv);
 
-		DECLARE_EVENT_TABLE()
-	protected:
-		droidpad::AndroidDevice *device;
-
-		void onDone(wxCommandEvent &evt);
-	private:
-		wxPanel *parent;
-
-		wxTextCtrl *host, *port, *securePort;
-		wxCheckBox *secureSupported;
-};
-
-#endif
+unsigned int checkPsk(SSL *ssl, const char *identity, unsigned char *psk, unsigned int max_psk_len);

@@ -1,5 +1,14 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* Defined if the requested minimum BOOST version is satisfied */
+#undef HAVE_BOOST
+
+/* Define to 1 if you have <boost/random/random_device.hpp> */
+#undef HAVE_BOOST_RANDOM_RANDOM_DEVICE_HPP
+
+/* Define to 1 if you have <boost/uuid/uuid.hpp> */
+#undef HAVE_BOOST_UUID_UUID_HPP
+
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 

@@ -56,15 +56,19 @@ CustomHost::CustomHost(wxWindow *parent, droidpad::AndroidDevice *device) :
 	wxGridSizer *entrySizer = new wxGridSizer(2);
 
 	entrySizer->Add(new wxStaticText(this, -1, _("IP Address / hostname")), 0, wxALL, 3);
-
-	host = new wxTextCtrl(this, _ID_HOST, Data::host);
+	host = new wxTextCtrl(this, 0, Data::host);
 	entrySizer->Add(host, 1, wxALL, 3);
 
 	entrySizer->Add(new wxStaticText(this, -1, _("Port (default 3141)")), 0, wxALL, 3);
-
-	port = new wxTextCtrl(this, _ID_PORT, wxString::Format(wxT("%d"), Data::port));
+	port = new wxTextCtrl(this, 0, wxString::Format(wxT("%d"), Data::port));
 	entrySizer->Add(port, 1, wxALL, 3);
 
+	secureSupported = new wxCheckBox(this, 0, _("Use a secure connection"));
+	entrySizer->Add(secureSupported, 1, wxALL, 3);
+
+//	entrySizer->Add(new wxStaticText(this, -1, _("Secure Port (default 3142)")), 0, wxALL, 3);
+//	securePort = new wxTextCtrl(this, 0, wxString::Format(wxT("%d"), Data::securePort));
+//	entrySizer->Add(securePort, 1, wxALL, 3);
 	
 	wxBoxSizer *buttonSizer = new wxBoxSizer(wxHORIZONTAL);
 
@@ -90,6 +94,9 @@ void CustomHost::onDone(wxCommandEvent &evt) {
 
 	device->port = Data::port;
 	device->ip = Data::host;
+	device->securePort = device->port + 1;
+	Data::secureSupported = secureSupported->GetValue();
+	device->secureSupported = secureSupported->GetValue();
 
 	Data::savePreferences();
 	EndModal(wxID_OK);

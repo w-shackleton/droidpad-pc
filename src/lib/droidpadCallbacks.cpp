@@ -19,6 +19,8 @@
  */
 #include "droidpadCallbacks.hpp"
 
+#include <wx/intl.h>
+
 using namespace droidpad;
 
 DroidPadCallbacks::~DroidPadCallbacks()
@@ -27,17 +29,18 @@ DroidPadCallbacks::~DroidPadCallbacks()
 
 bool AndroidDevice::operator ==(const AndroidDevice& b)
 {
+	// No need to check secureSupported when checking equality
 	return (type == b.type && usbId == b.usbId && ip == b.ip && name == b.name);
 }
 
 AndroidDevice::operator wxString() const {
 	switch(type) {
 		case DEVICE_USB:
-			return wxString(wxT("USB ")) + usbId;
+			return wxString(_("USB: ")) + usbId;
 		case DEVICE_NET:
-			return wxString(wxT("Wifi ") + name + wxT(" (") + ip + wxT(":") + wxString::Format(wxT("%d"), port) + wxT(")"));
+			return wxString::Format(_("Wifi: %s (%s:%d) %s"), name.c_str(), ip.c_str(), port, secureSupported ? _("(Secure)") : _("(Insecure)"));
 		case DEVICE_CUSTOMHOST:
-			return wxString(wxT("(Custom device)"));
+			return wxString(_("Custom device"));
 	}
 }
 
@@ -49,6 +52,7 @@ AndroidDevice::AndroidDevice(const AndroidDevice& dev) :
 	usbId(dev.usbId),
 	ip(dev.ip),
 	port(dev.port),
-	name(dev.name)
-{
-}
+	securePort(dev.securePort),
+	name(dev.name),
+	secureSupported(dev.secureSupported)
+{ }

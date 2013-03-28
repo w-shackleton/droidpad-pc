@@ -17,30 +17,40 @@
  * along with DroidPad, in the file COPYING.
  * If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef _CUSTOMHOST_H
-#define _CUSTOMHOST_H
+#ifndef DEVICE_PAIR_H
+#define DEVICE_PAIR_H
 
 #include <wx/dialog.h>
 #include <wx/panel.h>
-#include <wx/sizer.h>
 #include <wx/textctrl.h>
-#include <wx/checkbox.h>
-#include "droidpadCallbacks.hpp"
 
-class CustomHost : public wxDialog {
+#include <boost/uuid/uuid.hpp>
+
+#include "qrPanel.hpp"
+
+#include "data.hpp"
+
+class DevicePair : public wxDialog {
 	public:
-		CustomHost(wxWindow *parent, droidpad::AndroidDevice *device);
-
+		DevicePair(wxWindow *parent, boost::uuids::uuid id);
 		DECLARE_EVENT_TABLE()
+	public:
 	protected:
-		droidpad::AndroidDevice *device;
+		wxPanel *panel;
 
-		void onDone(wxCommandEvent &evt);
-	private:
-		wxPanel *parent;
+		qrPanel *qrCode;
 
-		wxTextCtrl *host, *port, *securePort;
-		wxCheckBox *secureSupported;
+		enum {
+			ID_COMP_NAME = wxID_HIGHEST,
+		};
+
+		wxTextCtrl *compName;
+
+		droidpad::Credentials newCredentials;
+		boost::uuids::uuid computerId;
+
+		void OnComputerNameChanged(wxCommandEvent &evt);
+		wxString createContent();
 };
 
 #endif

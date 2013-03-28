@@ -49,6 +49,9 @@ AdbManager::AdbManager() {
 
 bool AdbManager::initialise() {
 	try {
+#ifdef DEBUG
+		if(!Data::noAdb)
+#endif
 		runProcess(adbCmd, ADB_START);
 	} catch (string e) {
 		LOGEwx(wxString::Format(wxT("Failed to run ADB: %s."), e.c_str()));
@@ -58,18 +61,23 @@ bool AdbManager::initialise() {
 }
 
 AdbManager::~AdbManager() {
-#ifndef DEBUG // Don't stop ADB in debug - it loads faster next time.
 	try {
+#ifdef DEBUG
+		if(!Data::noAdb)
+#endif
 		runProcess(adbCmd, ADB_STOP);
 	} catch (int e) {
 	}
-#endif
 }
 
 vector<wxString> AdbManager::getDeviceIds() {
-	wxString ret = wxString(runProcess(adbCmd, ADB_DEVICES).c_str(), wxConvUTF8);
-
 	vector<wxString> devs;
+#ifdef DEBUG
+	if(Data::noAdb)
+		return devs;
+#endif
+
+	wxString ret = wxString(runProcess(adbCmd, ADB_DEVICES).c_str(), wxConvUTF8);
 
 	wxStringTokenizer tkz(ret, wxT("\n"));
 	while (tkz.HasMoreTokens())
@@ -85,6 +93,9 @@ void AdbManager::forwardDevice(string serial, uint16_t from, uint16_t to)
 {
 	stringstream args;
 	args << "-s " << serial << " forward " << "tcp:" << from << " tcp:" << to;
+#ifdef DEBUG
+	if(!Data::noAdb)
+#endif
 	runProcess(adbCmd, args.str());
 }
 

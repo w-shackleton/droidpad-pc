@@ -27,6 +27,7 @@
 
 #include "customHost.hpp"
 #include "reorderDialog.hpp"
+#include "devicePair.hpp"
 #include "axisTweak.hpp"
 #include "about.hpp"
 #include "log.hpp"
@@ -41,6 +42,7 @@ BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
 	EVT_MENU(XRCID("menuFileStart"), DroidFrame::OnStart)
 	EVT_MENU(XRCID("menuFileStop"), DroidFrame::OnStop)
 
+	EVT_MENU(XRCID("menuFilePair"), DroidFrame::OnPairDevice)
 	EVT_MENU(XRCID("menuFileQuit"), DroidFrame::OnMenuClose)
 
 	EVT_MENU(XRCID("menuAdjustReorder"), DroidFrame::ReorderAxes)
@@ -176,6 +178,7 @@ void DroidFrame::dpCloseComplete()
 void DroidFrame::dpNewDeviceList(AndroidDeviceList &list)
 {
 	for(int i = 0; i < list.size(); i++) {
+		/*
 		wxString label;
 		switch(list[i].type) {
 			case DEVICE_CUSTOMHOST:
@@ -185,6 +188,8 @@ void DroidFrame::dpNewDeviceList(AndroidDeviceList &list)
 				label = list[i].usbId + wxT(": ") + list[i].name;
 				break;
 		}
+		*/
+		wxString label = list[i];
 		if(devListBox->FindString(label) == wxNOT_FOUND) {
 			AndroidDevice *clientData = new AndroidDevice(list[i]);
 			int listPos = devListBox->Append(label, clientData); // Does wx take ownership here? Hope so.
@@ -253,6 +258,11 @@ void DroidFrame::OnAbout(wxCommandEvent& event) {
 void DroidFrame::OnGettingStarted(wxCommandEvent& event) {
 	help = new Help;
 	help->Show(true);
+}
+
+void DroidFrame::OnPairDevice(wxCommandEvent& event) {
+	DevicePair pair(this, Data::computerUuid);
+	pair.ShowModal();
 }
 
 // Update code

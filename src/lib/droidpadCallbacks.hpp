@@ -39,7 +39,11 @@ namespace droidpad {
 			wxString usbId;
 			wxString ip;
 			uint16_t port;
+			uint16_t securePort;
 			wxString name;
+
+			// If TLS connections are supported
+			bool secureSupported;
 
 			operator wxString() const;
 			bool operator ==(const AndroidDevice& b);

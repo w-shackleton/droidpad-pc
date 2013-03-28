@@ -139,6 +139,11 @@ AC_SUBST(WXBASECXXFLAGS, "$WX_CXXFLAGS_ONLY")
 AC_SUBST(WXBASECFLAGS, "$WX_CFLAGS_ONLY")
 AC_SUBST(WXBASELIBS, "$WX_LIBS")
 
+AX_CHECK_OPENSSL
+AC_SUBST(OPENSSL_INCLUDES, "$OPENSSL_INCLUDES")
+AC_SUBST(OPENSSL_LIBS, "$OPENSSL_LIBS")
+AC_SUBST(OPENSSL_LDFLAGS, "$OPENSSL_LDFLAGS")
+
 case "$host" in
 	*x86_64*)
 		bits="64bit"
@@ -166,6 +171,21 @@ AM_CONDITIONAL([OS_UNIX], [test $os = "linux"])
 
 AM_CONDITIONAL([OS_64BIT], [test $bits = "64bit"])
 AM_CONDITIONAL([MSW_TESTMODE], [test $enable_testmode = "yes"])
+
+# BOOST_RANDOM()
+# ------------
+# Look for Boost.Random
+BOOST_DEFUN([Random],
+[BOOST_FIND_HEADER([boost/random/random_device.hpp])])
+
+BOOST_REQUIRE
+BOOST_UUID
+BOOST_RANDOM
+
+# Check for qrencode
+AC_SEARCH_LIBS([QRinput_new], [qrencode], [], [
+				     AC_MSG_ERROR([Unable to find the libqrencode library])
+				     ])
 
 # TODO: Change this to a variable, to change the interface
 iface="gui"

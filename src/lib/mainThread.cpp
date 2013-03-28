@@ -22,6 +22,7 @@
 #include "deviceManager.hpp"
 #include "include/outputMgr.hpp"
 #include "output/outputSmoothBuffer.hpp"
+#include "net/secureConnection.hpp"
 
 #include "events.hpp"
 #include "log.hpp"
@@ -41,7 +42,13 @@ MainThread::MainThread(DeviceManager &parent, AndroidDevice &device) :
 	mgr(NULL),
 	deleteOutputManager(true)
 {
-	conn = new DPConnection(device.ip, device.port);
+	if(device.secureSupported) {
+		LOGV("Starting a secure communication with the device");
+		conn = new SecureConnection(device.ip, device.securePort);
+	} else {
+		LOGV("Starting an INSECURE communication with the device");
+		conn = new DPConnection(device.ip, device.port);
+	}
 }
 
 MainThread::~MainThread() {
@@ -59,7 +66,10 @@ void* MainThread::Entry()
 				LOGW("Failed to reconnect, retrying...");
 				wxMilliSleep(300);
 				delete conn; // Reset
-				conn = new DPConnection(device.ip, device.port);
+				if(device.secureSupported)
+					conn = new SecureConnection(device.ip, device.port);
+				else
+					conn = new DPConnection(device.ip, device.port);
 				continue;
 			} else {
 				setupDone = false;
@@ -156,19 +166,35 @@ bool MainThread::setup()
 {
 	// TODO: Only this on first time round?
 	if(device.type == DEVICE_USB) parent.adb->forwardDevice(string(device.usbId.mb_str()), device.port);
-	if(!conn->Start()) {
-		LOGE("Couldn't connect to phone");
-		return false;
+	// TODO: Display more fitting errors. Perhaps LOGE displays errors to user in some cases?
+	switch(conn->Start()) {
+		case Connection::START_AUTHERROR:
+			LOGE("Error authenticating with device");
+			return false;
+		case Connection::START_INITERROR:
+			LOGE("Error while initialising connection with phone");
+			return false;
+		case Connection::START_HANDSHAKEERROR:
+			LOGE("Error while communicating settings with phone");
+			return false;
+		case Connection::START_NETERROR:
+			LOGE("Couldn't connect to phone");
+			return false;
+		case Connection::START_SUCCESS:
+		default:
+			return true;
 	}
 
-	return true;
 }
 
 int MainThread::loop()
 {
 	try {
 		DPJSData data = conn->GetData();
-		if(data.connectionClosed) return LOOP_FINISHED;
+		if(data.connectionClosed) {
+			LOGV("Received message from device indicating that connection was closed.");
+			return LOOP_FINISHED;
+		}
 		switch(conn->GetMode().type) {
 			case MODE_JS:
 				data.reorder(Data::buttonOrder, Data::axisOrder);
