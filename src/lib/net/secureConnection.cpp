@@ -183,7 +183,7 @@ const decode::DPJSData SecureConnection::GetData() throw (std::runtime_error) {
 	return getBinaryData(header, elems);
 }
 
-decode::BinarySignature SecureConnection::getSignature() {
+decode::BinarySignature SecureConnection::getSignature() throw(std::runtime_error) {
 	decode::BinarySignature sig;
 	if(ssl) { // Read header
 		int read;
@@ -192,7 +192,7 @@ decode::BinarySignature SecureConnection::getSignature() {
 			// TODO: Should I stop here?
 			Stop();
 		}
-	} else LOGW("SSL not open!");
+	} else throw runtime_error("SSL not open");
 	return sig;
 }
 

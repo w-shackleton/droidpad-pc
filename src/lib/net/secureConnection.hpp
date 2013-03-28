@@ -58,7 +58,7 @@ namespace droidpad {
 			/**
 			 * Reads the signature from the input stream
 			 */
-			decode::BinarySignature getSignature();
+			decode::BinarySignature getSignature() throw(std::runtime_error);
 
 			// SSL stuff
 			const SSL_METHOD *tlsMethod;

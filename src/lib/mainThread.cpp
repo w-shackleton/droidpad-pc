@@ -191,7 +191,10 @@ int MainThread::loop()
 {
 	try {
 		DPJSData data = conn->GetData();
-		if(data.connectionClosed) return LOOP_FINISHED;
+		if(data.connectionClosed) {
+			LOGV("Received message from device indicating that connection was closed.");
+			return LOOP_FINISHED;
+		}
 		switch(conn->GetMode().type) {
 			case MODE_JS:
 				data.reorder(Data::buttonOrder, Data::axisOrder);

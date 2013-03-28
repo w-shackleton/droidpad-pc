@@ -126,13 +126,13 @@ namespace droidpad {
 			char h[4];
 			
 			inline bool isConnectionInfo() {
-				printf("isConnectionInfo: %02x%02x%02x%02x == %s?\n",
-						h[0], h[1], h[2], h[3], "DINF");
+//				printf("isConnectionInfo: %02x%02x%02x%02x == %s?\n",
+//						h[0], h[1], h[2], h[3], "DINF");
 				return memcmp(h, "DINF", 4) == 0;
 			}
 			inline bool isBinaryHeader() {
-				printf("isBinaryHeader: %02x%02x%02x%02x == %s?\n",
-						h[0], h[1], h[2], h[3], "DPAD");
+//				printf("isBinaryHeader: %02x%02x%02x%02x == %s?\n",
+//						h[0], h[1], h[2], h[3], "DPAD");
 				return memcmp(h, "DPAD", 4) == 0;
 			}
 		} BinarySignature;
