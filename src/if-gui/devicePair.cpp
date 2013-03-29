@@ -36,7 +36,6 @@ using namespace droidpad;
 using namespace std;
 
 BEGIN_EVENT_TABLE(DevicePair, wxDialog)
-	EVT_TEXT(ID_COMP_NAME, DevicePair::OnComputerNameChanged)
 END_EVENT_TABLE()
 
 #ifdef __WXMSW__
@@ -71,6 +70,7 @@ DevicePair::DevicePair(wxWindow *parent, uuid id) :
 	compNameSizer->Add(new wxStaticText(this, -1, _("Computer name:")), 0, wxALL, 5);
 	// Using computer name from settings
 	compName = new wxTextCtrl(this, ID_COMP_NAME, Data::computerName);
+	Connect(ID_COMP_NAME, wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler(DevicePair::OnComputerNameChanged));
 	compName->SetMaxLength(40);
 	compNameSizer->Add(compName, 1, wxALL | wxEXPAND, 5);
 

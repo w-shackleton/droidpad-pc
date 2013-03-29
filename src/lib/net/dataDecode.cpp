@@ -73,7 +73,7 @@ Vec2 droidpad::decode::accelToAxes(float x, float y, float z) {
 float droidpad::decode::applyGamma(float value, float gamma) {
 	// Power applied to value must be in the range 1/n to n,
 	// where n is around 10.
-	float G = powf(GAMMA_CONST, gamma);
+	float G = pow(GAMMA_CONST, gamma);
 	return sign(value) * pow(abs(value), G);
 }
 
