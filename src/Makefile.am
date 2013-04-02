@@ -30,6 +30,7 @@ SRC_IF_GUI = \
 		   if-gui/wxImagePanel.cpp	if-gui/wxImagePanel.hpp	\
 		   if-gui/qrPanel.cpp		if-gui/qrPanel.hpp	\
 		   if-gui/reorderDialog.cpp	if-gui/reorderDialog.hpp\
+		   if-gui/preferences.cpp	if-gui/preferences.hpp	\
 		   if-gui/devicePair.cpp	if-gui/devicePair.hpp	\
 		   if-gui/setup.cpp		if-gui/setup.hpp	\
 		   if-gui/help.cpp		if-gui/help.hpp

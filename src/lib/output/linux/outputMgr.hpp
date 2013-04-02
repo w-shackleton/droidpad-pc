@@ -38,6 +38,11 @@ namespace droidpad {
 			void SendMouseData(const decode::DPMouseData& data, bool firstIteration = true);
 			void SendTouchData(const decode::DPTouchData& data, bool firstIteration = true);
 			void SendSlideData(const decode::DPSlideData& data, bool firstIteration = true);
+
+			/**
+			 * Given a letter of the alphabet, returns the Linux keycode associated with it.
+			 */
+			static int getKeycode(char letter);
 		private:
 			dpinfo *dpinput;
 

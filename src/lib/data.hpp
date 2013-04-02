@@ -105,6 +105,8 @@ namespace droidpad
 			static std::vector<int> buttonOrder;
 			static std::vector<int> axisOrder;
 
+			static wxChar blackKey, whiteKey;
+
 			/**
 			 * Tweaks
 			 */

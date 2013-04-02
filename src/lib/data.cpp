@@ -41,6 +41,8 @@ wxString Data::datadir = wxT("");
 wxString Data::confLocation = wxT("");
 wxString Data::host = wxT("");
 wxString Data::computerName = wxT("");
+wxChar Data::blackKey = 'b';
+wxChar Data::whiteKey = 'w';
 boost::uuids::uuid Data::computerUuid;
 bool Data::secureSupported = false;
 #ifdef DEBUG
@@ -189,6 +191,13 @@ void Data::loadPreferences() {
 	// secureSupported
 	config->Read(wxT("secureSupported"), &secureSupported, false);
 
+	// blackKey & whiteKey
+	wxString black, white;
+	config->Read(wxT("blackKey"), &black, wxT("b"));
+	config->Read(wxT("whiteKey"), &white, wxT("w"));
+	if(black.size() > 0) blackKey = black.GetChar(0);
+	if(white.size() > 0) whiteKey = white.GetChar(0);
+
 	// computerName
 	config->Read(wxT("computerName"), &computerName);
 	computerName = computerName.Mid(0, 40);
@@ -239,6 +248,9 @@ void Data::savePreferences() {
 	config->Write(wxT("computerUuid"),
 			wxString(computerUuidString().c_str(), wxConvUTF8));
 	config->Write(wxT("secureSupported"), secureSupported);
+
+	config->Write(wxT("blackKey"), (wxString)blackKey);
+	config->Write(wxT("whiteKey"), (wxString)whiteKey);
 
 	// Currently serialising tweaks the very non-portable way. Should probably change this
 	char *buf = new char[sizeof(Tweaks)];

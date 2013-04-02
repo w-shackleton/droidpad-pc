@@ -22,6 +22,7 @@
 #include <sstream>
 
 #include "types.hpp"
+#include "data.hpp"
 
 #include "net/connection.hpp"
 #include "log.hpp"
@@ -98,8 +99,8 @@ void OutputManager::SendSlideData(const DPSlideData& data, bool firstIteration)
 	WinOutputs::SendKeystroke(VK_DOWN,	data.next);
 	WinOutputs::SendKeystroke(VK_F5,	data.start);
 	WinOutputs::SendKeystroke(VK_ESCAPE,	data.finish);
-	WinOutputs::SendKeystroke('W',		data.white);
-	WinOutputs::SendKeystroke('B',		data.black);
+	WinOutputs::SendKeystroke(Data::whiteKey,data.white);
+	WinOutputs::SendKeystroke(Data::blackKey,data.black);
 	WinOutputs::SendKeystroke(VK_HOME,	data.beginning);
 	WinOutputs::SendKeystroke(VK_END,	data.end);
 }

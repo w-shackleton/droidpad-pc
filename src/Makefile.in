@@ -96,7 +96,8 @@ am__droidpad_SOURCES_DIST = if-gui/droidFrame.cpp \
 	if-gui/pageSizer.cpp if-gui/pageSizer.hpp \
 	if-gui/wxImagePanel.cpp if-gui/wxImagePanel.hpp \
 	if-gui/qrPanel.cpp if-gui/qrPanel.hpp if-gui/reorderDialog.cpp \
-	if-gui/reorderDialog.hpp if-gui/devicePair.cpp \
+	if-gui/reorderDialog.hpp if-gui/preferences.cpp \
+	if-gui/preferences.hpp if-gui/devicePair.cpp \
 	if-gui/devicePair.hpp if-gui/setup.cpp if-gui/setup.hpp \
 	if-gui/help.cpp if-gui/help.hpp if-gui/updateDisplay.cpp \
 	if-gui/updateDisplay.hpp if-gui/driverChoice.cpp \
@@ -106,8 +107,8 @@ am__objects_1 = droidpad-droidFrame.$(OBJEXT) \
 	droidpad-about.$(OBJEXT) droidpad-axisTweak.$(OBJEXT) \
 	droidpad-pageSizer.$(OBJEXT) droidpad-wxImagePanel.$(OBJEXT) \
 	droidpad-qrPanel.$(OBJEXT) droidpad-reorderDialog.$(OBJEXT) \
-	droidpad-devicePair.$(OBJEXT) droidpad-setup.$(OBJEXT) \
-	droidpad-help.$(OBJEXT)
+	droidpad-preferences.$(OBJEXT) droidpad-devicePair.$(OBJEXT) \
+	droidpad-setup.$(OBJEXT) droidpad-help.$(OBJEXT)
 @IF_GUI_TRUE@am__objects_2 = $(am__objects_1)
 @OS_WIN32_TRUE@am__objects_3 = droidpad-updateDisplay.$(OBJEXT)
 @MSW_TESTMODE_TRUE@@OS_WIN32_TRUE@am__objects_4 = droidpad-driverChoice.$(OBJEXT)
@@ -396,6 +397,7 @@ SRC_IF_GUI = \
 		   if-gui/wxImagePanel.cpp	if-gui/wxImagePanel.hpp	\
 		   if-gui/qrPanel.cpp		if-gui/qrPanel.hpp	\
 		   if-gui/reorderDialog.cpp	if-gui/reorderDialog.hpp\
+		   if-gui/preferences.cpp	if-gui/preferences.hpp	\
 		   if-gui/devicePair.cpp	if-gui/devicePair.hpp	\
 		   if-gui/setup.cpp		if-gui/setup.hpp	\
 		   if-gui/help.cpp		if-gui/help.hpp
@@ -529,6 +531,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-droidFrame.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-help.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-pageSizer.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-preferences.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-qrPanel.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-reorderDialog.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/droidpad-setup.Po@am__quote@
@@ -703,6 +706,20 @@ droidpad-reorderDialog.obj: if-gui/reorderDialog.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='if-gui/reorderDialog.cpp' object='droidpad-reorderDialog.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-reorderDialog.obj `if test -f 'if-gui/reorderDialog.cpp'; then $(CYGPATH_W) 'if-gui/reorderDialog.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/reorderDialog.cpp'; fi`
+
+droidpad-preferences.o: if-gui/preferences.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -MT droidpad-preferences.o -MD -MP -MF $(DEPDIR)/droidpad-preferences.Tpo -c -o droidpad-preferences.o `test -f 'if-gui/preferences.cpp' || echo '$(srcdir)/'`if-gui/preferences.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/droidpad-preferences.Tpo $(DEPDIR)/droidpad-preferences.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='if-gui/preferences.cpp' object='droidpad-preferences.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-preferences.o `test -f 'if-gui/preferences.cpp' || echo '$(srcdir)/'`if-gui/preferences.cpp
+
+droidpad-preferences.obj: if-gui/preferences.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -MT droidpad-preferences.obj -MD -MP -MF $(DEPDIR)/droidpad-preferences.Tpo -c -o droidpad-preferences.obj `if test -f 'if-gui/preferences.cpp'; then $(CYGPATH_W) 'if-gui/preferences.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/preferences.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/droidpad-preferences.Tpo $(DEPDIR)/droidpad-preferences.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='if-gui/preferences.cpp' object='droidpad-preferences.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -c -o droidpad-preferences.obj `if test -f 'if-gui/preferences.cpp'; then $(CYGPATH_W) 'if-gui/preferences.cpp'; else $(CYGPATH_W) '$(srcdir)/if-gui/preferences.cpp'; fi`
 
 droidpad-devicePair.o: if-gui/devicePair.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(droidpad_CXXFLAGS) $(CXXFLAGS) -MT droidpad-devicePair.o -MD -MP -MF $(DEPDIR)/droidpad-devicePair.Tpo -c -o droidpad-devicePair.o `test -f 'if-gui/devicePair.cpp' || echo '$(srcdir)/'`if-gui/devicePair.cpp
