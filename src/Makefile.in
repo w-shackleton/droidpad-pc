@@ -72,6 +72,7 @@ bin_PROGRAMS = droidpad$(EXEEXT) tlstest$(EXEEXT)
 @OS_UNIX_TRUE@am__append_8 = -DOS_UNIX
 @OS_LINUX_TRUE@am__append_9 = -DOS_LINUX
 @OS_WIN32_TRUE@am__append_10 = -DOS_WIN32
+@OS_WIN32_TRUE@am__append_11 = -lsetupapi -lws2_32 -lgdi32
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -128,7 +129,8 @@ droidpad_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(CXXFLAGS) $(droidpad_LDFLAGS) $(LDFLAGS) -o $@
 am_tlstest_OBJECTS = tlsTest.$(OBJEXT)
 tlstest_OBJECTS = $(am_tlstest_OBJECTS)
-tlstest_DEPENDENCIES =
+am__DEPENDENCIES_3 =
+tlstest_DEPENDENCIES = $(am__DEPENDENCIES_3)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
@@ -424,7 +426,7 @@ AM_CPPFLAGS = -DPREFIX='"$(prefix)"' $(am__append_7) $(am__append_8) \
 
 # TLS test
 tlstest_SOURCES = tlsTest.c	tlsTest.h
-tlstest_LDADD = @OPENSSL_LIBS@
+tlstest_LDADD = @OPENSSL_LIBS@ $(am__append_11)
 all: all-recursive
 
 .SUFFIXES:
