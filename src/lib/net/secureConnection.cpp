@@ -30,6 +30,7 @@ using namespace std;
 #include "hexdump.h"
 #include <wx/intl.h>
 #include "data.hpp"
+#include "mathUtil.hpp"
 
 #ifdef DEBUG
 #define SSL_PRINT_ERRORS() { if(ERR_peek_error()) fprintf(stderr, "SSL Error at %s:%d:\n", __FILE__, __LINE__); ERR_print_errors_fp(stderr); }
@@ -115,7 +116,9 @@ void SecureConnection::Stop() throw (std::runtime_error) {
 		BinaryServerMessage stop;
 		stop.sig.setCmd();
 		stop.msg = CMD_STOP;
+		HTON(stop.msg);
 		SSL_write(ssl, &stop, sizeof(BinaryServerMessage));
+		SSL_PRINT_ERRORS();
 		LOGV("Stop message sent");
 
 		SSL_shutdown(ssl);
@@ -176,8 +179,9 @@ const decode::DPJSData SecureConnection::GetData() throw (std::runtime_error) {
 
 	size_t elementsSize = sizeof(RawBinaryElement) * header.numElements;
 	char *elementsBuf = (char*)malloc(elementsSize);
-	if(SSL_read(ssl, elementsBuf, elementsSize) < 1)
-		throw runtime_error("Failed to read elements from stream");
+	if(elementsSize > 0)
+		if(SSL_read(ssl, elementsBuf, elementsSize) < 1)
+			throw runtime_error("Failed to read elements from stream");
 
 	vector<RawBinaryElement> elems;
 	for(const char *elem = elementsBuf; elem < elementsBuf + elementsSize; elem += sizeof(RawBinaryElement)) {

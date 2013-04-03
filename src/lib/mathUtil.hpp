@@ -20,7 +20,10 @@
 #ifndef DP_MATH_UTIL_H
 #define DP_MATH_UTIL_H
 
+#include <arpa/inet.h>
+
 #define NTOH(_x) _x = ntohl((_x))
+#define HTON(_x) _x = htonl((_x))
 
 #define DEG_TO_RAD (M_PI / 180)
 #define RAD_TO_DEG (180 / M_PI)

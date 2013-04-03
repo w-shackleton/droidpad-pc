@@ -86,7 +86,10 @@ DPJSData::DPJSData(const DPJSData& old) :
 	axes(old.axes),
 	touchpadAxes(old.touchpadAxes),
 	buttons(old.buttons),
-	connectionClosed(connectionClosed)
+	connectionClosed(connectionClosed),
+	containsAccel(containsAccel),
+	containsGyro(containsGyro),
+	reset(reset)
 { }
 
 void DPJSData::reorder(std::vector<int> bmap, std::vector<int> amap) {
@@ -391,6 +394,7 @@ const RawBinaryHeader droidpad::decode::getBinaryHeader(const char *binaryHeader
 	NTOH(header.raw.rx);
 	NTOH(header.raw.ry);
 	NTOH(header.raw.rz);
+
 #if 0
 #ifdef DEBUG
 	cout << "Binary header:" << endl;

@@ -214,6 +214,7 @@ int MainThread::loop()
 		}
 		prevData = data;
 	} catch(runtime_error e) {
+		printf("GetData failed: %s\n", e.what());
 		return LOOP_CONNLOST;
 	}
 	return LOOP_OK;
