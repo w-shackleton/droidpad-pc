@@ -40,11 +40,11 @@ ModeSetting::ModeSetting() :
 	numAxes(0),
 	numButtons(0) {}
 
-DPConnection::DPConnection(wxString host, uint16_t port) :
+DPConnection::DPConnection(AndroidDevice &device) :
 	wxSocketClient(wxSOCKET_BLOCK)
 {
-	addr.Hostname(host);
-	addr.Service(port);
+	addr.Hostname(device.ip);
+	addr.Service(device.port);
 	
 	SetTimeout(10);
 }

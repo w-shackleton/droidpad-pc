@@ -12,10 +12,10 @@ fi
 MINGW32_LOCATION=$MINGW32_PATH/i586-mingw32msvc
 
 
-if [ "$MINGW64_PATH" = "" ]
-then
-MINGW64_PATH=/home/william/Dev/toolchains/mingw-w64
-fi
+# if [ "$MINGW64_PATH" = "" ]
+# then
+# MINGW64_PATH=/home/william/Dev/toolchains/mingw-w64
+# fi
 
 MINGW64_LOCATION=$MINGW64_PATH/x86_64-w64-mingw32
 

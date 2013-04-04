@@ -46,11 +46,17 @@ using namespace std;
 #define RETURN_ERR(err,s, val) if ((err)==-1) { perror(s); return (val); }
 #define RETURN_SSL(err, val) if ((err)==-1) { SSL_PRINT_ERRORS(); return (val); }
 
-SecureConnection::SecureConnection(wxString host, uint16_t port) throw (runtime_error) :
-	host(host),
-	port(wxString::Format(wxT("%d"), port))
+bool SecureConnection::staticInitialised = false;
+int SecureConnection::thisReferenceId = -1;
+
+SecureConnection::SecureConnection(AndroidDevice &device) throw (runtime_error) :
+	host(device.ip),
+	port(wxString::Format(wxT("%d"), device.securePort)),
+	name(device.name)
 {
-	LOGVwx(wxString::Format(_("Connecting on %s:%d"), host.c_str(), port));
+	staticInitialise();
+
+	LOGVwx(wxString::Format(_("Connecting on %s:%d"), host.c_str(), device.securePort));
 	// SSL_library_init called in droidApp
 	tlsMethod = TLSv1_server_method();
 	ctx = SSL_CTX_new(tlsMethod);
@@ -63,7 +69,7 @@ SecureConnection::SecureConnection(wxString host, uint16_t port) throw (runtime_
 	// Connection setup
 	netBio = BIO_new(BIO_s_connect());
 	BIO_set_conn_hostname(netBio, host.char_str());
-	BIO_set_conn_port(netBio, wxString::Format(wxT("%d"), (int)port).char_str());
+	BIO_set_conn_port(netBio, port.char_str());
 }
 
 SecureConnection::~SecureConnection() {
@@ -88,6 +94,9 @@ int SecureConnection::Start() throw (runtime_error) {
 	ssl = SSL_new(ctx);
 	RETURN_NULL(ssl, START_INITERROR);
 	SSL_set_bio(ssl, netBio, netBio);
+
+	// Set SSL app data. This is used so this can be accessed in the static fn call
+	SSL_set_ex_data(ssl, thisReferenceId, this);
 	
 	LOGV("SSL: Accepting");
 	err = SSL_accept(ssl);
@@ -214,6 +223,14 @@ unsigned int SecureConnection::checkPsk(SSL *ssl, const char *identity, unsigned
 		if(it->deviceIdString().compare((string) identity) == 0) {
 			// Known connection found
 			memcpy(psk, it->psk.c_str(), std::min((int)max_psk_len, (int)it->psk.size()));
+
+			// Now that we have a valid key, update the name saved in the DB with the name given over mDNS, accessible in 'device'
+			SecureConnection *conn = (SecureConnection*)SSL_get_ex_data(ssl, thisReferenceId);
+			if(conn) { // If null just ignore this step
+				it->deviceName = conn->name;
+				Data::savePreferences();
+			}
+
 			return it->psk.size();
 		}
 	}

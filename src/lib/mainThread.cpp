@@ -44,10 +44,10 @@ MainThread::MainThread(DeviceManager &parent, AndroidDevice &device) :
 {
 	if(device.secureSupported) {
 		LOGV("Starting a secure communication with the device");
-		conn = new SecureConnection(device.ip, device.securePort);
+		conn = new SecureConnection(device);
 	} else {
 		LOGV("Starting an INSECURE communication with the device");
-		conn = new DPConnection(device.ip, device.port);
+		conn = new DPConnection(device);
 	}
 }
 
@@ -67,9 +67,9 @@ void* MainThread::Entry()
 				wxMilliSleep(300);
 				delete conn; // Reset
 				if(device.secureSupported)
-					conn = new SecureConnection(device.ip, device.port);
+					conn = new SecureConnection(device);
 				else
-					conn = new DPConnection(device.ip, device.port);
+					conn = new DPConnection(device);
 				continue;
 			} else {
 				setupDone = false;

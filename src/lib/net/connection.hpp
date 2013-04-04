@@ -27,6 +27,7 @@
 #include <stdint.h>
 
 #include "dataDecode.hpp"
+#include "droidpadCallbacks.hpp"
 
 // Small buffer to allow faster reading & less overflow?
 #define CONN_BUFFER_SIZE 64
@@ -70,7 +71,7 @@ namespace droidpad {
 
 	class DPConnection : private wxSocketClient, public Connection {
 		public:
-			DPConnection(wxString host, uint16_t port);
+			DPConnection(AndroidDevice &device);
 			virtual ~DPConnection();
 
 			virtual int Start();

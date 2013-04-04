@@ -30,7 +30,7 @@
 namespace droidpad {
 	class SecureConnection : public Connection {
 		public:
-			SecureConnection(wxString host, uint16_t port) throw (std::runtime_error);
+			SecureConnection(AndroidDevice &device) throw (std::runtime_error);
 			virtual ~SecureConnection();
 
 			/**
@@ -47,7 +47,7 @@ namespace droidpad {
 			inline virtual void RequestBinary() throw (std::runtime_error) { }
 
 		private:
-			wxString host, port;
+			wxString host, port, name;
 
 			/**
 			 * Once a TLS connection has been made,
@@ -67,6 +67,17 @@ namespace droidpad {
 			BIO *netBio;
 
 			static unsigned int checkPsk(SSL *ssl, const char *identity, unsigned char *psk, unsigned int max_psk_len);
+
+			/**
+			 * Initialises the static components of this class
+			 */
+			static inline void staticInitialise() {
+				if(staticInitialised) return;
+				staticInitialised = true;
+				thisReferenceId = SSL_get_ex_new_index(0, (void*)"SecureConnection this reference", NULL, NULL, NULL);
+			}
+			static int thisReferenceId;
+			static bool staticInitialised;
 	};
 }
 

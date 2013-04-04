@@ -20,7 +20,9 @@
 #ifndef DP_MATH_UTIL_H
 #define DP_MATH_UTIL_H
 
+#ifdef OS_UNIX
 #include <arpa/inet.h>
+#endif
 
 #define NTOH(_x) _x = ntohl((_x))
 #define HTON(_x) _x = htonl((_x))
