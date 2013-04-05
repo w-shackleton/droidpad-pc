@@ -43,9 +43,11 @@ class ReorderDialog : public wxDialog {
 		std::vector<wxComboBox*> buttons;
 
 		inline wxString getAxisText(int num) {
+			if(num < 0) return _("None");
 			return wxString::Format(_("Axis %d"), num+1);
 		}
 		inline wxString getButtonText(int num) {
+			if(num < 0) return _("None");
 			return wxString::Format(_("Button %d"), num+1);
 		}
 };

@@ -71,13 +71,13 @@ ReorderDialog::ReorderDialog(wxWindow *parent) {
 	wxGridSizer *buttonGrid = (wxGridSizer*)inner2->GetItem((size_t)1)->GetSizer();
 	CHECK_XML(buttonGrid);
 
-	wxString axisSelections[NUM_AXIS];
-	for(int i = 0; i < NUM_AXIS; i++) {
-		axisSelections[i] = getAxisText(i);
+	wxString axisSelections[NUM_AXIS + 1];
+	for(int i = -1; i < NUM_AXIS; i++) {
+		axisSelections[i+1] = getAxisText(i);
 	}
-	wxString buttonSelections[NUM_BUTTONS];
-	for(int i = 0; i < NUM_BUTTONS; i++) {
-		buttonSelections[i] = getButtonText(i);
+	wxString buttonSelections[NUM_BUTTONS + 1];
+	for(int i = -1; i < NUM_BUTTONS; i++) {
+		buttonSelections[i+1] = getButtonText(i);
 	}
 
 	for(int i = 0; i < NUM_AXIS; i++) {
@@ -86,9 +86,10 @@ ReorderDialog::ReorderDialog(wxWindow *parent) {
 
 		wxComboBox *box = new wxComboBox(this, -1,
 				getAxisText(Data::axisOrder[i]),
-				wxDefaultPosition, wxSize(100, -1), NUM_AXIS,
+				wxDefaultPosition, wxSize(100, -1), NUM_AXIS + 1,
 				axisSelections,
 				wxCB_READONLY);
+		box->SetSelection(Data::axisOrder[i] + 1);
 		axes.push_back(box);
 		axisGrid->Add(box, 0, wxEXPAND);
 	}
@@ -99,9 +100,10 @@ ReorderDialog::ReorderDialog(wxWindow *parent) {
 
 		wxComboBox *box = new wxComboBox(this, -1,
 				getButtonText(Data::buttonOrder[i]),
-				wxDefaultPosition, wxSize(120, -1), NUM_BUTTONS,
+				wxDefaultPosition, wxSize(120, -1), NUM_BUTTONS + 1,
 				buttonSelections,
 				wxCB_READONLY);
+		box->SetSelection(Data::buttonOrder[i] + 1);
 		buttons.push_back(box);
 		buttonGrid->Add(box, 0, wxEXPAND);
 	}
@@ -114,14 +116,16 @@ void ReorderDialog::onDone(wxCommandEvent &evt) {
 	int i = 0;
 	for(vector<wxComboBox*>::iterator it = axes.begin(); it != axes.end(); it++) {
 		int selection = (*it)->GetSelection();
-		Data::axisOrder[i] = selection == wxNOT_FOUND ? i : selection;
+		cout << "Axes " << selection << endl;
+		Data::axisOrder[i] = selection == wxNOT_FOUND ? i : selection - 1;
 		i++;
 	}
 
 	i = 0;
 	for(vector<wxComboBox*>::iterator it = buttons.begin(); it != buttons.end(); it++) {
 		int selection = (*it)->GetSelection();
-		Data::buttonOrder[i] = selection == wxNOT_FOUND ? i : selection;
+		cout << "Button " << selection << endl;
+		Data::buttonOrder[i] = selection == wxNOT_FOUND ? i : selection - 1;
 		i++;
 	}
 	Data::savePreferences();
