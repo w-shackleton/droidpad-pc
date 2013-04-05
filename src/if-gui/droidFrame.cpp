@@ -29,6 +29,7 @@
 #include "reorderDialog.hpp"
 #include "devicePair.hpp"
 #include "axisTweak.hpp"
+#include "preferences.hpp"
 #include "about.hpp"
 #include "log.hpp"
 #ifdef OS_WIN32
@@ -47,6 +48,7 @@ BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
 
 	EVT_MENU(XRCID("menuAdjustReorder"), DroidFrame::ReorderAxes)
 	EVT_MENU(XRCID("menuAdjustTweak"), DroidFrame::TweakAxes)
+	EVT_MENU(XRCID("menuAdjustSettings"), DroidFrame::OpenSettings)
 
 	EVT_MENU(XRCID("menuHelpAbout"), DroidFrame::OnAbout)
 	EVT_MENU(XRCID("menuHelpGettingStarted"), DroidFrame::OnGettingStarted)
@@ -154,6 +156,11 @@ void DroidFrame::TweakAxes(wxCommandEvent& event) {
 	AxisTweak dlg(this);
 	int y = dlg.GetSize().GetHeight();
 	dlg.SetSizeHints(400, y);
+	dlg.ShowModal();
+}
+
+void DroidFrame::OpenSettings(wxCommandEvent& event) {
+	Preferences dlg(this);
 	dlg.ShowModal();
 }
 

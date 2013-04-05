@@ -57,6 +57,9 @@ Preferences::Preferences(wxWindow *parent) {
 	LOADXRC(slideshowBlackKey, blackKey, wxTextCtrl);
 	LOADXRC(slideshowWhiteKey, whiteKey, wxTextCtrl);
 
+	blackKey->SetValue(Data::blackKey);
+	whiteKey->SetValue(Data::whiteKey);
+
 	Fit();
 }
 
