@@ -44,13 +44,14 @@ class DevicePair : public wxDialog {
 			ID_COMP_NAME = wxID_HIGHEST,
 		};
 
-		wxTextCtrl *compName;
+		wxTextCtrl *compName, *pairUrl;
 
 		droidpad::Credentials newCredentials;
 		boost::uuids::uuid computerId;
 
 		void OnComputerNameChanged(wxCommandEvent &evt);
 		wxString createContent();
+		wxString createUrl();
 };
 
 #endif

@@ -20,6 +20,7 @@
 
 #include "devicePair.hpp"
 
+#include <wx/uri.h>
 #include <wx/icon.h>
 #include <wx/sizer.h>
 #include <wx/button.h>
@@ -30,6 +31,7 @@
 #include <sstream>
 
 #include "log.hpp"
+#include "ext/b64/base64.hpp"
 
 using namespace boost::uuids;
 using namespace droidpad;
@@ -80,6 +82,12 @@ DevicePair::DevicePair(wxWindow *parent, uuid id) :
 	qrCode = new qrPanel(this, createContent());
 	panelSizer->Add(qrCode, 0, wxALIGN_CENTRE | wxTOP, 5);
 
+	// Backup URL pairing technique
+	panelSizer->Add(new wxStaticText(this, -1, _("If you are having trouble scanning this barcode,\nemail the following URL to yourself\nand then open it from your phone / tablet:"), wxDefaultPosition, wxDefaultSize), 0, wxEXPAND | wxALL, 5);
+	pairUrl = new wxTextCtrl(this, -1);
+	pairUrl->SetValue(createUrl());
+	panelSizer->Add(pairUrl, 0, wxALIGN_CENTRE | wxEXPAND | wxALL, 5);
+
 	// Bottom button panel
 	wxBoxSizer *buttons = new wxBoxSizer(wxHORIZONTAL);
 
@@ -93,6 +101,7 @@ void DevicePair::OnComputerNameChanged(wxCommandEvent &evt) {
 	qrCode->setContent(createContent());
 	Data::computerName = compName->GetValue();
 	Data::savePreferences();
+	pairUrl->SetValue(createUrl());
 }
 
 wxString DevicePair::createContent() {
@@ -106,6 +115,16 @@ wxString DevicePair::createContent() {
 	result << compName->GetValue().mb_str() << "\n";
 	result << boost::uuids::to_string(newCredentials.deviceId) << "\n";
 	result << newCredentials.psk64_std();
+	return wxString(result.str().c_str(), wxConvUTF8);
+
+}
+wxString DevicePair::createUrl() {
+	stringstream result;
+	result << "http://droidpad-pair.digitalsquid.co.uk/?";
+	result << "computerId=" << boost::uuids::to_string(computerId) << "&";
+	result << "computerName=" << base64_encode2uri(compName->GetValue()) << "&";
+	result << "deviceId=" << boost::uuids::to_string(newCredentials.deviceId) << "&";
+	result << "psk=" << newCredentials.psk64_std_uri();
 	return wxString(result.str().c_str(), wxConvUTF8);
 
 }

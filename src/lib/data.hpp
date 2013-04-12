@@ -153,6 +153,9 @@ namespace droidpad
 			inline std::string psk64_std() {
 				return base64_encode((unsigned char * const)psk.c_str(), psk.length());
 			}
+			inline std::string psk64_std_uri() {
+				return base64_encode_uri((unsigned char * const)psk.c_str(), psk.length());
+			}
 
 			inline Credentials(boost::uuids::uuid deviceId, wxString deviceName, std::string psk) :
 				deviceId(deviceId),
