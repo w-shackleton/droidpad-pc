@@ -76,7 +76,8 @@ namespace droidpad {
 
 			virtual void threadStarted() = 0;
 			virtual void threadError(wxString failReason) = 0;
-			virtual void setStatusText(wxString text) = 0;
+			virtual void threadInfoBox(wxString infoMessage) = 0;
+			virtual void setStatusText(wxString text, bool showSpinner = false) = 0;
 			virtual void threadStopped() = 0;
 
 			virtual void updatesAvailable(std::vector<UpdateInfo> updates, std::vector<UpdateInfo> latest, bool userRequest) = 0;

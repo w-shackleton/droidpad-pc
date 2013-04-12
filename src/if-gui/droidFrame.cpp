@@ -36,6 +36,7 @@
 #include "updater.hpp"
 #endif
 
+IMPLEMENT_DYNAMIC_CLASS(DroidFrame, wxFrame)
 BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
 	EVT_BUTTON(XRCID("buttonStart"), DroidFrame::OnStart)
 	EVT_BUTTON(XRCID("buttonStop"), DroidFrame::OnStop)
@@ -68,8 +69,10 @@ using namespace droidpad::threads;
 
 #ifdef __WXMSW__
 #define _FRAME_ICON wxT("icon.xpm")
+#define _LOADING_GIF wxT("loading.gif")
 #else
 #define _FRAME_ICON wxT("iconlarge.xpm")
+#define _LOADING_GIF wxT("loading.gif")
 #endif
 
 #define FRAME_TITLE "DroidPad"
@@ -85,7 +88,7 @@ DroidFrame::DroidFrame() :
 
 void DroidFrame::init()
 {
-	SetIcon(wxIcon(wxString(Data::getFilePath(_FRAME_ICON).c_str(), wxConvUTF8), wxBITMAP_TYPE_XPM));
+	SetIcon(wxIcon(Data::getFilePath(_FRAME_ICON), wxBITMAP_TYPE_XPM));
 
 	// Load XML
 	SetMenuBar(wxXmlResource::Get()->LoadMenuBar(this, wxT("menu")));
@@ -101,6 +104,14 @@ void DroidFrame::init()
 	LOADXRC(buttonStop,	buttonStop,		wxButton);
 	LOADXRC(statusText,	statusText,	wxStaticText);
 	LOADXRC(devicesList,	devListBox,	wxListBox);
+	LOADXRC(loadingAnimCtrl,	loadingAnimCtrl,	wxAnimationCtrl);
+	animSizer = statusText->GetContainingSizer();
+
+	// Create spinning loading wheel thing, to keep users happy.
+	loadingAnimCtrl->LoadFile(Data::getFilePath(_LOADING_GIF), wxANIMATION_TYPE_GIF);
+	loadingAnimCtrl->Play();
+//	loadingAnimCtrl = new wxAnimationCtrl(this, -1, loadingAnim);
+//	animSizer->Insert(0, loadingAnimCtrl);
 
 	buttonStop->Disable();
 
@@ -231,9 +242,16 @@ void DroidFrame::threadError(wxString failReason)
 {
 	wxMessageBox(_("DroidPad couldn't start - ") + failReason);
 }
+void DroidFrame::threadInfoBox(wxString infoMessage)
+{
+	wxMessageBox(infoMessage);
+}
 
-void DroidFrame::setStatusText(wxString text) {
+void DroidFrame::setStatusText(wxString text, bool showSpinner) {
 	statusText->SetLabel(text);
+//	if(showSpinner && !loadingAnimCtrl->IsShown()) loadingAnimCtrl->Show(true);
+//	if(!showSpinner && loadingAnimCtrl->IsShown()) loadingAnimCtrl->Show(false);
+	loadingAnimCtrl->Show(showSpinner);
 }
 
 void DroidFrame::threadStopped()

@@ -82,6 +82,7 @@ void DeviceManager::Close()
 void DeviceManager::OnInitialised(DMEvent &event)
 {
 	LOGV("DeviceManager Initialised");
+	callbacks.setStatusText(_("Scanning for devices..."), true);
 	callbacks.dpInitComplete(event.getStatus() == DM_SUCCESS);
 
 	if(finishing) {
@@ -197,6 +198,10 @@ void DeviceManager::OnMainThreadError(DMEvent &event)
 			LOGE("Recieved error when connecting");
 			callbacks.threadError(_("Couldn't connect to phone"));
 			break;
+		case THREAD_ERROR_NOT_PAIRED:
+			LOGE("Auth error - probably devices not paired");
+			callbacks.threadInfoBox(_("DroidPad now secures the connections between the computer and the phone / tablet. To make sure the communications are secure, please select the 'Pair New Device' option from the 'File' menu. This only has to be done once and ensures secure communications."));
+			break;
 		case THREAD_ERROR_SETUP_FAIL:
 			LOGE("Recieved error when setting up interfaces");
 			callbacks.threadError(_("Couldn't setup DroidPad"));
@@ -209,6 +214,7 @@ void DeviceManager::OnMainThreadError(DMEvent &event)
 			LOGE("Other error from thread");
 			callbacks.threadError(wxString::Format(_("Unknown Error - %d."), event.getStatus()));
 	}
+	callbacks.setStatusText(_("Scanning for devices..."), true);
 	Stop();
 }
 
@@ -217,16 +223,16 @@ void DeviceManager::OnMainThreadNotification(DMEvent &event)
 	switch(event.getStatus()) {
 		case THREAD_WARNING_CONNECTION_LOST:
 			LOGE("Connection to phone lost.");
-			callbacks.setStatusText(_("Connection to phone lost. Retrying..."));
+			callbacks.setStatusText(_("Connection to phone lost. Retrying..."), true);
 			break;
 		case THREAD_INFO_FINISHED:
 			LOGV("Finished.");
-			callbacks.setStatusText(_("Done."));
+			callbacks.setStatusText(_("Connection complete. Scanning..."), true);
 			Stop();
 			break;
 		case THREAD_INFO_CONNECTED:
 			LOGV("Connected.");
-			callbacks.setStatusText(_("Connected."));
+			callbacks.setStatusText(_("Connected."), false);
 			break;
 		default:
 			LOGE("Other error from thread");

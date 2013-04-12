@@ -55,14 +55,21 @@ namespace droidpad {
 
 			bool running;
 
-			bool setup();
+			enum {
+				SETUP_SUCCESS,
+				SETUP_FAIL,
+				SETUP_FAIL_QUIET
+			};
+			int setup();
 
-#define LOOP_OK 1
-/**
- * Normal closing of connection
- */
-#define LOOP_FINISHED 2
-#define LOOP_CONNLOST 3
+			enum {
+				LOOP_OK,
+				/**
+				 * Normal closing of connection
+				 */
+				LOOP_FINISHED,
+				LOOP_CONNLOST
+			};
 
 			/**
 			 * Returns LOOP_*

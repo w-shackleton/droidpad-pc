@@ -25,6 +25,7 @@
 #include <wx/button.h>
 #include <wx/stattext.h>
 #include <wx/listbox.h>
+#include <wx/animate.h>
 
 #include <map>
 
@@ -40,6 +41,7 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 		DroidFrame ();
 		~DroidFrame ();
 		DECLARE_EVENT_TABLE()
+		DECLARE_DYNAMIC_CLASS(DroidFrame)
 	public:
 	protected:
 		wxPanel *panel;
@@ -50,6 +52,9 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 		wxListBox *devListBox;
 
 		wxStaticText *statusText;
+
+		wxSizer *animSizer;
+		wxAnimationCtrl *loadingAnimCtrl;
 
 		Help *help;
 
@@ -92,7 +97,8 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 
 		virtual void threadStarted();
 		virtual void threadError(wxString failReason);
-		virtual void setStatusText(wxString text);
+		virtual void threadInfoBox(wxString infoMessage);
+		virtual void setStatusText(wxString text, bool showSpinner);
 		virtual void threadStopped();
 
 		void updatesAvailable(std::vector<droidpad::UpdateInfo> updates, std::vector<droidpad::UpdateInfo> latest, bool userRequest);

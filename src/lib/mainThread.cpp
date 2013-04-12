@@ -61,7 +61,8 @@ void* MainThread::Entry()
 	bool connectAgain = false;
 	bool setupDone = true;
 	do { // connectAgain
-		if(!setup()) {
+		int setupResult;
+		if((setupResult = setup()) != SETUP_SUCCESS) {
 			if(connectAgain) {
 				LOGW("Failed to reconnect, retrying...");
 				wxMilliSleep(300);
@@ -73,8 +74,10 @@ void* MainThread::Entry()
 				continue;
 			} else {
 				setupDone = false;
-				DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_CONNECT_FAIL);
-				parent.AddPendingEvent(evt);
+				if(setupResult != SETUP_FAIL_QUIET) {
+					DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_CONNECT_FAIL);
+					parent.AddPendingEvent(evt);
+				}
 			}
 		}
 
@@ -162,7 +165,7 @@ void MainThread::stop()
 	running = false;
 }
 
-bool MainThread::setup()
+int MainThread::setup()
 {
 	// TODO: Only this on first time round?
 	if(device.type == DEVICE_USB) parent.adb->forwardDevice(string(device.usbId.mb_str()), device.port);
@@ -170,19 +173,21 @@ bool MainThread::setup()
 	switch(conn->Start()) {
 		case Connection::START_AUTHERROR:
 			LOGE("Error authenticating with device");
-			return false;
+			{ DMEvent evt(dpTHREAD_ERROR, THREAD_ERROR_NOT_PAIRED);
+			parent.AddPendingEvent(evt); }
+			return SETUP_FAIL_QUIET;
 		case Connection::START_INITERROR:
 			LOGE("Error while initialising connection with phone");
-			return false;
+			return SETUP_FAIL;
 		case Connection::START_HANDSHAKEERROR:
 			LOGE("Error while communicating settings with phone");
-			return false;
+			return SETUP_FAIL;
 		case Connection::START_NETERROR:
 			LOGE("Couldn't connect to phone");
-			return false;
+			return SETUP_FAIL;
 		case Connection::START_SUCCESS:
 		default:
-			return true;
+			return SETUP_SUCCESS;
 	}
 
 }
