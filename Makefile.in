@@ -50,7 +50,7 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@IF_GUI_TRUE@am__append_1 = data/layout.xrc data/iconlarge.xpm data/iconlarge.png
+@IF_GUI_TRUE@am__append_1 = data/layout.xrc data/iconlarge.xpm data/iconlarge.png data/loading.gif
 @IF_GUI_TRUE@am__append_2 = data/docs/intro.zip
 @IF_GUI_TRUE@@OS_WIN32_TRUE@am__append_3 = data/icon.xpm
 @IF_GUI_TRUE@@OS_LINUX_TRUE@am__append_4 = data/iconlarge.xpm
@@ -69,8 +69,7 @@ subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
 	$(top_srcdir)/configure AUTHORS COPYING ChangeLog INSTALL NEWS \
-	TODO config.guess config.sub depcomp install-sh ltmain.sh \
-	missing
+	config.guess config.sub depcomp install-sh ltmain.sh missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/boost.m4 \
 	$(top_srcdir)/m4/libtool.m4 $(top_srcdir)/m4/ltoptions.m4 \

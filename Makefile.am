@@ -31,7 +31,7 @@ clean-local:
 DPDATA =
 DPDOCS =
 if IF_GUI
-DPDATA += data/layout.xrc data/iconlarge.xpm data/iconlarge.png
+DPDATA += data/layout.xrc data/iconlarge.xpm data/iconlarge.png data/loading.gif
 DPDOCS += data/docs/intro.zip
 
 if OS_WIN32
