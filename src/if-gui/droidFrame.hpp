@@ -81,6 +81,7 @@ class DroidFrame : public wxFrame, public droidpad::DroidPadCallbacks
 
 		void OnAbout(wxCommandEvent& event);
 		void OnGettingStarted(wxCommandEvent& event);
+		void OnDesignLayouts(wxCommandEvent& event);
 
 		droidpad::DeviceManager *devices;
 

@@ -32,6 +32,7 @@
 #include "preferences.hpp"
 #include "about.hpp"
 #include "log.hpp"
+#include "proc.hpp"
 #ifdef OS_WIN32
 #include "updater.hpp"
 #endif
@@ -53,6 +54,7 @@ BEGIN_EVENT_TABLE(DroidFrame, wxFrame)
 
 	EVT_MENU(XRCID("menuHelpAbout"), DroidFrame::OnAbout)
 	EVT_MENU(XRCID("menuHelpGettingStarted"), DroidFrame::OnGettingStarted)
+	EVT_MENU(XRCID("menuHelpDesignLayouts"), DroidFrame::OnDesignLayouts)
 
 	EVT_LISTBOX(XRCID("devicesList"), DroidFrame::OnListBox)
 	EVT_LISTBOX_DCLICK(XRCID("devicesList"), DroidFrame::OnStart)
@@ -283,6 +285,10 @@ void DroidFrame::OnAbout(wxCommandEvent& event) {
 void DroidFrame::OnGettingStarted(wxCommandEvent& event) {
 	help = new Help;
 	help->Show(true);
+}
+
+void DroidFrame::OnDesignLayouts(wxCommandEvent& event) {
+	openWebpage("http://digitalsquid.co.uk/droidpad/layout-editor");
 }
 
 void DroidFrame::OnPairDevice(wxCommandEvent& event) {

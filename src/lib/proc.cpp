@@ -190,6 +190,7 @@ bool droidpad::openWebpage(string url) {
 	cout << "Webpage: " << url << endl;
 	// Good ol' fork and exec
 	int uid = getOriginalUserID();
+	cout << "Running as User ID " << uid << endl;
 	if(!uid) { // No need to sudo
 		if(fork() == 0) {
 			printf("Running %s %s\n",
@@ -363,6 +364,6 @@ int droidpad::getOriginalUserID() {
 			return id;
 		}
 	}
-	return 0;
+	return getuid();
 }
 #endif
