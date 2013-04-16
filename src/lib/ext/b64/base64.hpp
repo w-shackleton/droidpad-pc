@@ -23,7 +23,7 @@ inline std::string base64_encode2(wxString in) {
 	unsigned char *data = new unsigned char[in.Length()];
 	wxCharBuffer c_in = in.mb_str();
 	for(int i = 0; i < in.size(); i++)
-		data[i] = c_in[i];
+		data[i] = c_in[(size_t)i];
 //	hexdump(data, in.Length());
 	std::string result(base64_encode(data, in.Length()));
 	delete[] data;

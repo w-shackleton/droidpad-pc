@@ -18,7 +18,7 @@
 # If not, see <http://www.gnu.org/licenses/>.
 #
 SUBDIRS = lib
-bin_PROGRAMS = droidpad tlstest
+bin_PROGRAMS = droidpad # tlstest
 
 SRC_IF_GUI = \
 		   if-gui/droidFrame.cpp	if-gui/droidFrame.hpp	\
@@ -109,8 +109,8 @@ AM_CPPFLAGS += -DOS_WIN32
 endif
 
 # TLS test
-tlstest_SOURCES = tlsTest.c	tlsTest.h
-tlstest_LDADD = @OPENSSL_LIBS@
-if OS_WIN32
-tlstest_LDADD += -lsetupapi -lws2_32 -lgdi32
-endif
+# tlstest_SOURCES = tlsTest.c	tlsTest.h
+# tlstest_LDADD = @OPENSSL_LIBS@
+# if OS_WIN32
+# tlstest_LDADD += -lsetupapi -lws2_32 -lgdi32
+# endif
