@@ -1,3 +1,11 @@
+droidpad (2.1) quantal; urgency=low
+
+  * Version 2.1
+  * Added SSL Security
+  * Added PSK transfer via QR code
+
+ -- William Shackleton <w.shackleton@gmail.com>  Thu, 18 Apr 2013 21:35:23 +0100
+
 droidpad (2.0) quantal; urgency=low
 
   * Version 2.0
