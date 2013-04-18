@@ -37,7 +37,7 @@ namespace droidpad {
 			 * Starts the full handshake process, including TLS
 			 */
 			int Start() throw (std::runtime_error);
-			void Stop() throw (std::runtime_error);
+			void Stop(bool sendStopMessage = true) throw (std::runtime_error);
 
 			virtual const ModeSetting &GetMode() throw (std::runtime_error);
 			virtual const decode::DPJSData GetData() throw (std::runtime_error);

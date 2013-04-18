@@ -74,7 +74,7 @@ SecureConnection::SecureConnection(AndroidDevice &device) throw (runtime_error) 
 }
 
 SecureConnection::~SecureConnection() {
-	Stop();
+	Stop(false);
 	SSL_CTX_free(ctx);
 }
 
@@ -120,16 +120,18 @@ int SecureConnection::Start() throw (runtime_error) {
 }
 
 // Stops the connection, whatever stage it is at. If the connection is currently open, will send a stop message, then disconnect.
-void SecureConnection::Stop() throw (std::runtime_error) {
+void SecureConnection::Stop(bool sendStopMessage) throw (std::runtime_error) {
 	if(ssl) {
+		if(sendStopMessage) {
 		LOGV("Sending stop message");
-		BinaryServerMessage stop;
-		stop.sig.setCmd();
-		stop.msg = CMD_STOP;
-		HTON(stop.msg);
-		SSL_write(ssl, &stop, sizeof(BinaryServerMessage));
-		SSL_PRINT_ERRORS();
-		LOGV("Stop message sent");
+			BinaryServerMessage stop;
+			stop.sig.setCmd();
+			stop.msg = CMD_STOP;
+			HTON(stop.msg);
+			SSL_write(ssl, &stop, sizeof(BinaryServerMessage));
+			SSL_PRINT_ERRORS();
+			LOGV("Stop message sent");
+		}
 
 		SSL_shutdown(ssl);
 		SSL_free(ssl);

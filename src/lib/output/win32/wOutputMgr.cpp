@@ -95,12 +95,13 @@ void OutputManager::SendMouseData(const DPMouseData& data, bool firstIteration)
 
 void OutputManager::SendSlideData(const DPSlideData& data, bool firstIteration)
 {
+	LOGVwx(wxString::Format(wxT("Keycode: %c"), Data::blackKey));
 	WinOutputs::SendKeystroke(VK_UP,	data.prev);
 	WinOutputs::SendKeystroke(VK_DOWN,	data.next);
 	WinOutputs::SendKeystroke(VK_F5,	data.start);
 	WinOutputs::SendKeystroke(VK_ESCAPE,	data.finish);
-	WinOutputs::SendKeystroke(Data::whiteKey,data.white);
-	WinOutputs::SendKeystroke(Data::blackKey,data.black);
+	WinOutputs::SendKeystroke(getKeycode(Data::whiteKey),data.white);
+	WinOutputs::SendKeystroke(getKeycode(Data::blackKey),data.black);
 	WinOutputs::SendKeystroke(VK_HOME,	data.beginning);
 	WinOutputs::SendKeystroke(VK_END,	data.end);
 }
@@ -117,4 +118,11 @@ void OutputManager::SendTouchData(const decode::DPTouchData& data, bool firstIte
 	{
 		LOGWwx(wxT("SendInput failed: ") + GetLastError());
 	}
+}
+
+int OutputManager::getKeycode(char letter) {
+	// Windows a-z keycodes are just A-Z ASCII codes
+	if(isalpha(letter)) return toupper(letter);
+	if(isdigit(letter)) return letter;
+	return 'B'; // Fall through
 }
