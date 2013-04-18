@@ -32,7 +32,7 @@ fi
 
 BASEDIR=`pwd`
 BUILD=build
-MAKEOPTS="-j8"
+MAKEOPTS="-j8 CXXFLAGS=\"-O2 -s\""
 
 builddirs()
 {

@@ -26,6 +26,7 @@
 #include <wx/stdpaths.h>
 #include <wx/textfile.h>
 #include <wx/tokenzr.h>
+#include <wx/filename.h>
 #include <wx/intl.h>
 #include <wx/utils.h>
 
@@ -284,7 +285,7 @@ void Data::savePreferences() {
 
 wxString Data::getFilePath(wxString file)
 {
-	return datadir + wxT("/") + file;
+	return datadir + wxFileName::GetPathSeparator() + file;
 }
 
 vector<int> Data::decodeOrderConf(wxString input, int count) {
