@@ -97,10 +97,6 @@ void DroidFrame::init()
 
 	panel = wxXmlResource::Get()->LoadPanel(this, wxT("mainPanel"));
 	panel->SetSizerAndFit(panel->GetSizer());
-	wxSize sz;
-	sz.SetHeight(200);
-	sz.SetWidth(500);
-	SetSize(sz);
 
 	LOADXRC(buttonStart,	buttonStart,		wxButton);
 	LOADXRC(buttonStop,	buttonStop,		wxButton);
@@ -116,6 +112,11 @@ void DroidFrame::init()
 //	animSizer->Insert(0, loadingAnimCtrl);
 
 	buttonStop->Disable();
+
+	wxSize sz;
+	sz.SetHeight(200);
+	sz.SetWidth(500);
+	SetSize(sz);
 
 	devices = new DeviceManager(*this);
 	PushEventHandler(devices);
