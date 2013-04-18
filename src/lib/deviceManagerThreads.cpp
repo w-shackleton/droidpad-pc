@@ -101,6 +101,8 @@ void* DeviceFinder::Entry()
 			dev.usbId = usbDevices[i];
 			dev.ip = wxT(LOCALHOST);
 			dev.port = LOCALHOST_PORT;
+			dev.securePort = 0;
+			dev.secureSupported = false;
 			dev.name = _("USB Device");
 
 			devs.push_back(dev);

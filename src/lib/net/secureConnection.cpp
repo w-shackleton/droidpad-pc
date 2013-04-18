@@ -56,6 +56,7 @@ SecureConnection::SecureConnection(AndroidDevice &device) throw (runtime_error) 
 {
 	staticInitialise();
 
+	cout << "Secure connection starting on " << device.securePort << endl;
 	LOGVwx(wxString::Format(_("Connecting on %s:%d"), host.c_str(), device.securePort));
 	// SSL_library_init called in droidApp
 	tlsMethod = TLSv1_server_method();

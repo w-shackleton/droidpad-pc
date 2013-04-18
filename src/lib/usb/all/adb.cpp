@@ -91,6 +91,7 @@ vector<wxString> AdbManager::getDeviceIds() {
 
 void AdbManager::forwardDevice(string serial, uint16_t from, uint16_t to)
 {
+	cout << "Forwarding device from " << from << " to " << to << endl;
 	stringstream args;
 	args << "-s " << serial << " forward " << "tcp:" << from << " tcp:" << to;
 #ifdef DEBUG

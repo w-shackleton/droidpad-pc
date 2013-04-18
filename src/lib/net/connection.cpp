@@ -43,6 +43,7 @@ ModeSetting::ModeSetting() :
 DPConnection::DPConnection(AndroidDevice &device) :
 	wxSocketClient(wxSOCKET_BLOCK)
 {
+	cout << "Normal connection starting on " << device.port << endl;
 	addr.Hostname(device.ip);
 	addr.Service(device.port);
 	

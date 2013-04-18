@@ -108,12 +108,12 @@ void DroidFrame::init()
 	// Create spinning loading wheel thing, to keep users happy.
 	// For the time being this just doesn't work on MSW64.
 	// The macro disables it in this case.
-#if (defined OS_WIN32 && !defined OS_64BIT)
+#if (defined OS_WIN32 && defined OS_64BIT)
+	loadingAnimCtrl->Destroy();
+#else
 	LOGVwx(Data::getFilePath(_LOADING_GIF));
 	loadingAnimCtrl->LoadFile(Data::getFilePath(_LOADING_GIF), wxANIMATION_TYPE_GIF);
 	loadingAnimCtrl->Play();
-#else // Make anim 0 size
-	loadingAnimCtrl->Destroy();
 #endif
 
 	buttonStop->Disable();
@@ -257,7 +257,7 @@ void DroidFrame::threadInfoBox(wxString infoMessage)
 
 void DroidFrame::setStatusText(wxString text, bool showSpinner) {
 	statusText->SetLabel(text);
-#if (defined OS_WIN32 && !defined OS_64BIT)
+#if !(defined OS_WIN32 && defined OS_64BIT)
 	loadingAnimCtrl->Show(showSpinner);
 #endif
 }
