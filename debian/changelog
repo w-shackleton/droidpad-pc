@@ -1,3 +1,10 @@
+droidpad (2.1ubuntu1) raring; urgency=low
+
+  * Added debian install script to fix permissions of ADB,
+  allowing USB mode to work.
+
+ -- William Shackleton <w.shackleton@gmail.com>  Tue, 02 Jul 2013 20:58:26 +0100
+
 droidpad (2.1) quantal; urgency=low
 
   * Version 2.1
