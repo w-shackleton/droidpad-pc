@@ -1,0 +1,63 @@
+/*
+ * This file is part of DroidPad.
+ * DroidPad lets you use an Android mobile to control a joystick or mouse
+ * on a Windows or Linux computer.
+ *
+ * DroidPad is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * DroidPad is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with DroidPad, in the file COPYING.
+ * If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#include "config.h"
+
+1 VERSIONINFO
+FILEVERSION     V_MAJOR,V_MINOR,V_REVISION,0
+PRODUCTVERSION  V_MAJOR,V_MINOR,V_REVISION,0
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "080904E4"
+    BEGIN
+      VALUE "CompanyName", "Digitalsquid"
+      VALUE "FileDescription", "DroidPad - phone joystick controller"
+      VALUE "FileVersion", VERSION
+      VALUE "InternalName", "droidpad"
+      VALUE "LegalCopyright", "This program is licensed under the GPLv3 license."
+      VALUE "OriginalFilename", "droidpad.exe"
+      VALUE "ProductName", "DroidPad"
+      VALUE "ProductVersion", VERSION
+    END
+  END
+
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x809, 1252
+  END
+END
+
+id ICON "../data/icon.ico"
+
+// #include "wx/msw/wx.rc"
+
+// see "about isolated applications" topic in MSDN
+#ifdef ISOLATION_AWARE_ENABLED
+#define wxMANIFEST_ID 2
+#else
+#define wxMANIFEST_ID 1
+#endif
+
+#if defined(WX_CPU_AMD64)
+wxMANIFEST_ID 24 "if-gui/amd64.manifest"
+#elif defined(WX_CPU_X86)
+wxMANIFEST_ID 24 "if-gui/x86.manifest"
+#endif

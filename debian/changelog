@@ -1,0 +1,65 @@
+droidpad (2.1ubuntu1) raring; urgency=low
+
+  * Added debian install script to fix permissions of ADB,
+  allowing USB mode to work.
+
+ -- William Shackleton <w.shackleton@gmail.com>  Tue, 02 Jul 2013 20:58:26 +0100
+
+droidpad (2.1) quantal; urgency=low
+
+  * Version 2.1
+  * Added SSL Security
+  * Added PSK transfer via QR code
+
+ -- William Shackleton <w.shackleton@gmail.com>  Thu, 18 Apr 2013 21:35:23 +0100
+
+droidpad (2.0) quantal; urgency=low
+
+  * Version 2.0
+  * Numerous fixes
+  * Added Getting Started guide
+  * Imported working fully signed driver
+
+ -- William Shackleton <w.shackleton@gmail.com>  Mon, 24 Dec 2012 22:38:07 +0000
+
+droidpad (1.9.3) precise; urgency=low
+
+  * Added axis tweaking
+  * Improved reconnection code on connection loss
+  * Note that version numbers (for the time being) are synced with the Android
+    app version numbers
+
+ -- William Shackleton <w.shackleton@gmail.com>  Mon, 13 Aug 2012 21:05:27 +0100
+
+droidpad (1.9.1) quantal; urgency=low
+
+  * Added absolute mouse mode using gyro to position.
+  * Added binary data serialisation over network
+  * Added ReactOS sponsor message on Windows builds
+
+ -- William Shackleton <w.shackleton@gmail.com>  Mon, 13 Aug 2012 21:05:02 +0100
+
+droidpad (1.9.0ubuntu3) oneiric; urgency=low
+
+  * Changed linked utilities to copies of files.
+
+ -- William Shackleton <w.shackleton@gmail.com>  Sun, 05 Feb 2012 22:45:28 +0000
+
+droidpad (1.9.0ubuntu2) oneiric; urgency=low
+
+  * Fixed Linux data folder searching; using layout.xrc as reference file.
+
+ -- William Shackleton <w.shackleton@gmail.com>  Sat, 04 Feb 2012 22:57:22 +0000
+
+droidpad (1.9.0ubuntu1) oneiric; urgency=low
+
+  * Beta release; working on Linux, Win32 and Win64 (Win64 requires test mode
+    to be enabled)
+
+ -- William Shackleton <w.shackleton@gmail.com>  Fri, 03 Feb 2012 20:30:33 +0000
+
+droidpad (1.9.0) oneiric; urgency=low
+
+  * First debianisation attempt
+
+ -- William Shackleton <w.shackleton@gmail.com>  Wed, 14 Dec 2011 23:22:34 +0000

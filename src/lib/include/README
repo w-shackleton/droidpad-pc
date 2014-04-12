@@ -1,0 +1,3 @@
+This folder contains private header files for DroidPad library.
+The headers are mostly just links to the actual headers, but
+these also work out which to include based on the OS.

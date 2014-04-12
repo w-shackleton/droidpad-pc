@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Set this variable beforehand if your mingw32 is somewhere else (which it almost certainly will be).
+if [ "$MINGW32_PATH" = "" ]
+then
+MINGW32_PATH=/usr
+fi
+
+export PATH="$MINGW32_PATH/bin:$PATH"
+MINGW32_LOCATION=$MINGW32_PATH/i586-mingw32msvc
+
+./configure --host=i586-mingw32msvc --disable-shared --disable-debug --with-wx-prefix=$MINGW32_LOCATION --prefix=$MINGW32_LOCATION --enable-sponsor-message "$@"
+
+# echo ""
+# echo "Please run 'export PATH=$MINGW32_PATH/bin:\$PATH'"
