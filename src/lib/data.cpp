@@ -126,7 +126,7 @@ bool Data::initialise()
 
 	confLocation = wxStandardPaths::Get().GetUserDataDir();
 
-	wxTextFile config(wxString(confLocation.c_str(), wxConvUTF8) + wxT("/") + wxT(CONF_FILE));
+	wxTextFile config(wxString((const char*) confLocation.c_str(), wxConvUTF8) + wxT("/") + wxT(CONF_FILE));
 
 	if(config.Open())
 	{ // Process config file
@@ -157,7 +157,7 @@ bool Data::initialise()
 		config.Close();
 
 		// Remove old file
-		wxRemoveFile(wxString(confLocation.c_str(), wxConvUTF8) + wxT("/") + wxT(CONF_FILE));
+		wxRemoveFile(wxString((const char*) confLocation.c_str(), wxConvUTF8) + wxT("/") + wxT(CONF_FILE));
 		wxRmdir(confLocation);
 
 		// Now, save to new system

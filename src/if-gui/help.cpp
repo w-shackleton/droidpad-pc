@@ -47,7 +47,7 @@ HelpWindow *currentWindow;
 Help::Help() :
 	wxFrame(NULL, -1, _(FRAME_TITLE), wxDefaultPosition, wxSize(640, 480))
 {
-	SetIcon(wxIcon(wxString(Data::getFilePath(_FRAME_ICON).c_str(), wxConvUTF8), wxBITMAP_TYPE_XPM));
+	SetIcon(wxIcon(wxString((const char*) Data::getFilePath(_FRAME_ICON).c_str(), wxConvUTF8), wxBITMAP_TYPE_XPM));
 
 	wxBoxSizer *parentSizer = new wxBoxSizer(wxVERTICAL);
 	SetSizer(parentSizer);
