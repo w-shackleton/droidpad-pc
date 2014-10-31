@@ -47,7 +47,7 @@ CustomHost::CustomHost(wxWindow *parent, droidpad::AndroidDevice *device) :
 	wxDialog(parent, -1, _(FRAME_TITLE), wxDefaultPosition, wxSize(250, 150)),
 	device(device)
 {
-	SetIcon(wxIcon(wxString((const char*) Data::getFilePath(_FRAME_ICON).c_str(), wxConvUTF8), wxBITMAP_TYPE_XPM));
+	SetIcon(wxIcon(wxString(Data::getFilePath(_FRAME_ICON).c_str(), wxConvUTF8), wxBITMAP_TYPE_XPM));
 
 	wxBoxSizer *parentSizer = new wxBoxSizer(wxVERTICAL);
 	SetSizer(parentSizer);

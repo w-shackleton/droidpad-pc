@@ -290,7 +290,7 @@ const DPJSData droidpad::decode::getTextData(wxString line) {
 		wxStringTokenizer valTk;
 		if(t.StartsWith(wxT("{"))) { // Axis of some sort
 
-			switch((char)t[1]) {
+			switch(t[1]) {
 				case 'A': // 2way axis
 				case 'S': // 1way axis
 					if(end < start) break; // Malformed?
